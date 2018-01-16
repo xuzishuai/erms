@@ -1,2 +1,2 @@
-# ierms
+# erms
 Educational Resources Manage System
