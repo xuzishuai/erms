@@ -302,7 +302,7 @@
 </div>
 <!-- END FOOTER -->
 
-<script src="/public/plugins/metronic/js/jquery-1.10.1.min.js" type="text/javascript"></script>
+<script src="/public/plugins/jquery2_1_1/jquery-2.1.1.min.js" type="text/javascript"></script>
 <script src="/public/plugins/metronic/js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
 <script src="/public/plugins/metronic/js/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script>
 <script src="/public/plugins/metronic/js/bootstrap.min.js" type="text/javascript"></script>
@@ -332,5 +332,11 @@
 <script src="/public/plugins/metronic/js/jquery.sparkline.min.js" type="text/javascript"></script>
 <script src="/public/plugins/metronic/js/app.js" type="text/javascript"></script>
 <script src="/public/plugins/metronic/js/index.js" type="text/javascript"></script>
+<script>
+    jQuery(document).ready(function() {
+        App.init(); // initlayout and core plugins
+        Index.init();
+    });
+</script>
 </body>
 </html>
