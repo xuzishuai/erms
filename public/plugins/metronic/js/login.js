@@ -9,7 +9,7 @@ var Login = function () {
 	            errorClass: 'help-inline', // default input error message class
 	            focusInvalid: false, // do not focus the last invalid input
 	            rules: {
-	                username: {
+                    user_no: {
 	                    required: true
 	                },
 	                password: {
@@ -21,16 +21,12 @@ var Login = function () {
 	            },
 
 	            messages: {
-	                username: {
-	                    required: "Username is required."
+                    user_no: {
+	                    required: "请输入工号"
 	                },
 	                password: {
-	                    required: "Password is required."
+	                    required: "请输入密码"
 	                }
-	            },
-
-	            invalidHandler: function (event, validator) { //display error alert on form submit   
-	                $('.alert-error', $('.login-form')).show();
 	            },
 
 	            highlight: function (element) { // hightlight error inputs
@@ -45,19 +41,6 @@ var Login = function () {
 
 	            errorPlacement: function (error, element) {
 	                error.addClass('help-small no-left-padding').insertAfter(element.closest('.input-icon'));
-	            },
-
-	            submitHandler: function (form) {
-	                window.location.href = "index.html";
-	            }
-	        });
-
-	        $('.login-form input').keypress(function (e) {
-	            if (e.which == 13) {
-	                if ($('.login-form').validate().form()) {
-	                    window.location.href = "index.html";
-	                }
-	                return false;
 	            }
 	        });
 
@@ -187,6 +170,16 @@ var Login = function () {
 	            jQuery('.login-form').show();
 	            jQuery('.register-form').hide();
 	        });
+
+	        $.backstretch([
+		        "/public/plugins/metronic/image/bg/1.jpg",
+		        "/public/plugins/metronic/image/bg/2.jpg",
+		        "/public/plugins/metronic/image/bg/3.jpg",
+		        "/public/plugins/metronic/image/bg/4.jpg"
+		        ], {
+		          fade: 1000,
+		          duration: 8000
+		      });
         }
 
     };

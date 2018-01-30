@@ -38,7 +38,7 @@
 <!-- BEGIN LOGIN -->
 <div class="content">
     <!-- BEGIN LOGIN FORM -->
-    <form class="form-vertical login-form" action="index.html">
+    <form class="form-vertical login-form" action="/user/do_login" method="post">
         <h3 class="form-title">用户登录</h3>
         <% if (locals.errorMessage){%>
         <div class="alert alert-error">
@@ -52,7 +52,7 @@
             <div class="controls">
                 <div class="input-icon left">
                     <i class="icon-user"></i>
-                    <input class="m-wrap placeholder-no-fix" type="text" placeholder="请输入工号" name="user_no"/>
+                    <input class="m-wrap placeholder-no-fix" type="text" placeholder="请输入工号" name="user_no" value="<%= locals.user_no%>"/>
                 </div>
             </div>
         </div>
@@ -108,7 +108,7 @@
 
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script src="/public/plugins/metronic/js/app.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/login-soft.js" type="text/javascript"></script>
+<script src="/public/plugins/metronic/js/login.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <script>
     jQuery(document).ready(function() {
