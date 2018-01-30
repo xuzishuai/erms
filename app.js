@@ -31,6 +31,11 @@ app.use(session({
 }));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
+app.use(async function (req, res, next) {
+    res.locals.showLayout = true;//默认显示layout
+    next();
+});
+
 // routes
 app.use('/', index);
 app.use('/user', user);
