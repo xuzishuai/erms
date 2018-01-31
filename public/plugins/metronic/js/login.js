@@ -22,7 +22,7 @@ var Login = function () {
 
 	            messages: {
                     user_no: {
-	                    required: "请输入工号",
+	                    required: "请输入工号"
 	                },
 	                password: {
 	                    required: "请输入密码"
