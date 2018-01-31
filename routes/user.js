@@ -12,7 +12,7 @@ router.post('/do_login', async function (req, res) {
         if (!user || user.length == 0) {
             throw '工号或密码错误';
         }
-        req.session.user = user[0];
+        req.session.user = user;
         res.redirect('/');
     } catch (errorMessage) {
         res.render('user/login', {

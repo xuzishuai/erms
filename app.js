@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-// const favicon = require('serve-favicon');
+const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
@@ -17,8 +17,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public/plugins/metronic/image', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -29,9 +28,25 @@ app.use(session({
     saveUninitialized: true,
     cookie: { maxAge: 1000*3600*24 }
 }));
-app.use('/public', express.static(path.join(__dirname, 'public')));
+
+//拦截器
+app.all('/*', function(req, res, next){
+    let publicPattern=/^\/public/;
+    let url=req.path;
+    if(publicPattern.test(url) || url == '/user/login' || url == '/user/do_login'){
+        next();
+        return;
+    }
+    if (req.session.user && req.session.user.length > 0) {
+        next();
+    }
+    else{
+        res.redirect('/user/login');
+    }
+});
 
 // routes
+app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/user', user);
 
