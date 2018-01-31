@@ -114,6 +114,24 @@
     jQuery(document).ready(function() {
         App.init();
         Login.init();
+        let $form = $(document.forms[0]);
+        let $remember = $('input[name=remember]', $form);
+        let $user_no = $('input[name=user_no]', $form);
+        let cookieProps = {expires: 365, path: '/'};
+        if ($.cookie('remember') === 'true') {
+            $.uniform.update($remember.attr("checked", true));
+            $user_no.val($.cookie('user_no'));
+        }
+
+        $('button[type=submit]', $form).click(function() {
+            if ($remember.prop('checked')) {
+                $.cookie('remember', 'true', cookieProps);
+                $.cookie('user_no', $user_no.val(), cookieProps);
+            } else {
+                $.cookie('remember', null);
+                $.cookie('user_no', null);
+            }
+        });
     });
 </script>
 <!-- END JAVASCRIPTS -->
