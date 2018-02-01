@@ -6,6 +6,6 @@ exports.renderException = function (res, error) {
     });
 };
 
-exports.sendException = function (res, err) {
-    res.send({status : false, "error": err});
+exports.sendException = function (res, error) {
+    res.send({status : false, error: error});
 };

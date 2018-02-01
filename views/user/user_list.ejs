@@ -1,0 +1,49 @@
+<div class="row-fluid">
+    <div class="span12 responsive" data-tablet="span12 fix-offset" data-desktop="span12">
+        <div class="portlet box purple">
+            <div class="portlet-title">
+                <div class="actions">
+                    <a href="/user/new_user" class="btn green"><i class="icon-plus"></i> 新增用户</a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>工号</th>
+                        <th>姓名</th>
+                        <th>角色</th>
+                        <th class="table_action" data-colNum=3>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="odd gradeX">
+                        <td>shuxer</td>
+                        <td><a href="mailto:shuxer@gmail.com">shuxer@gmail.com</a></td>
+                        <td><span class="label label-success">Approved</span></td>
+                        <td>
+                            <a href="/user/edit_user" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
+                            <a href="/user/delete_user" class="btn red mini"><i class="icon-minus"></i> 删除</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<%- contentFor('title')%>
+用户列表
+<%- contentFor('script')%>
+<script type="text/javascript" src="/public/plugins/metronic/js/select2.min.js"></script>
+<script type="text/javascript" src="/public/plugins/metronic/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="/public/plugins/metronic/js/DT_bootstrap.js"></script>
+<script type="text/javascript" src="/public/plugins/metronic/js/table-managed.js"></script>
+<script>
+    jQuery(document).ready(function() {
+        TableManaged.init();
+    });
+</script>
+<%- contentFor('style')%>
+<link rel="stylesheet" type="text/css" href="/public/plugins/metronic/css/select2_metro.css" />
+<link rel="stylesheet" type="text/css" href="/public/plugins/metronic/css/DT_bootstrap.css" />

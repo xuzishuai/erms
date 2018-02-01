@@ -25,7 +25,12 @@ router.post('/do_login', async function (req, res) {
 });
 
 router.get('/user_list', async function (req, res) {
-    let users = await dataPool.getAll('user');
+    try {
+        let users = await dataPool.query('select * from user where id<>"1cbb1360-d57d-11e7-9634-4d058774421e"');
+        res.render('user/user_list', {users: users});
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
 });
 
 module.exports = router;
