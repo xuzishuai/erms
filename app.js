@@ -33,11 +33,12 @@ app.use(session({
 app.all('/*', function(req, res, next){
     let publicPattern=/^\/public/;
     let url=req.path;
-    if(publicPattern.test(url) || url == '/user/login' || url == '/user/do_login'){
+    if(publicPattern.test(url) || url == '/user/login' || url == '/user/do_login' || url == '/error'){
         next();
         return;
     }
-    if (req.session.user && req.session.user.length > 0) {
+    let user = req.session.user;
+    if (user && user.length > 0 && (user[0].id = '1cbb1360-d57d-11e7-9634-4d058774421e')) {
         next();
     }
     else{

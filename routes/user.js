@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const dataPool = require('../util/dataPool');
+const exceptionHelper = require("../helper/exceptionHelper");
 
 router.get('/login', function (req, res) {
     res.render('user/login', {hideLayout: true});
@@ -21,6 +22,10 @@ router.post('/do_login', async function (req, res) {
             user_no: req.body.user_no
         });
     }
+});
+
+router.get('/user_list', async function (req, res) {
+    let users = await dataPool.getAll('user');
 });
 
 module.exports = router;

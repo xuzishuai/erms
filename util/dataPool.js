@@ -10,13 +10,45 @@ const pool = mysql.createPool({
     port: 3306
 });
 
-exports.query = function (sql, params) {
+exports.getById = function (table, id) {
     return new Promise(function (resolve, reject) {
-        pool.getConnection(function(err,conn){
+        pool.getConnection(function(err, conn){
             if(err){
                 reject(err);
             }else{
-                conn.query(sql,params,function(err,results,fields){
+                conn.query('select * from ' + table + ' where id=?', [id], function(err, results){
+                    conn.release();
+                    if (err) reject(err);
+                    else resolve(results);
+                })
+            }
+        })
+    })
+};
+
+exports.getAll = function (table) {
+    return new Promise(function (resolve, reject) {
+        pool.getConnection(function(err, conn){
+            if(err){
+                reject(err);
+            }else{
+                conn.query('select * from ' + table, function(err, results){
+                    conn.release();
+                    if (err) reject(err);
+                    else resolve(results);
+                })
+            }
+        })
+    })
+};
+
+exports.query = function (sql, params) {
+    return new Promise(function (resolve, reject) {
+        pool.getConnection(function(err, conn){
+            if(err){
+                reject(err);
+            }else{
+                conn.query(sql, params, function(err, results){
                     //释放连接
                     conn.release();
                     if (err) reject(err);
