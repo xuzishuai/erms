@@ -24,10 +24,40 @@ router.post('/do_login', async function (req, res) {
     }
 });
 
+router.get('/logout', function (req, res) {
+    req.session.user = false;
+    res.redirect('/user/login');
+});
+
 router.get('/user_list', async function (req, res) {
     try {
         let users = await dataPool.query('select * from user where id<>"1cbb1360-d57d-11e7-9634-4d058774421e"');
-        res.render('user/user_list', {users: users});
+        let roles = await dataPool.getAll('role');
+        let roleMap = {};
+        for (let i = 0; i < roles.length; i++) {
+            roleMap[roles[i].id] = roles[i];
+        }
+        res.render('user/user_list', {
+            users: users,
+            roleMap: roleMap
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/new_user', async function (req, res) {
+    try {
+        let roles = await dataPool.getAll('role');
+        res.render('user/new_user', {roles: roles});
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/create_user', async function (req, res) {
+    try {
+        res.redirect('/user/user_list');
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }

@@ -1,0 +1,60 @@
+<div class="row-fluid">
+    <div class="span12">
+        <div class="portlet box blue">
+            <div class="portlet-title">
+                <div class="actions">
+                    <a href="/user/user_list" class="btn yellow"><i class="icon-chevron-left"></i> 返回</a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <form action="create_user" class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label">工号<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" class="m-wrap span6" name="user_no">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">姓名<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" class="m-wrap span6" name="name">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">密码<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="password" class="m-wrap span6" name="password">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">角色<span class="required">*</span></label>
+                        <div class="controls">
+                            <select class="span6 select2"  data-placeholder="请选择角色" tabindex="1">
+                                <option value=""></option>
+                                <%for (var i=0;i<roles.length;i++){%>
+                                <option value="<%= roles[i].id%>"><%= roles[i].name%></option>
+                                <%}%>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn green"><i class="icon-ok"></i> 提交</button>
+                        <button type="button" class="btn" onclick="javascript:history.back(-1);">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%- contentFor('title')%>
+新增用户
+<%- contentFor('script')%>
+<script type="text/javascript" src="/public/plugins/metronic/js/select2.min.js"></script>
+<script type="text/javascript" src="/public/plugins/metronic/js/form-samples.js"></script>
+<script>
+    jQuery(document).ready(function() {
+        FormSamples.init();
+    });
+</script>
+<%- contentFor('style')%>
+<link rel="stylesheet" type="text/css" href="/public/plugins/metronic/css/select2_metro.css" />
