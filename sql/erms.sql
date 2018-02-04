@@ -25,6 +25,13 @@ create table menu
 
 alter table menu comment '菜单表，手动插入数据';
 
+-- ----------------------------
+-- Records of menu,插入菜单数据
+-- ----------------------------
+INSERT INTO menu VALUES ('1', '设置', null, null, '#2#3#');
+INSERT INTO menu VALUES ('2', '用户管理', '1', '/user/user_list', null);
+INSERT INTO menu VALUES ('3', '角色管理', '1', '/user/role_list', null);
+
 /*==============================================================*/
 /* Table: role                                                  */
 /*==============================================================*/

@@ -7,29 +7,29 @@
                 </div>
             </div>
             <div class="portlet-body form">
-                <form action="create_user" class="form-horizontal">
+                <form action="create_user" class="form-horizontal" method="post">
                     <div class="control-group">
                         <label class="control-label">工号<span class="required">*</span></label>
                         <div class="controls">
-                            <input type="text" class="m-wrap span6" name="user_no">
+                            <input type="text" class="m-wrap span6" name="user_no" id="user_no">
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label">姓名<span class="required">*</span></label>
                         <div class="controls">
-                            <input type="text" class="m-wrap span6" name="name">
+                            <input type="text" class="m-wrap span6" name="name" id="name">
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label">密码<span class="required">*</span></label>
                         <div class="controls">
-                            <input type="password" class="m-wrap span6" name="password">
+                            <input type="password" class="m-wrap span6" name="password" id="password">
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label">角色<span class="required">*</span></label>
                         <div class="controls">
-                            <select class="span6 select2"  data-placeholder="请选择角色" tabindex="1">
+                            <select class="span6 select2"  data-placeholder="请选择角色" tabindex="1" name="role_id" id="role_id">
                                 <option value=""></option>
                                 <%for (var i=0;i<roles.length;i++){%>
                                 <option value="<%= roles[i].id%>"><%= roles[i].name%></option>
@@ -39,7 +39,7 @@
                     </div>
                     <div class="form-actions">
                         <button type="submit" class="btn green"><i class="icon-ok"></i> 提交</button>
-                        <button type="button" class="btn" onclick="javascript:history.back(-1);">取消</button>
+                        <button type="button" class="btn" onclick="javascript:history.back(-1);"><i class="icon-remove"></i> 取消</button>
                     </div>
                 </form>
             </div>
@@ -49,11 +49,80 @@
 <%- contentFor('title')%>
 新增用户
 <%- contentFor('script')%>
+<script type="text/javascript" src="/public/plugins/metronic/js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="/public/plugins/metronic/js/select2.min.js"></script>
 <script type="text/javascript" src="/public/plugins/metronic/js/form-samples.js"></script>
 <script>
     jQuery(document).ready(function() {
         FormSamples.init();
+        let form1 = $('form');
+
+        form1.validate({
+            errorElement: 'span', //default input error message container
+            errorClass: 'help-inline', // default input error message class
+            focusInvalid: false, // do not focus the last invalid input
+            rules: {
+                user_no: {
+                    required: true,
+                    remote: {
+                        url: "/user/validate_user_no",     //后台处理程序
+                        type: "post",               //数据发送方式
+                        dataType: "json",           //接受数据格式
+                        data: {                     //要传递的数据
+                            user_no: function() {
+                                return $("#user_no").val();
+                            }
+                        }
+                    }
+                },
+                name: {
+                    required: true
+                },
+                password: {
+                    minlength: 6,
+                    required: true
+                },
+                role_id: {
+                    required: true
+                }
+            },
+
+            messages: {
+                user_no: {
+                    required: "请输入工号",
+                    remote: "工号已存在，请重新输入"
+                },
+                name: {
+                    required: "请输入姓名"
+                },
+                password: {
+                    minlength: "密码长度不能小于6位",
+                    required: "请输入密码"
+                },
+                role_id: {
+                    required: "请选择角色"
+                }
+            },
+
+            highlight: function (element) { // hightlight error inputs
+                $(element)
+                    .closest('.help-inline').removeClass('ok'); // display OK icon
+                $(element)
+                    .closest('.control-group').removeClass('success').addClass('error'); // set error class to the control group
+            },
+
+            unhighlight: function (element) { // revert the change dony by hightlight
+                $(element)
+                    .closest('.control-group').removeClass('error'); // set error class to the control group
+            },
+
+            success: function (label) {
+                label
+                    .addClass('valid').addClass('help-inline ok') // mark the current input as valid and display OK icon
+                    .closest('.control-group').removeClass('error').addClass('success'); // set success class to the control group
+            }
+        });
+
     });
 </script>
 <%- contentFor('style')%>

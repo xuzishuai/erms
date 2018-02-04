@@ -1,6 +1,5 @@
 var FormSamples = function () {
 
-
     return {
         //main function to initiate the module
         init: function () {
@@ -12,7 +11,5 @@ var FormSamples = function () {
                 formatSearching: function () { return "搜索中…"; }
 	        });
         }
-
     };
-
 }();

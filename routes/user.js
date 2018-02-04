@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const dataPool = require('../util/dataPool');
+const baseDAO = require('../dao/baseDAO');
+const userDAO = require('../dao/userDAO');
 const exceptionHelper = require("../helper/exceptionHelper");
 
 router.get('/login', function (req, res) {
@@ -9,7 +10,7 @@ router.get('/login', function (req, res) {
 
 router.post('/do_login', async function (req, res) {
     try {
-        let user = await dataPool.query('select * from user where user_no=? and password=? limit 1', [req.body.user_no, req.body.password]);
+        let user = await userDAO.login(req.body.user_no, req.body.password);
         if (!user || user.length == 0) {
             throw '工号或密码错误';
         }
@@ -31,8 +32,8 @@ router.get('/logout', function (req, res) {
 
 router.get('/user_list', async function (req, res) {
     try {
-        let users = await dataPool.query('select * from user where id<>"1cbb1360-d57d-11e7-9634-4d058774421e"');
-        let roles = await dataPool.getAll('role');
+        let users = await userDAO.getAllUser();
+        let roles = await baseDAO.getAll('role');
         let roleMap = {};
         for (let i = 0; i < roles.length; i++) {
             roleMap[roles[i].id] = roles[i];
@@ -48,15 +49,29 @@ router.get('/user_list', async function (req, res) {
 
 router.get('/new_user', async function (req, res) {
     try {
-        let roles = await dataPool.getAll('role');
+        let roles = await baseDAO.getAll('role');
         res.render('user/new_user', {roles: roles});
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }
 });
 
+router.post('/validate_user_no', async function (req, res) {
+    try {
+        let user = await userDAO.getUserByUserNo(req.body.user_no);
+        if (user && user.length > 0) {
+            res.send(false);
+        } else {
+            res.send(true);
+        }
+    } catch (error) {
+        res.send(false);
+    }
+});
+
 router.post('/create_user', async function (req, res) {
     try {
+        await userDAO.saveUser(req.body.user_no, req.body.name, req.body.password, req.body.role_id);
         res.redirect('/user/user_list');
     } catch (error) {
         exceptionHelper.renderException(res, error);

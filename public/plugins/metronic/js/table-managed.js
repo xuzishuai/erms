@@ -39,7 +39,11 @@ const TableManaged = function () {
 
             jQuery('.dataTables_filter input').addClass("m-wrap small"); // modify table search input
             jQuery('.dataTables_length select').addClass("m-wrap small"); // modify table per page dropdown
-            jQuery('.dataTables_length select').select2(); // initialzie select2 dropdown
+            jQuery('.dataTables_length select').select2({
+                formatNoMatches: function () { return "没有找到匹配项"; },
+                formatLoadMore: function () { return "加载结果中…"; },
+                formatSearching: function () { return "搜索中…"; }
+            }); // initialzie select2 dropdown
         }
 
     };

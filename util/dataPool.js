@@ -2,7 +2,7 @@ const mysql = require('mysql');
 const Promise = require('promise');
 
 //创建连接池
-const pool = mysql.createPool({
+const dataPool = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: 'root',
@@ -10,41 +10,9 @@ const pool = mysql.createPool({
     port: 3306
 });
 
-exports.getById = function (table, id) {
-    return new Promise(function (resolve, reject) {
-        pool.getConnection(function(err, conn){
-            if(err){
-                reject(err);
-            }else{
-                conn.query('select * from ' + table + ' where id=?', [id], function(err, results){
-                    conn.release();
-                    if (err) reject(err);
-                    else resolve(results);
-                })
-            }
-        })
-    })
-};
-
-exports.getAll = function (table) {
-    return new Promise(function (resolve, reject) {
-        pool.getConnection(function(err, conn){
-            if(err){
-                reject(err);
-            }else{
-                conn.query('select * from ' + table, function(err, results){
-                    conn.release();
-                    if (err) reject(err);
-                    else resolve(results);
-                })
-            }
-        })
-    })
-};
-
 exports.query = function (sql, params) {
     return new Promise(function (resolve, reject) {
-        pool.getConnection(function(err, conn){
+        dataPool.getConnection(function(err, conn){
             if(err){
                 reject(err);
             }else{
@@ -61,7 +29,7 @@ exports.query = function (sql, params) {
 
 exports.batchQuery = function (sqls, params) {
     return new Promise(function (resolve, reject) {
-        pool.getConnection(function (err, conn) {
+        dataPool.getConnection(function (err, conn) {
             if (err) {
                 reject(err);
             } else {
