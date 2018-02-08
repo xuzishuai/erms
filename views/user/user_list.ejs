@@ -24,7 +24,7 @@
                             <td><%= roleMap[users[i].role_id].name%></td>
                             <td>
                                 <a href="/user/edit_user?id=<%= users[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
-                                <a href="/user/delete_user?id=<%= users[i].id%>" class="btn red mini"><i class="icon-minus"></i> 删除</a>
+                                <a data-toggle="modal" data-target="#confirm" data-id="<%= users[i].id%>" class="btn red mini"><i class="icon-minus"></i> 删除</a>
                             </td>
                         </tr>
                         <%}%>
@@ -34,18 +34,29 @@
         </div>
     </div>
 </div>
+<div id="confirm" class="modal hide fade" tabindex="-1" data-backdrop="static">
+    <div class="modal-body">
+        <p>确定删除该用户吗?</p>
+    </div>
+    <div class="modal-footer">
+        <form action="/user/delete_user">
+            <input id="id" name="id" hidden>
+            <button type="button" data-dismiss="modal" class="btn">取消</button>
+            <button type="submit" class="btn green">确认</button>
+        </form>
+    </div>
+</div>
 <%- contentFor('title')%>
 用户列表
 <%- contentFor('script')%>
-<script type="text/javascript" src="/public/plugins/metronic/js/select2.min.js"></script>
-<script type="text/javascript" src="/public/plugins/metronic/js/jquery.dataTables.js"></script>
-<script type="text/javascript" src="/public/plugins/metronic/js/DT_bootstrap.js"></script>
-<script type="text/javascript" src="/public/plugins/metronic/js/table-managed.js"></script>
 <script>
     jQuery(document).ready(function() {
-        TableManaged.init();
+        $('#confirm').on('show.bs.modal', function (event) {
+            let button = $(event.relatedTarget);
+            $('#id').val(button.data('id'));
+        })
+        $('#confirm').on('hidden.bs.modal', function () {
+            $('#id').val('');
+        })
     });
 </script>
-<%- contentFor('style')%>
-<link rel="stylesheet" type="text/css" href="/public/plugins/metronic/css/select2_metro.css" />
-<link rel="stylesheet" type="text/css" href="/public/plugins/metronic/css/DT_bootstrap.css" />

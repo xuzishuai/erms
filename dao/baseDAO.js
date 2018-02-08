@@ -22,3 +22,14 @@ exports.getAll = function (table) {
         }
     })
 };
+
+exports.deleteById = function (table, id) {
+    return new Promise(function (resolve, reject) {
+        try {
+            dataPool.query('delete from ' + table + ' where id=?', [id]);
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+};

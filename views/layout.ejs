@@ -19,8 +19,14 @@
     <link href="/public/plugins/metronic/css/style-responsive.css" rel="stylesheet" type="text/css"/>
     <link href="/public/plugins/metronic/css/default.css" rel="stylesheet" type="text/css" id="style_color"/>
     <link href="/public/plugins/metronic/css/uniform.default.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/metronic/css/select2_metro.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/metronic/css/DT_bootstrap.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/metronic/css/bootstrap-modal.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/metronic/css/jquery.gritter.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/metronic/css/daterangepicker.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/metronic/css/fullcalendar.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/metronic/css/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css"/>
     <!-- END GLOBAL MANDATORY STYLES -->
-    <%- style %>
 
     <link rel="shortcut icon" href="/public/plugins/metronic/image/favicon.ico" />
 </head>
@@ -260,12 +266,18 @@
 <script src="/public/plugins/metronic/js/jquery.easy-pie-chart.js" type="text/javascript"></script>
 <script src="/public/plugins/metronic/js/jquery.sparkline.min.js" type="text/javascript"></script>
 <script src="/public/plugins/metronic/js/app.js" type="text/javascript"></script>
-<%- script %>
+<script src="/public/plugins/metronic/js/jquery.validate.min.js" type="text/javascript"></script>
+<script src="/public/plugins/metronic/js/select2.min.js" type="text/javascript"></script>
+<script src="/public/plugins/metronic/js/form-samples.js" type="text/javascript"></script>
+<script src="/public/plugins/metronic/js/jquery.dataTables.js" type="text/javascript"></script>
+<script src="/public/plugins/metronic/js/DT_bootstrap.js" type="text/javascript"></script>
+<script src="/public/plugins/metronic/js/table-managed.js" type="text/javascript"></script>
 <script>
     jQuery(document).ready(function() {
         App.init(); // initlayout and core plugins
     });
 </script>
+<%- script %>
 </body>
 </html>
 <%} else {%>

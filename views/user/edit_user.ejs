@@ -7,23 +7,24 @@
                 </div>
             </div>
             <div class="portlet-body form">
-                <form action="/user/do_create_user" class="form-horizontal" method="post">
+                <form action="/user/do_update_user" class="form-horizontal" method="post">
+                    <input id="id" name="id" value="<%= user.id%>" type="hidden">
                     <div class="control-group">
                         <label class="control-label">工号<span class="required">*</span></label>
                         <div class="controls">
-                            <input type="text" class="m-wrap span6" name="user_no" id="user_no">
+                            <input type="text" class="m-wrap span6" name="user_no" id="user_no" value="<%= user.user_no%>">
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label">姓名<span class="required">*</span></label>
                         <div class="controls">
-                            <input type="text" class="m-wrap span6" name="name" id="name">
+                            <input type="text" class="m-wrap span6" name="name" id="name" value="<%= user.name%>">
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label">密码<span class="required">*</span></label>
                         <div class="controls">
-                            <input type="password" class="m-wrap span6" name="password" id="password">
+                            <input type="password" class="m-wrap span6" name="password" id="password" value="<%= user.password%>">
                         </div>
                     </div>
                     <div class="control-group">
@@ -31,7 +32,7 @@
                         <div class="controls">
                             <select class="span6 select2"  data-placeholder="请选择角色" tabindex="1" name="role_id" id="role_id">
                                 <%for (var i=0;i<roles.length;i++){%>
-                                <option value="<%= roles[i].id%>"><%= roles[i].name%></option>
+                                <option value="<%= roles[i].id%>" <%if (user.role_id == roles[i]){%>selected<%}%>><%= roles[i].name%></option>
                                 <%}%>
                             </select>
                         </div>
@@ -46,7 +47,7 @@
     </div>
 </div>
 <%- contentFor('title')%>
-新增用户
+编辑用户
 <%- contentFor('script')%>
 <script>
     jQuery(document).ready(function() {
@@ -64,6 +65,9 @@
                         data: {                     //要传递的数据
                             user_no: function() {
                                 return $("#user_no").val();
+                            },
+                            id: function () {
+                                return $("#id").val();
                             }
                         }
                     }
@@ -101,10 +105,12 @@
                 $(element)
                     .closest('.control-group').removeClass('success').addClass('error'); // set error class to the control group
             },
+
             unhighlight: function (element) { // revert the change dony by hightlight
                 $(element)
                     .closest('.control-group').removeClass('error'); // set error class to the control group
             },
+
             success: function (label) {
                 label
                     .addClass('valid').addClass('help-inline ok') // mark the current input as valid and display OK icon
