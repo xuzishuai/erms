@@ -47,6 +47,19 @@
 </div>
 <%- contentFor('title')%>
 新增用户
+<%- contentFor('breadcrumb')%>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="javascript:void(0);">设置</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/user/user_list">用户列表</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/user/new_user">新增用户</a>
+</li>
 <%- contentFor('script')%>
 <script>
     jQuery(document).ready(function() {

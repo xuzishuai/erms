@@ -12,6 +12,7 @@
                         <tr>
                             <th>工号</th>
                             <th>姓名</th>
+                            <th>密码</th>
                             <th>角色</th>
                             <th class="table_action" data-colNum=3>操作</th>
                         </tr>
@@ -21,6 +22,7 @@
                         <tr>
                             <td><%= users[i].user_no%></td>
                             <td><%= users[i].name%></td>
+                            <td><%= users[i].password%></td>
                             <td><%= roleMap[users[i].role_id].name%></td>
                             <td>
                                 <a href="/user/edit_user?id=<%= users[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
@@ -48,6 +50,15 @@
 </div>
 <%- contentFor('title')%>
 用户列表
+<%- contentFor('breadcrumb')%>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="javascript:void(0);">设置</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/user/user_list">用户列表</a>
+</li>
 <%- contentFor('script')%>
 <script>
     jQuery(document).ready(function() {
