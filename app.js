@@ -39,6 +39,7 @@ app.all('/*', function(req, res, next){
     }
     let user = req.session.user;
     if (user && user.length > 0 && (user[0].id = '1cbb1360-d57d-11e7-9634-4d058774421e')) {
+        res.locals.user = user[0];
         next();
     }
     else{

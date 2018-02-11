@@ -1,0 +1,67 @@
+<div class="row-fluid">
+    <div class="span12">
+        <div class="portlet box purple">
+            <div class="portlet-title">
+                <div class="actions">
+                    <a href="/user/new_role" class="btn blue"><i class="icon-plus"></i> 新增用户</a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>角色名称</th>
+                        <th class="table_action" data-colNum=1>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <%for (var i=0;i<roles.length;i++){%>
+                    <tr>
+                        <td><%= roles[i].name%></td>
+                        <td>
+                            <a href="/user/edit_role?id=<%= roles[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
+                            <a data-toggle="modal" data-target="#confirm" data-id="<%= roles[i].id%>" class="btn red mini"><i class="icon-minus"></i> 删除</a>
+                        </td>
+                    </tr>
+                    <%}%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirm" class="modal hide fade" tabindex="-1" data-backdrop="static">
+    <div class="modal-body">
+        <p>确定删除该角色吗?</p>
+    </div>
+    <div class="modal-footer">
+        <form action="/user/delete_role">
+            <input id="id" name="id" hidden>
+            <button type="button" data-dismiss="modal" class="btn">取消</button>
+            <button type="submit" class="btn green">确认</button>
+        </form>
+    </div>
+</div>
+<%- contentFor('title')%>
+角色列表
+<%- contentFor('breadcrumb')%>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="javascript:void(0);">设置</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/user/role_list">角色列表</a>
+</li>
+<%- contentFor('script')%>
+<script>
+    jQuery(document).ready(function() {
+        $('#confirm').on('show.bs.modal', function (event) {
+            let button = $(event.relatedTarget);
+            $('#id').val(button.data('id'));
+        })
+        $('#confirm').on('hidden.bs.modal', function () {
+            $('#id').val('');
+        })
+    });
+</script>

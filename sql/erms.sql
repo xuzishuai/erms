@@ -18,7 +18,7 @@ create table menu
    id                   varchar(36) not null,
    name                 varchar(50) not null comment '菜单名',
    parent_id            varchar(36) comment '上级菜单id',
-   path                 varchar(200) comment '菜单路径',
+   path                 varchar(500) comment '菜单路径',
    children_ids         varchar(200) comment '子菜单id，用#隔开，并用#开头和结束，只包含最底层有链接的子菜单',
    primary key (id)
 );
@@ -28,9 +28,9 @@ alter table menu comment '菜单表，手动插入数据';
 -- ----------------------------
 -- Records of menu,插入菜单数据
 -- ----------------------------
-INSERT INTO menu VALUES ('1', '设置', null, null, '#2#3#');
-INSERT INTO menu VALUES ('2', '用户管理', '1', '/user/user_list', null);
-INSERT INTO menu VALUES ('3', '角色管理', '1', '/user/role_list', null);
+INSERT INTO menu VALUES ('1', '用户', null, null, '#2#3#');
+INSERT INTO menu VALUES ('2', '账号管理', '1', '#/user/user_list#/user/new_user#/user/validate_user_no#/user/do_create_user#/user/edit_user#/user/do_update_user#/user/delete_user#', null);
+INSERT INTO menu VALUES ('3', '角色管理', '1', '#/user/role_list#/user/new_role#', null);
 
 /*==============================================================*/
 /* Table: role                                                  */

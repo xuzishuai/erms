@@ -109,4 +109,29 @@ router.get('/delete_user', async function (req, res) {
     }
 });
 
+router.get('/role_list', async function (req, res) {
+    try {
+        let roles = await baseDAO.getAll('role');
+        let roleMap = {};
+        for (let i = 0; i < roles.length; i++) {
+            roleMap[roles[i].id] = roles[i];
+        }
+        res.render('user/role_list', {
+            roles: roles,
+            roleMap: roleMap
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/new_role', async function (req, res) {
+    try {
+        let menus = await baseDAO.getAll('menu');
+        res.render('user/new_role', {menus: menus});
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
 module.exports = router;
