@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const baseDAO = require('../dao/baseDAO');
 const userDAO = require('../dao/userDAO');
+const menuDAO = require('../dao/menuDAO');
+const roleDAO = require('../dao/roleDAO');
 const exceptionHelper = require("../helper/exceptionHelper");
 
 router.get('/login', function (req, res) {
@@ -127,8 +129,87 @@ router.get('/role_list', async function (req, res) {
 
 router.get('/new_role', async function (req, res) {
     try {
-        let menus = await baseDAO.getAll('menu');
-        res.render('user/new_role', {menus: menus});
+        let parentMenus = await menuDAO.getParentMenu();
+        let menuMap = {};
+        for (let i = 0; i < parentMenus.length; i++) {
+            menuMap[parentMenus[i].id] = await menuDAO.getChildrenMenu(parentMenus[i].id);
+        }
+        res.render('user/new_role', {
+            parentMenus: parentMenus,
+            menuMap: menuMap
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/validate_role_name', async function (req, res) {
+    try {
+        let role = await roleDAO.isRoleExist(req.body.id, req.body.name);
+        if (role && role.length > 0) {
+            res.send(false);
+        } else {
+            res.send(true);
+        }
+    } catch (error) {
+        res.send(false);
+    }
+});
+
+router.post('/do_create_role', async function (req, res) {
+    try {
+        let menuIds = req.body.menu_ids;
+        let menu_ids = "#";
+        if (menuIds) {
+            for (let i = 0; i < menuIds.length; i++) {
+                menu_ids += menuIds[i] + "#";
+            }
+        }
+        await roleDAO.saveRole(req.body.name, menu_ids=="#"?null:menu_ids);
+        res.redirect('/user/role_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/edit_role', async function (req, res) {
+    try {
+        let role = await baseDAO.getById('role', req.query.id);
+        let parentMenus = await menuDAO.getParentMenu();
+        let menuMap = {};
+        for (let i = 0; i < parentMenus.length; i++) {
+            menuMap[parentMenus[i].id] = await menuDAO.getChildrenMenu(parentMenus[i].id);
+        }
+        res.render('user/edit_role', {
+            role: role[0],
+            parentMenus: parentMenus,
+            menuMap: menuMap
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_update_role', async function (req, res) {
+    try {
+        let menuIds = req.body.menu_ids;
+        let menu_ids = "#";
+        if (menuIds) {
+            for (let i = 0; i < menuIds.length; i++) {
+                menu_ids += menuIds[i] + "#";
+            }
+        }
+        await roleDAO.updateRole(req.body.id, req.body.name, menu_ids);
+        res.redirect('/user/role_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/delete_role', async function (req, res) {
+    try {
+        await baseDAO.deleteById('role', req.query.id);
+        res.redirect('/user/role_list');
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }

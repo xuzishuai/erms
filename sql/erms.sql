@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/1/28 周日 下午 01:22:08                     */
+/* Created on:     2018/1/28 周日 下午 01:22:08                  */
 /*==============================================================*/
 
 
@@ -30,7 +30,7 @@ alter table menu comment '菜单表，手动插入数据';
 -- ----------------------------
 INSERT INTO menu VALUES ('1', '用户', null, null, '#2#3#');
 INSERT INTO menu VALUES ('2', '账号管理', '1', '#/user/user_list#/user/new_user#/user/validate_user_no#/user/do_create_user#/user/edit_user#/user/do_update_user#/user/delete_user#', null);
-INSERT INTO menu VALUES ('3', '角色管理', '1', '#/user/role_list#/user/new_role#', null);
+INSERT INTO menu VALUES ('3', '角色管理', '1', '#/user/role_list#/user/new_role#/user/validate_role_name#/user/do_create_role#/user/edit_role#/user/do_update_role#/user/delete_role#', null);
 
 /*==============================================================*/
 /* Table: role                                                  */

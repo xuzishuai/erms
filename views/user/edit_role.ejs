@@ -7,11 +7,12 @@
                 </div>
             </div>
             <div class="portlet-body form">
-                <form action="/user/do_create_role" class="form-horizontal" method="post">
+                <form action="/user/do_update_role" class="form-horizontal" method="post">
+                    <input id="id" name="id" value="<%= role.id%>" type="hidden">
                     <div class="control-group">
                         <label class="control-label">角色名称<span class="required">*</span></label>
                         <div class="controls">
-                            <input type="text" class="m-wrap span6" name="name" id="name">
+                            <input type="text" class="m-wrap span6" name="name" id="name" value="<%= role.name%>">
                         </div>
                     </div>
                     <div class="control-group">
@@ -23,7 +24,7 @@
                             <br>
                             <%for (let j = 0; j < menuMap[parentMenus[i].id].length; j++){%>
                             <label class="checkbox">
-                                <input type="checkbox" name="menu_ids" value="<%= menuMap[parentMenus[i].id][j].id%>"> <%= menuMap[parentMenus[i].id][j].name%>
+                                <input type="checkbox" <%if (role.menu_ids.indexOf('#'+menuMap[parentMenus[i].id][j].id+'#')>-1){%>checked<%}%> name="menu_ids" value="<%= menuMap[parentMenus[i].id][j].id%>"> <%= menuMap[parentMenus[i].id][j].name%>
                             </label>
                             <%}%>
                             <%}%>
@@ -39,7 +40,7 @@
     </div>
 </div>
 <%- contentFor('title')%>
-新增角色
+编辑角色
 <%- contentFor('breadcrumb')%>
 <li>
     <i class="icon-angle-right"></i>
@@ -51,7 +52,7 @@
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/user/new_role">新增角色</a>
+    <a href="/user/edit_role?id=<%= role.id%>">编辑角色</a>
 </li>
 <%- contentFor('script')%>
 <script>
@@ -70,6 +71,9 @@
                         data: {                     //要传递的数据
                             name: function() {
                                 return $("#name").val();
+                            },
+                            id: function () {
+                                return $("#id").val();
                             }
                         }
                     }
