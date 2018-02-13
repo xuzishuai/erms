@@ -17,6 +17,19 @@ router.post('/do_login', async function (req, res) {
             throw '工号或密码错误';
         }
         req.session.user = user;
+        let parentMenus = await menuDAO.getParentMenu();
+        let subMenuMap = {};
+        for (let i = 0; i < parentMenus.length; i++) {
+            subMenuMap[parentMenus[i].id] = await menuDAO.getSubMenuByPId(parentMenus[i].id);
+        }
+        let subMenus = await menuDAO.getSubMenu();
+        let menuMap = {};
+        for (let i = 0; i < subMenus.length; i++) {
+            menuMap[subMenus[i].id] = await menuDAO.getChildrenMenu(subMenus[i].children_ids.split('#'));
+        }
+        req.session.parentMenus = parentMenus;
+        req.session.subMenuMap = subMenuMap;
+        req.session.menuMap = menuMap;
         res.redirect('/');
     } catch (errorMessage) {
         res.render('user/login', {
@@ -132,7 +145,7 @@ router.get('/new_role', async function (req, res) {
         let parentMenus = await menuDAO.getParentMenu();
         let menuMap = {};
         for (let i = 0; i < parentMenus.length; i++) {
-            menuMap[parentMenus[i].id] = await menuDAO.getChildrenMenu(parentMenus[i].id);
+            menuMap[parentMenus[i].id] = await menuDAO.getChildrenMenu(parentMenus[i].children_ids.split('#'));
         }
         res.render('user/new_role', {
             parentMenus: parentMenus,
@@ -178,7 +191,7 @@ router.get('/edit_role', async function (req, res) {
         let parentMenus = await menuDAO.getParentMenu();
         let menuMap = {};
         for (let i = 0; i < parentMenus.length; i++) {
-            menuMap[parentMenus[i].id] = await menuDAO.getChildrenMenu(parentMenus[i].id);
+            menuMap[parentMenus[i].id] = await menuDAO.getChildrenMenu(parentMenus[i].children_ids.split('#'));
         }
         res.render('user/edit_role', {
             role: role[0],
