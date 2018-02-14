@@ -17,19 +17,37 @@ router.post('/do_login', async function (req, res) {
             throw '工号或密码错误';
         }
         req.session.user = user;
-        let parentMenus = await menuDAO.getParentMenu();
-        let subMenuMap = {};
-        for (let i = 0; i < parentMenus.length; i++) {
-            subMenuMap[parentMenus[i].id] = await menuDAO.getSubMenuByPId(parentMenus[i].id);
+        if (user[0].id == '1cbb1360-d57d-11e7-9634-4d058774421e') {
+            let parentMenus = await menuDAO.getParentMenu();
+            let subMenuMap = {};
+            for (let i = 0; i < parentMenus.length; i++) {
+                subMenuMap[parentMenus[i].id] = await menuDAO.getSubMenuByPId(parentMenus[i].id);
+            }
+            let subMenus = await menuDAO.getSubMenu();
+            let menuMap = {};
+            for (let i = 0; i < subMenus.length; i++) {
+                menuMap[subMenus[i].id] = await menuDAO.getChildrenMenu(subMenus[i].children_ids.split('#'));
+            }
+            req.session.parentMenus = parentMenus;
+            req.session.subMenuMap = subMenuMap;
+            req.session.menuMap = menuMap;
+        } else {
+            let role = await baseDAO.getById('role', user[0].role_id);
+            let childrenIds = role[0].menu_ids.split('#');
+            let parentMenus = await menuDAO.getParentMenuByCIds(childrenIds);
+            let subMenuMap = {};
+            for (let i = 0; i < parentMenus.length; i++) {
+                subMenuMap[parentMenus[i].id] = await menuDAO.getSubMenuByPIdCId(parentMenus[i].id, childrenIds);
+            }
+            let subMenus = await menuDAO.getSubMenuByCid(childrenIds);
+            let menuMap = {};
+            for (let i = 0; i < subMenus.length; i++) {
+                menuMap[subMenus[i].id] = await menuDAO.getChildrenMenuByIds(subMenus[i].children_ids.split('#'), childrenIds);
+            }
+            req.session.parentMenus = parentMenus;
+            req.session.subMenuMap = subMenuMap;
+            req.session.menuMap = menuMap;
         }
-        let subMenus = await menuDAO.getSubMenu();
-        let menuMap = {};
-        for (let i = 0; i < subMenus.length; i++) {
-            menuMap[subMenus[i].id] = await menuDAO.getChildrenMenu(subMenus[i].children_ids.split('#'));
-        }
-        req.session.parentMenus = parentMenus;
-        req.session.subMenuMap = subMenuMap;
-        req.session.menuMap = menuMap;
         res.redirect('/');
     } catch (errorMessage) {
         res.render('user/login', {

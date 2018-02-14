@@ -57,7 +57,7 @@
                 <li class="dropdown user">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img alt="" src="/public/plugins/metronic/image/avatar_small.jpg" style="border-radius: 50% !important;"/>
-                        <span class="username"><%= locals.currentUser.name%></span>
+                        <span class="username"><%= locals.localsUser.name%></span>
                         <i class="icon-angle-down"></i>
                     </a>
                     <ul class="dropdown-menu">
@@ -85,41 +85,42 @@
                 <div class="sidebar-toggler hidden-phone" style="margin-bottom: 15px;"></div>
                 <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
             </li>
-            <li class="start active ">
+            <li <%if (!localsMenu){%>class="active"<%}%>>
                 <a href="/">
                     <i class="icon-home"></i>
                     <span class="title">首页</span>
-                    <span class="selected"></span>
+                    <%if (!localsMenu){%><span class="selected"></span><%}%>
                 </a>
             </li>
-            <%for (let i = 0; i < locals.parentMenus.length; i++){%>
-            <li>
+            <%for (let i = 0; i < locals.localsParentMenus.length; i++){%>
+            <li <%if (localsMenu&&(locals.localsParentMenus[i].children_ids.indexOf('#'+locals.localsMenu.id+'#')>=0)){%>class="active"<%}%>>
                 <a href="javascript:">
-                    <i class="<%= locals.parentMenus[i].icon%>"></i>
-                    <span class="title"><%= locals.parentMenus[i].name%></span>
-                    <span class="arrow"></span>
+                    <i class="<%= locals.localsParentMenus[i].icon%>"></i>
+                    <span class="title"><%= locals.localsParentMenus[i].name%></span>
+                    <%if (localsMenu&&(locals.localsParentMenus[i].children_ids.indexOf('#'+locals.localsMenu.id+'#')>=0)){%><span class="selected"></span><%}%>
+                    <span class="arrow <%if (localsMenu&&(locals.localsParentMenus[i].children_ids.indexOf('#'+locals.localsMenu.id+'#')>=0)){%>open<%}%>"></span>
                 </a>
                 <ul class="sub-menu">
-                    <%for (let j = locals.subMenuMap[locals.parentMenus[i].id].length - 1; j >= 0 ; j--){%>
-                    <li>
-                        <%if (locals.subMenuMap[locals.parentMenus[i].id][j].path&&locals.subMenuMap[locals.parentMenus[i].id][j].path!=''){%>
-                        <a href="<%= locals.subMenuMap[locals.parentMenus[i].id][j].path%>">
-                        <%= locals.subMenuMap[locals.parentMenus[i].id][j].name%>
-                        </a>
-                        <%}else {%>
-                        <a href="javascript:">
-                            <%= locals.subMenuMap[locals.parentMenus[i].id][j].name%>
-                            <span class="arrow"></span>
-                        </a>
+                    <%for (let j = 0; j < locals.localsSubMenuMap[locals.localsParentMenus[i].id].length; j++){%>
+                        <%if (locals.localsSubMenuMap[locals.localsParentMenus[i].id][j].path&&locals.localsSubMenuMap[locals.localsParentMenus[i].id][j].path!=''){%>
+                            <li <%if (localsMenu&&locals.localsSubMenuMap[locals.localsParentMenus[i].id][j].id==localsMenu.id){%>class="active"<%}%>>
+                                <a href="<%= locals.localsSubMenuMap[locals.localsParentMenus[i].id][j].path%>">
+                                    <%= locals.localsSubMenuMap[locals.localsParentMenus[i].id][j].name%>
+                                </a>
+                            </li>
+                        <%}else if (locals.localsMenuMap[locals.localsSubMenuMap[locals.localsParentMenus[i].id][j].id]&&locals.localsMenuMap[locals.localsSubMenuMap[locals.localsParentMenus[i].id][j].id].length>0){%>
+                            <li <%if (localsMenu&&(locals.localsSubMenuMap[locals.localsParentMenus[i].id][j].children_ids.indexOf('#'+localsMenu.id+'#')>=0)){%>class="active open"<%}%>>
+                                <a href="javascript:">
+                                    <%= locals.localsSubMenuMap[locals.localsParentMenus[i].id][j].name%>
+                                    <span class="arrow <%if (localsMenu&&(locals.localsSubMenuMap[locals.localsParentMenus[i].id][j].children_ids.indexOf('#'+localsMenu.id+'#')>=0)){%>open<%}%>"></span>
+                                </a>
+                                <ul class="sub-menu">
+                                    <%for (let k = 0; k < locals.localsMenuMap[locals.localsSubMenuMap[locals.localsParentMenus[i].id][j].id].length; k++){%>
+                                        <li <%if (localsMenu&&locals.localsMenuMap[locals.localsSubMenuMap[locals.localsParentMenus[i].id][j].id][k].id==localsMenu.id){%>class="active"<%}%>><a href="<%= locals.localsMenuMap[locals.localsSubMenuMap[locals.localsParentMenus[i].id][j].id][k].path%>"><%= locals.localsMenuMap[locals.localsSubMenuMap[locals.localsParentMenus[i].id][j].id][k].name%></a></li>
+                                    <%}%>
+                                </ul>
+                            </li>
                         <%}%>
-                        <%if (locals.menuMap[locals.subMenuMap[locals.parentMenus[i].id][j].id]&&locals.menuMap[locals.subMenuMap[locals.parentMenus[i].id][j].id].length>0){%>
-                        <ul class="sub-menu">
-                            <%for (let k = locals.menuMap[locals.subMenuMap[locals.parentMenus[i].id][j].id].length - 1; k >= 0 ; k--){%>
-                            <li><a href="<%= locals.menuMap[locals.subMenuMap[locals.parentMenus[i].id][j].id][k].path%>"><%= locals.menuMap[locals.subMenuMap[locals.parentMenus[i].id][j].id][k].name%></a></li>
-                            <%}%>
-                        </ul>
-                        <%}%>
-                    </li>
                     <%}%>
                 </ul>
             </li>

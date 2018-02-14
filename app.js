@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const expressLayouts = require('express-ejs-layouts');
+const menuDAO = require('./dao/menuDAO');
 
 const index = require('./routes/index');
 const user = require('./routes/user');
@@ -30,7 +31,7 @@ app.use(session({
 }));
 
 //拦截器
-app.all('/*', function(req, res, next){
+app.all('/*', async function(req, res, next){
     let publicPattern=/^\/public/;
     let url=req.path;
     if(publicPattern.test(url) || url == '/user/login' || url == '/user/do_login' || url == '/error'){
@@ -38,12 +39,13 @@ app.all('/*', function(req, res, next){
         return;
     }
     let user = req.session.user;
-    if (user && user.length > 0 && (user[0].id = '1cbb1360-d57d-11e7-9634-4d058774421e')) {
-        res.locals.currentUser = user[0];
-        res.locals.parentMenus = req.session.parentMenus;
-        res.locals.subMenuMap = req.session.subMenuMap;
-        res.locals.menuMap = req.session.menuMap;
-        res.locals.currentUrl = url;
+    if (user && user.length > 0) {
+        res.locals.localsUser = user[0];
+        res.locals.localsParentMenus = req.session.parentMenus;
+        res.locals.localsSubMenuMap = req.session.subMenuMap;
+        res.locals.localsMenuMap = req.session.menuMap;
+        let menu = await menuDAO.getMenuByPath(url);
+        res.locals.localsMenu = menu[0];
         next();
     }
     else{
