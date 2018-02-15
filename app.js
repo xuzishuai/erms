@@ -46,7 +46,28 @@ app.all('/*', async function(req, res, next){
         res.locals.localsMenuMap = req.session.menuMap;
         let menu = await menuDAO.getMenuByPath(url);
         res.locals.localsMenu = menu[0];
-        next();
+
+        let access = false;
+        if (user[0].id == '1cbb1360-d57d-11e7-9634-4d058774421e' || url == '/') {
+            access = true;
+        } else {
+            let childrenMenus = req.session.childrenMenus;
+            for (let i = 0; i < childrenMenus.length; i++) {
+                if (childrenMenus[i].auth_path.indexOf('#' + url + '#') >= 0) {
+                    access = true;
+                    break;
+                }
+            }
+        }
+        if (access) {
+            next();
+        } else {
+            res.render('error', {
+                hideLayout: true,
+                error: {status: 403, stack: '抱歉，你没有权限访问此页面'},
+                message: '没有权限'
+            })
+        }
     }
     else{
         res.redirect('/user/login');

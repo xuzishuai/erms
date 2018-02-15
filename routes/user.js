@@ -47,6 +47,7 @@ router.post('/do_login', async function (req, res) {
             req.session.parentMenus = parentMenus;
             req.session.subMenuMap = subMenuMap;
             req.session.menuMap = menuMap;
+            req.session.childrenMenus = await menuDAO.getChildrenMenu(childrenIds);
         }
         res.redirect('/');
     } catch (errorMessage) {
