@@ -26,7 +26,67 @@
     <link href="/public/plugins/metronic/css/daterangepicker.css" rel="stylesheet" type="text/css"/>
     <link href="/public/plugins/metronic/css/fullcalendar.css" rel="stylesheet" type="text/css"/>
     <link href="/public/plugins/metronic/css/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/metronic/css/datepicker.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/metronic/css/timepicker.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/metronic/css/colorpicker.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/metronic/css/datetimepicker.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/metronic/css/bootstrap-wysihtml5.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/metronic/css/bootstrap-fileupload.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/metronic/css/chosen.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/metronic/css/jquery.tagsinput.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/metronic/css/clockface.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/metronic/css/bootstrap-toggle-buttons.css" rel="stylesheet" type="text/css"/>
+    <link href="/public/plugins/metronic/css/multi-select-metro.css" rel="stylesheet" type="text/css"/>
     <!-- END GLOBAL MANDATORY STYLES -->
+
+    <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
+    <script src="/public/plugins/jquery2_1_1/jquery-2.1.1.min.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/bootstrap.min.js" type="text/javascript"></script>
+    <!--[if lt IE 9]>
+    <script src="/public/plugins/metronic/js/excanvas.min.js"></script>
+    <script src="/public/plugins/metronic/js/respond.min.js"></script>
+    <![endif]-->
+    <script src="/public/plugins/metronic/js/jquery.slimscroll.min.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/jquery.blockui.min.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/jquery.cookie.min.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/jquery.uniform.min.js" type="text/javascript" ></script>
+    <script src="/public/plugins/metronic/js/jquery.flot.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/jquery.flot.resize.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/jquery.pulsate.min.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/date.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/daterangepicker.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/jquery.gritter.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/fullcalendar.min.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/jquery.easy-pie-chart.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/jquery.sparkline.min.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/app.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/jquery.validate.min.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/select2.min.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/bootstrap-datepicker.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/bootstrap-datetimepicker.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/bootstrap-colorpicker.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/bootstrap-timepicker.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/wysihtml5-0.3.0.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/bootstrap-wysihtml5.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/ckeditor.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/bootstrap-fileupload.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/chosen.jquery.min.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/jquery.toggle.buttons.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/clockface.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/jquery.inputmask.bundle.min.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/jquery.input-ip-address-control-1.0.min.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/jquery.multi-select.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/jquery.dataTables.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/DT_bootstrap.js" type="text/javascript"></script>
+    <script src="/public/plugins/metronic/js/form-components.js" type="text/javascript"></script>
+    <script>
+        jQuery(document).ready(function() {
+            App.init(); // initlayout and core plugins
+            FormComponents.init();
+        })
+    </script>
 
     <link rel="shortcut icon" href="/public/plugins/metronic/image/favicon.ico" />
 </head>
@@ -173,38 +233,6 @@
 </div>
 <!-- END FOOTER -->
 
-<!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
-<script src="/public/plugins/jquery2_1_1/jquery-2.1.1.min.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/bootstrap.min.js" type="text/javascript"></script>
-<!--[if lt IE 9]>
-<script src="/public/plugins/metronic/js/excanvas.min.js"></script>
-<script src="/public/plugins/metronic/js/respond.min.js"></script>
-<![endif]-->
-<script src="/public/plugins/metronic/js/jquery.slimscroll.min.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/jquery.blockui.min.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/jquery.cookie.min.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/jquery.uniform.min.js" type="text/javascript" ></script>
-<script src="/public/plugins/metronic/js/jquery.flot.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/jquery.flot.resize.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/jquery.pulsate.min.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/date.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/daterangepicker.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/jquery.gritter.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/fullcalendar.min.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/jquery.easy-pie-chart.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/jquery.sparkline.min.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/app.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/jquery.validate.min.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/select2.min.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/form-samples.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/jquery.dataTables.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/DT_bootstrap.js" type="text/javascript"></script>
-<script src="/public/plugins/metronic/js/table-managed.js" type="text/javascript"></script>
-<script>
-    App.init(); // initlayout and core plugins
-</script>
 <%- script %>
 </body>
 </html>

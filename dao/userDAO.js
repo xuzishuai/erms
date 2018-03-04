@@ -40,10 +40,10 @@ exports.isUserExist = function (id, user_no) {
     })
 };
 
-exports.saveUser = function (user_no, name, password, role_id) {
+exports.saveUser = function (user_no, name, password, role_id, is_adviser) {
     return new Promise(async function (resolve, reject) {
         try {
-            await dataPool.query('insert into user values (?, ?, ?, ?, ?)', [uuid.v1(), user_no, name, password, role_id]);
+            await dataPool.query('insert into user values (?, ?, ?, ?, ?, ?)', [uuid.v1(), user_no, name, password, role_id, is_adviser]);
             resolve();
         } catch (error) {
             reject(error);
@@ -51,11 +51,22 @@ exports.saveUser = function (user_no, name, password, role_id) {
     })
 };
 
-exports.updateUser = function (id, user_no, name, password, role_id) {
+exports.updateUser = function (id, user_no, name, password, role_id, is_adviser) {
     return new Promise(async function (resolve, reject) {
         try {
-            await dataPool.query('update user set user_no=?, name=?, password=?, role_id=? where id=?', [user_no, name, password, role_id, id]);
+            await dataPool.query('update user set user_no=?, name=?, password=?, role_id=?, is_adviser=? where id=?', [user_no, name, password, role_id, is_adviser, id]);
             resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
+
+exports.getAllAdviser = function () {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let user = await dataPool.query('select * from user where is_adviser=1');
+            resolve(user);
         } catch (error) {
             reject(error);
         }

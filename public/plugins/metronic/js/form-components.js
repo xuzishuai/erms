@@ -231,9 +231,9 @@ var FormComponents = function () {
     }
 
     var handleDatetimePicker = function () {        
-
+          //已经启用
           $(".form_datetime").datetimepicker({
-              format: "dd MM yyyy - hh:ii",
+              format: "yyyy-mm-dd hh:ii",
               pickerPosition: (App.isRTL() ? "bottom-right" : "bottom-left")
           });
 

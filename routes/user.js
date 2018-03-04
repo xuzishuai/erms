@@ -105,7 +105,7 @@ router.post('/validate_user_no', async function (req, res) {
 
 router.post('/do_create_user', async function (req, res) {
     try {
-        await userDAO.saveUser(req.body.user_no, req.body.name, req.body.password, req.body.role_id);
+        await userDAO.saveUser(req.body.user_no, req.body.name, req.body.password, req.body.role_id, req.body.is_adviser);
         res.redirect('/user/user_list');
     } catch (error) {
         exceptionHelper.renderException(res, error);
@@ -127,7 +127,7 @@ router.get('/edit_user', async function (req, res) {
 
 router.post('/do_update_user', async function (req, res) {
     try {
-        await userDAO.updateUser(req.body.id, req.body.user_no, req.body.name, req.body.password, req.body.role_id);
+        await userDAO.updateUser(req.body.id, req.body.user_no, req.body.name, req.body.password, req.body.role_id, req.body.is_adviser);
         res.redirect('/user/user_list');
     } catch (error) {
         exceptionHelper.renderException(res, error);

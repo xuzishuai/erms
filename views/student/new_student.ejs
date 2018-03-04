@@ -1,0 +1,192 @@
+<div class="row-fluid">
+    <div class="span12">
+        <div class="portlet box blue">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-reorder"></i>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <form action="/student/do_create_student" method="post" class="form-horizontal">
+                    <div id="alert_error" class="alert alert-error" hidden>
+                        <button class="close" data-dismiss="alert"></button>
+                        <span>登记失败！</span>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">姓名<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" class="m-wrap span6" name="name" id="name">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">性别<span class="required">*</span></label>
+                        <div class="controls">
+                            <label class="radio">
+                                <input type="radio" name="gender" value="0" checked />男
+                            </label>
+                            <label class="radio">
+                                <input type="radio" name="gender" value="1" />女
+                            </label>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">年级<span class="required">*</span></label>
+                        <div class="controls">
+                            <select class="span6 select2" tabindex="1" name="grade_id" id="grade_id">
+                                <option value="">请选择年级</option>
+                                <%for (var i=0;i<grades.length;i++){%>
+                                <option value="<%= grades[i].id%>"><%= grades[i].name%></option>
+                                <%}%>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">联系电话<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" class="m-wrap span6" name="contact" id="contact">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">预约上门时间<span class="required">*</span></label>
+                        <div class="controls">
+                            <div class="input-append date form_datetime">
+                                <input id="appointment_time" name="appointment_time" size="16" type="text" value="" readonly class="m-wrap"/>
+                                <span class="add-on"><i class="icon-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">顾问</label>
+                        <div class="controls">
+                            <select class="span6 select2" tabindex="1" name="adviser_id" id="adviser_id">
+                                <option value="">请选择顾问</option>
+                                <%for (var i=0;i<advisers.length;i++){%>
+                                <option value="<%= advisers[i].id%>"><%= advisers[i].name%></option>
+                                <%}%>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">途径</label>
+                        <div class="controls">
+                            <select class="span6 select2" tabindex="1" name="source_id" id="source_id">
+                                <option value="">请选择途径</option>
+                                <%for (var i=0;i<sources.length;i++){%>
+                                <option value="<%= sources[i].id%>"><%= sources[i].name%></option>
+                                <%}%>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">从何得知</label>
+                        <div class="controls">
+                            <select class="span6 select2" tabindex="1" name="how_know_id" id="how_know_id">
+                                <option value="">请选择从何得知</option>
+                                <%for (var i=0;i<howKnows.length;i++){%>
+                                <option value="<%= howKnows[i].id%>"><%= howKnows[i].name%></option>
+                                <%}%>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn green"><i class="icon-ok"></i> 提交</button>
+                        <button type="button" class="btn" onclick="location.reload()"><i class="icon-undo"></i> 重置</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<button id="alert_success" data-toggle="modal" data-target="#alert_success_modal" hidden></button>
+<div id="alert_success_modal" class="modal hide fade" tabindex="-1" data-backdrop="static">
+    <div class="modal-body">
+        <p>登记成功！</p>
+    </div>
+    <div class="modal-footer">
+        <button onclick="location.reload()" class="btn green">确认</button>
+    </div>
+</div>
+<%- contentFor('title')%>
+客户登记
+<%- contentFor('breadcrumb')%>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="javascript:void(0);">客户</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/student/new_student">客户登记</a>
+</li>
+<%- contentFor('script')%>
+<script>
+    jQuery(document).ready(function() {
+        $('form').validate({
+            errorElement: 'span', //default input error message container
+            errorClass: 'help-inline', // default input error message class
+            focusInvalid: false, // do not focus the last invalid input
+            rules: {
+                name: {
+                    required: true
+                },
+                grade_id: {
+                    required: true
+                },
+                contact: {
+                    digits: true,
+                    required: true
+                },
+                appointment_time: {
+                    required: true
+                }
+            },
+            messages: {
+                name: {
+                    required: "请输入姓名"
+                },
+                grade_id: {
+                    required: "请选择年级"
+                },
+                contact: {
+                    digits: "请输入数字",
+                    required: "请输入联系电话"
+                },
+                appointment_time: {
+                    required: "请输入预约上门时间"
+                }
+            },
+            errorPlacement: function(error, element) {
+                error.appendTo( element.parents(".controls") );
+            },
+            highlight: function (element) { // hightlight error inputs
+                $(element)
+                    .closest('.help-inline').removeClass('ok'); // display OK icon
+                $(element)
+                    .closest('.control-group').removeClass('success').addClass('error'); // set error class to the control group
+            },
+            unhighlight: function (element) { // revert the change dony by hightlight
+                $(element)
+                    .closest('.control-group').removeClass('error'); // set error class to the control group
+            },
+            success: function (label) {
+                label
+                    .addClass('valid').addClass('help-inline ok') // mark the current input as valid and display OK icon
+                    .closest('.control-group').removeClass('error').addClass('success'); // set success class to the control group
+            },
+            submitHandler:function(form){
+                $.ajax({
+                    type: "POST",
+                    url: "/student/do_create_student",
+                    data: $('form').serialize(),
+                    success: function(result){
+                        if (result.status) {
+                            $('#alert_success').click();
+                        } else {
+                            $('#alert_error').show();
+                        }
+                    }
+                });
+                return false;
+            }
+        });
+    });
+</script>

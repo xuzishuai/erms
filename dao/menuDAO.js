@@ -4,7 +4,7 @@ const Promise = require('promise');
 exports.getParentMenu = function () {
     return new Promise(async function (resolve, reject) {
         try {
-            let menus = await dataPool.query('select * from menu where parent_id is null');
+            let menus = await dataPool.query('select * from menu where parent_id is null order by priority');
             resolve(menus);
         } catch (error) {
             reject(error);
@@ -18,7 +18,7 @@ exports.getParentMenuByCIds = function (menu_ids) {
             let result = [];
             if (menu_ids) {
                 for (let i = 0; i < menu_ids.length; i++) {
-                    let menus = await dataPool.query('select * from menu where parent_id is null and children_ids like ?', ['%#' + menu_ids[i] + '#%']);
+                    let menus = await dataPool.query('select * from menu where parent_id is null and children_ids like ? order by priority', ['%#' + menu_ids[i] + '#%']);
                     let isExist = false;
                     for (let j = 0; j < result.length; j++) {
                         if (result[j] && menus[0] && result[j].id == menus[0].id) {
@@ -44,7 +44,7 @@ exports.getSubMenuByCid = function (menu_ids) {
             let result = [];
             if (menu_ids) {
                 for (let i = 0; i < menu_ids.length; i++) {
-                    let menus = await dataPool.query('select * from menu where parent_id is not null and children_ids like ?', ['%#' + menu_ids[i] + '#%']);
+                    let menus = await dataPool.query('select * from menu where parent_id is not null and children_ids like ? order by priority', ['%#' + menu_ids[i] + '#%']);
                     result = result.concat(menus);
                 }
             }
@@ -58,7 +58,7 @@ exports.getSubMenuByCid = function (menu_ids) {
 exports.getChildrenMenu = function (ids) {
     return new Promise(async function (resolve, reject) {
         try {
-            let menus = await dataPool.query('select * from menu where id in ( ? ) and children_ids is null', [ids]);
+            let menus = await dataPool.query('select * from menu where id in ( ? ) and children_ids is null order by priority', [ids]);
             resolve(menus);
         } catch (error) {
             reject(error);
@@ -73,7 +73,7 @@ exports.getSubMenuByPIdCId = function (parent_id, menu_ids) {
             if (menu_ids) {
                 for (let i = 0; i < menu_ids.length; i++) {
                     if (menu_ids[i] != '') {
-                        let menus = await dataPool.query('select * from menu where parent_id=? and (children_ids like ? or (children_ids is null and id=?))', [parent_id, '%#' + menu_ids[i] + '#%', menu_ids[i]]);
+                        let menus = await dataPool.query('select * from menu where parent_id=? and (children_ids like ? or (children_ids is null and id=?)) order by priority', [parent_id, '%#' + menu_ids[i] + '#%', menu_ids[i]]);
                         let isExist = false;
                         for (let j = 0; j < result.length; j++) {
                             if (result[j] && menus[0] && result[j].id == menus[0].id) {
@@ -108,7 +108,7 @@ exports.getMenuByPath = function (path) {
 exports.getChildrenMenuByIds = function (ids, menu_ids) {
     return new Promise(async function (resolve, reject) {
         try {
-            let menus = await dataPool.query('select * from menu where id in ( ? ) and id in ( ? ) and children_ids is null', [ids, menu_ids]);
+            let menus = await dataPool.query('select * from menu where id in ( ? ) and id in ( ? ) and children_ids is null order by priority', [ids, menu_ids]);
             resolve(menus);
         } catch (error) {
             reject(error);
@@ -119,7 +119,7 @@ exports.getChildrenMenuByIds = function (ids, menu_ids) {
 exports.getSubMenu = function () {
     return new Promise(async function (resolve, reject) {
         try {
-            let menus = await dataPool.query('select * from menu where parent_id is not null and children_ids is not null');
+            let menus = await dataPool.query('select * from menu where parent_id is not null and children_ids is not null order by priority');
             resolve(menus);
         } catch (error) {
             reject(error);
@@ -130,7 +130,7 @@ exports.getSubMenu = function () {
 exports.getSubMenuByPId = function (parent_id) {
     return new Promise(async function (resolve, reject) {
         try {
-            let menus = await dataPool.query('select * from menu where parent_id=?', [parent_id]);
+            let menus = await dataPool.query('select * from menu where parent_id=? order by priority', [parent_id]);
             resolve(menus);
         } catch (error) {
             reject(error);

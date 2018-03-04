@@ -2,6 +2,9 @@
     <div class="span12">
         <div class="portlet box blue">
             <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-reorder"></i>
+                </div>
                 <div class="actions">
                     <a href="/user/user_list" class="btn yellow"><i class="icon-chevron-left"></i> 返回</a>
                 </div>
@@ -34,6 +37,17 @@
                                 <option value="<%= roles[i].id%>"><%= roles[i].name%></option>
                                 <%}%>
                             </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">是否顾问<span class="required">*</span></label>
+                        <div class="controls">
+                            <label class="radio">
+                                <input type="radio" name="is_adviser" value="1" />是
+                            </label>
+                            <label class="radio">
+                                <input type="radio" name="is_adviser" value="0" checked />否
+                            </label>
                         </div>
                     </div>
                     <div class="form-actions">
@@ -107,6 +121,9 @@
                 role_id: {
                     required: "请选择角色"
                 }
+            },
+            errorPlacement: function(error, element) {
+                error.appendTo( element.parents(".controls") );
             },
             highlight: function (element) { // hightlight error inputs
                 $(element)
