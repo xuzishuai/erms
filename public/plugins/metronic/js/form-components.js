@@ -92,7 +92,7 @@ var FormComponents = function () {
     }
 
     var handleDatePickers = function () {
-
+        //已经启用
         if (jQuery().datepicker) {
             $('.date-picker').datepicker({
                 rtl : App.isRTL()
@@ -234,12 +234,12 @@ var FormComponents = function () {
           //已经启用
           $(".form_datetime").datetimepicker({
               format: "yyyy-mm-dd hh:ii",
+              weekStart: 1,
               pickerPosition: (App.isRTL() ? "bottom-right" : "bottom-left")
           });
 
          $(".form_advance_datetime").datetimepicker({
               format: "dd MM yyyy - hh:ii",
-              autoclose: true,
               todayBtn: true,
               startDate: "2013-02-14 10:00",
               pickerPosition: (App.isRTL() ? "bottom-right" : "bottom-left"),
@@ -249,7 +249,6 @@ var FormComponents = function () {
          $(".form_meridian_datetime").datetimepicker({
             format: "dd MM yyyy - HH:ii P",
             showMeridian: true,
-            autoclose: true,
             pickerPosition: (App.isRTL() ? "bottom-right" : "bottom-left"),
             todayBtn: true
         });
@@ -463,7 +462,8 @@ var FormComponents = function () {
 
             App.addResponsiveHandler(function(){
                 resetWysihtml5();
-            })
+            });
+            App.initFancybox();
         }
 
     };

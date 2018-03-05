@@ -2,7 +2,7 @@ const dataPool = require('../util/dataPool');
 const Promise = require('promise');
 const uuid = require('node-uuid');
 
-exports.saveStudent = function (name, gender, grade_id, contact, appointment_time, adviser_id, source_id, how_know_id) {
+exports.saveStudent = function (name, gender, grade_id, contact, appointment_time, source_id, how_know_id, note) {
     return new Promise(async function (resolve, reject) {
         try {
             let create_at = new Date();
@@ -21,9 +21,29 @@ exports.saveStudent = function (name, gender, grade_id, contact, appointment_tim
                 num = '00' + num;
             else if (num < 1000)
                 num = '0' + num;
-            await dataPool.query('insert into student values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                [uuid.v1(), year.toString() + month.toString() + day.toString() + num, name, gender, grade_id, contact, appointment_time, adviser_id, source_id, how_know_id, create_at]);
+            await dataPool.query('insert into student values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                [uuid.v1(), year.toString() + month.toString() + day.toString() + num, name, gender, grade_id, contact, appointment_time, null, source_id, how_know_id, 0, create_at, note, null]);
             resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
+
+exports.getStudentByCondition = function (condition) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let sql = 'select * from student where 1=1';
+            let params = [];
+            if (condition) {
+                if (condition.status != null) {
+                    sql += ' and status=?';
+                    params[params.length] = condition.status;
+                }
+
+            }
+            let students = await dataPool.query(sql, params);
+            resolve(students);
         } catch (error) {
             reject(error);
         }

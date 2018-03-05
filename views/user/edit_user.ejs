@@ -34,7 +34,7 @@
                         <label class="control-label">角色<span class="required">*</span></label>
                         <div class="controls">
                             <select class="span6 select2"  data-placeholder="请选择角色" tabindex="1" name="role_id" id="role_id">
-                                <%for (var i=0;i<roles.length;i++){%>
+                                <%for (let i = 0; i < roles.length; i++){%>
                                 <option value="<%= roles[i].id%>" <%if (user.role_id == roles[i]){%>selected<%}%>><%= roles[i].name%></option>
                                 <%}%>
                             </select>

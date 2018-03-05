@@ -1,0 +1,155 @@
+<div class="row-fluid">
+    <div class="span12">
+        <div class="portlet box purple">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-reorder"></i>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="booking-search">
+                    <form action="#">
+                        <div class="clearfix margin-bottom-10">
+                            <div class="control-group span3">
+                                <label class="control-label">姓名：</label>
+                                <div class="controls">
+                                    <input class="m-wrap span12" type="text">
+                                </div>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label">预约上门起始时间：</label>
+                                <div class="controls">
+                                    <div class="input-append date form_datetime span12">
+                                        <input id="appointment_time" name="appointment_time" type="text" value="" readonly class="m-wrap span12"/>日期弹出框靠左
+                                        <span class="add-on"><i class="icon-remove"></i></span>
+                                        <span class="add-on"><i class="icon-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="clearfix margin-bottom-10">
+
+                            <div class="control-group pull-left">
+
+                                <label class="control-label">Check-out:</label>
+
+                                <div class="controls">
+
+                                    <div class="input-append date date-picker" data-date="102/2012" data-date-format="mm/yyyy" data-date-viewmode="years" data-date-minviewmode="months">
+
+                                        <input class="m-wrap m-ctrl-medium date-picker" size="16" type="text" value="02/2012" /><span class="add-on"><i class="icon-calendar"></i></span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="clearfix margin-bottom-10">
+
+                            <div class="pull-left margin-right-20">
+
+                                <label>How Many</label>
+
+                                <div class="input-icon left">
+
+                                    <i class="icon-user"></i>
+
+                                    <input class="m-wrap" type="text" placeholder="1 Room, 2 Adults, 0 Children">
+
+                                </div>
+
+                            </div>
+
+                            <div class="pull-left">
+
+                                <div class="control-group booking-option">
+
+                                    <label class="control-label">Choose Option</label>
+
+                                    <div class="controls controls-uniform">
+
+                                        <label class="radio">
+
+                                            <input type="radio" name="optionsRadios2" value="option1" />
+
+                                            Option1
+
+                                        </label>
+
+                                        <label class="radio">
+
+                                            <input type="radio" name="optionsRadios2" value="option2" checked />
+
+                                            Option2
+
+                                        </label>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="clearfix margin-bottom-10">
+                            <div class="pull-right">
+                                <button class="btn blue">SEARCH <i class="m-icon-swapright m-icon-white"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>客户编号</th>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>年级</th>
+                        <th>联系电话</th>
+                        <th>预约上门时间</th>
+                        <th>顾问</th>
+                        <th>途径</th>
+                        <th>状态</th>
+                        <th>备注</th>
+                        <th class="table_action" data-colNum=10>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <%for (let i = 0; i < students.length; i++){%>
+                    <tr>
+                        <td><%= students[i].student_no%></td>
+                        <td><%= students[i].name%></td>
+                        <td><%if (students[i].gender == 0){%>男<%} else {%>女<%}%></td>
+                        <td><%= gradeMap[students[i].grade_id].name%></td>
+                        <td><%= students[i].contact%></td>
+                        <td><%= dateUtil.dateTimeFormat(students[i].appointment_time)%></td>
+                        <td><% if (students[i].adviser_id) {%><%= adviserMap[students[i].adviser_id].name%><%}%></td>
+                        <td><%= sourceMap[students[i].source_id].name%></td>
+                        <td><%if (students[i].status == 0){%>未上门<%} else if (students[i].status == 1) {%>已上门<%} else if (students[i].status == 2) {%>已签约<%}%></td>
+                        <td><% if (students[i].note){%><%= students[i].note%><%}%></td>
+                        <td>
+                            <a href="/student/do_student_arrive?id=<%= students[i].id%>" class="btn green mini"><i class="icon-ok"></i> 确认上门</a>
+                        </td>
+                    </tr>
+                    <%}%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<%- contentFor('title')%>
+上门确认
+<%- contentFor('breadcrumb')%>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="javascript:void(0);">客户</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/student/arrive_student_list">上门确认</a>
+</li>
+<%- contentFor('script')%>

@@ -5,6 +5,7 @@ const userDAO = require('../dao/userDAO');
 const menuDAO = require('../dao/menuDAO');
 const roleDAO = require('../dao/roleDAO');
 const exceptionHelper = require("../helper/exceptionHelper");
+const commonUtil = require('../util/commonUtil');
 
 router.get('/login', function (req, res) {
     res.render('user/login', {hideLayout: true});
@@ -68,13 +69,9 @@ router.get('/user_list', async function (req, res) {
     try {
         let users = await userDAO.getAllUser();
         let roles = await baseDAO.getAll('role');
-        let roleMap = {};
-        for (let i = 0; i < roles.length; i++) {
-            roleMap[roles[i].id] = roles[i];
-        }
         res.render('user/user_list', {
             users: users,
-            roleMap: roleMap
+            roleMap: commonUtil.toMap(roles)
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);
@@ -146,13 +143,9 @@ router.get('/delete_user', async function (req, res) {
 router.get('/role_list', async function (req, res) {
     try {
         let roles = await baseDAO.getAll('role');
-        let roleMap = {};
-        for (let i = 0; i < roles.length; i++) {
-            roleMap[roles[i].id] = roles[i];
-        }
         res.render('user/role_list', {
             roles: roles,
-            roleMap: roleMap
+            roleMap: commonUtil.toMap(roles)
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);

@@ -34,7 +34,7 @@
                         <div class="controls">
                             <select class="span6 select2" tabindex="1" name="grade_id" id="grade_id">
                                 <option value="">请选择年级</option>
-                                <%for (var i=0;i<grades.length;i++){%>
+                                <%for (let i = 0; i < grades.length; i++){%>
                                 <option value="<%= grades[i].id%>"><%= grades[i].name%></option>
                                 <%}%>
                             </select>
@@ -51,27 +51,17 @@
                         <div class="controls">
                             <div class="input-append date form_datetime">
                                 <input id="appointment_time" name="appointment_time" size="16" type="text" value="" readonly class="m-wrap"/>
+                                <span class="add-on"><i class="icon-remove"></i></span>
                                 <span class="add-on"><i class="icon-calendar"></i></span>
                             </div>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label">顾问</label>
-                        <div class="controls">
-                            <select class="span6 select2" tabindex="1" name="adviser_id" id="adviser_id">
-                                <option value="">请选择顾问</option>
-                                <%for (var i=0;i<advisers.length;i++){%>
-                                <option value="<%= advisers[i].id%>"><%= advisers[i].name%></option>
-                                <%}%>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">途径</label>
+                        <label class="control-label">途径<span class="required">*</span></label>
                         <div class="controls">
                             <select class="span6 select2" tabindex="1" name="source_id" id="source_id">
                                 <option value="">请选择途径</option>
-                                <%for (var i=0;i<sources.length;i++){%>
+                                <%for (let i = 0; i < sources.length; i++){%>
                                 <option value="<%= sources[i].id%>"><%= sources[i].name%></option>
                                 <%}%>
                             </select>
@@ -82,10 +72,16 @@
                         <div class="controls">
                             <select class="span6 select2" tabindex="1" name="how_know_id" id="how_know_id">
                                 <option value="">请选择从何得知</option>
-                                <%for (var i=0;i<howKnows.length;i++){%>
+                                <%for (let i = 0; i < howKnows.length; i++){%>
                                 <option value="<%= howKnows[i].id%>"><%= howKnows[i].name%></option>
                                 <%}%>
                             </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">备注</label>
+                        <div class="controls">
+                            <textarea name="note" class="span6 m-wrap" rows="3"></textarea>
                         </div>
                     </div>
                     <div class="form-actions">
@@ -137,6 +133,9 @@
                 },
                 appointment_time: {
                     required: true
+                },
+                source_id: {
+                    required: true
                 }
             },
             messages: {
@@ -152,6 +151,9 @@
                 },
                 appointment_time: {
                     required: "请输入预约上门时间"
+                },
+                source_id: {
+                    required: "请选择途径"
                 }
             },
             errorPlacement: function(error, element) {
