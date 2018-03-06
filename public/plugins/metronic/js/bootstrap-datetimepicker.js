@@ -356,31 +356,17 @@
 		},
 
 		place: function(){
-			if(this.isInline) return;
-			var zIndex = parseInt(this.element.parents().filter(function() {
-				return $(this).css('z-index') != 'auto';
-			}).first().css('z-index'))+10;
-			var offset, top, left;
-			if (this.component) {
-				offset = this.component.offset();
-				left = offset.left;
-				if (this.pickerPosition == 'bottom-left' || this.pickerPosition == 'top-left') {
-					left += this.component.outerWidth() - this.picker.outerWidth();
-				}
-			} else {
-				offset = this.element.offset();
-				left = offset.left;
-			}
-			if (this.pickerPosition == 'top-left' || this.pickerPosition == 'top-right') {
-				top = offset.top - this.picker.outerHeight();
-			} else {
-				top = offset.top + this.height;
-			}
-			this.picker.css({
-				top: top,
-				left: left,
-				zIndex: zIndex
-			});
+            if(this.isInline) return;
+            var zIndex = parseInt(this.element.parents().filter(function() {
+                return $(this).css('z-index') != 'auto';
+            }).first().css('z-index'))+10;
+            var offset = this.component ? this.component.parent().offset() : this.element.offset();
+            var height = this.component ? this.component.outerHeight(true) : this.element.outerHeight(true);
+            this.picker.css({
+                top: offset.top + height,
+                left: offset.left,
+                zIndex: zIndex
+            });
 		},
 
 		update: function(){

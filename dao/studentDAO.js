@@ -36,14 +36,59 @@ exports.getStudentByCondition = function (condition) {
             let sql = 'select * from student where 1=1';
             let params = [];
             if (condition) {
-                if (condition.status != null) {
+                if (condition.name && condition.name != '') {
+                    sql += ' and name like ?';
+                    params[params.length] = '%' + condition.name + '%';
+                }
+                if (condition.contact && condition.contact != '') {
+                    sql += ' and contact like ?';
+                    params[params.length] = '%' + condition.contact + '%';
+                }
+                if (condition.grade_id && condition.grade_id != '') {
+                    sql += ' and grade_id=?';
+                    params[params.length] = condition.grade_id;
+                }
+                if (condition.status != null && condition.status !== '') {
                     sql += ' and status=?';
                     params[params.length] = condition.status;
                 }
-
+                if (condition.appointment_start_time && condition.appointment_start_time != '') {
+                    sql += ' and appointment_time>=?';
+                    params[params.length] = condition.appointment_start_time;
+                }
+                if (condition.appointment_end_time && condition.appointment_end_time != '') {
+                    sql += ' and appointment_time<=?';
+                    params[params.length] = condition.appointment_end_time;
+                }
+                if (condition.adviser_id && condition.adviser_id != '') {
+                    sql += ' and adviser_id=?';
+                    params[params.length] = condition.adviser_id;
+                }
+                if (condition.source_id && condition.source_id != '') {
+                    sql += ' and source_id=?';
+                    params[params.length] = condition.source_id;
+                }
             }
             let students = await dataPool.query(sql, params);
             resolve(students);
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
+
+exports.doStudentArrive = function (id, adviser_id, status) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let sql = 'update student set adviser_id=?, status=?';
+            let params = [adviser_id, status];
+            if (status == '1') {
+                sql += ', arrive_time=?';
+                params[params.length] = new Date();
+            }
+            params[params.length] = id;
+            await dataPool.query(sql + ' where id=?', params);
+            resolve();
         } catch (error) {
             reject(error);
         }

@@ -8,95 +8,91 @@
             </div>
             <div class="portlet-body">
                 <div class="booking-search">
-                    <form action="#">
+                    <form action="/student/arrive_student_list">
                         <div class="clearfix">
                             <div class="control-group span3">
-                                <label class="control-label">姓名：</label>
+                                <label class="control-label">姓名:</label>
                                 <div class="controls">
-                                    <input class="m-wrap span12" type="text">
+                                    <input name="name" class="m-wrap span12" type="text" value="<%= condition.name%>">
                                 </div>
                             </div>
                             <div class="control-group span3">
-                                <label class="control-label">预约上门起始时间：</label>
+                                <label class="control-label">联系电话:</label>
                                 <div class="controls">
-                                    <div class="input-append date form_datetime span12">
-                                        <input id="appointment_time" name="appointment_time" type="text" value="" readonly class="m-wrap span12"/>日期弹出框靠左
+                                    <input name="contact" class="m-wrap span12" type="text" value="<%= condition.contact%>">
+                                </div>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label">年级:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="grade_id" id="grade_id">
+                                        <option value="">请选择年级</option>
+                                        <%for (let i = 0; i < grades.length; i++){%>
+                                        <option value="<%= grades[i].id%>"><%= grades[i].name%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label">状态:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="status" id="status">
+                                        <option value="">请选择状态</option>
+                                        <option value="0">未上门</option>
+                                        <option value="1">已上门</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="control-group span3">
+                                <label class="control-label">预约上门起始时间:</label>
+                                <div class="controls">
+                                    <div class="input-append date form_datetime span12" style="padding-right: 56px;">
+                                        <input id="appointment_start_time" name="appointment_start_time" type="text"
+                                               <%if (condition.appointment_start_time){%>value="<%= dateUtil.dateTimeFormat(condition.appointment_start_time)%>"<%}%> readonly class="m-wrap span12"/>
                                         <span class="add-on"><i class="icon-remove"></i></span>
                                         <span class="add-on"><i class="icon-calendar"></i></span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="clearfix">
-
-                            <div class="control-group pull-left">
-
-                                <label class="control-label">Check-out:</label>
-
+                            <div class="control-group span3">
+                                <label class="control-label">预约上门截止时间:</label>
                                 <div class="controls">
-
-                                    <div class="input-append date date-picker" data-date="102/2012" data-date-format="mm/yyyy" data-date-viewmode="years" data-date-minviewmode="months">
-
-                                        <input class="m-wrap m-ctrl-medium date-picker" size="16" type="text" value="02/2012" /><span class="add-on"><i class="icon-calendar"></i></span>
-
+                                    <div class="input-append date form_datetime span12" style="padding-right: 56px;">
+                                        <input id="appointment_end_time" name="appointment_end_time" type="text"
+                                               <%if (condition.appointment_end_time){%>value="<%= dateUtil.dateTimeFormat(condition.appointment_end_time)%>"<%}%> readonly class="m-wrap span12"/>
+                                        <span class="add-on"><i class="icon-remove"></i></span>
+                                        <span class="add-on"><i class="icon-calendar"></i></span>
                                     </div>
-
                                 </div>
-
                             </div>
-
-                        </div>
-
-                        <div class="clearfix">
-
-                            <div class="pull-left margin-right-20">
-
-                                <label>How Many</label>
-
-                                <div class="input-icon left">
-
-                                    <i class="icon-user"></i>
-
-                                    <input class="m-wrap" type="text" placeholder="1 Room, 2 Adults, 0 Children">
-
+                            <div class="control-group span3">
+                                <label class="control-label">顾问:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="adviser_id" id="adviser_id">
+                                        <option value="">请选择顾问</option>
+                                        <%for (let i = 0; i < advisers.length; i++){%>
+                                        <option value="<%= advisers[i].id%>"><%= advisers[i].name%></option>
+                                        <%}%>
+                                    </select>
                                 </div>
-
                             </div>
-
-                            <div class="pull-left">
-
-                                <div class="control-group booking-option">
-
-                                    <label class="control-label">Choose Option</label>
-
-                                    <div class="controls controls-uniform">
-
-                                        <label class="radio">
-
-                                            <input type="radio" name="optionsRadios2" value="option1" />
-
-                                            Option1
-
-                                        </label>
-
-                                        <label class="radio">
-
-                                            <input type="radio" name="optionsRadios2" value="option2" checked />
-
-                                            Option2
-
-                                        </label>
-
-                                    </div>
-
+                            <div class="control-group span3">
+                                <label class="control-label">途径:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="source_id" id="source_id">
+                                        <option value="">请选择途径</option>
+                                        <%for (let i = 0; i < sources.length; i++){%>
+                                        <option value="<%= sources[i].id%>"><%= sources[i].name%></option>
+                                        <%}%>
+                                    </select>
                                 </div>
-
                             </div>
                         </div>
                         <div class="clearfix">
                             <div class="pull-right">
-                                <button class="btn blue">SEARCH <i class="m-icon-swapright m-icon-white"></i></button>
+                                <button class="btn blue"><i class="icon-search m-icon-white"></i> 搜索</button>
                             </div>
                         </div>
                     </form>
@@ -131,7 +127,9 @@
                         <td><%if (students[i].status == 0){%>未上门<%} else if (students[i].status == 1) {%>已上门<%} else if (students[i].status == 2) {%>已签约<%}%></td>
                         <td><% if (students[i].note){%><%= students[i].note%><%}%></td>
                         <td>
-                            <a href="/student/do_student_arrive?id=<%= students[i].id%>" class="btn green mini"><i class="icon-ok"></i> 确认上门</a>
+                            <%if (students[i].status == 0){%>
+                            <a href="/student/student_arrive?id=<%= students[i].id%>" class="btn green mini"><i class="icon-ok"></i> 确认上门</a>
+                            <%}%>
                         </td>
                     </tr>
                     <%}%>
@@ -142,7 +140,7 @@
     </div>
 </div>
 <%- contentFor('title')%>
-上门确认
+客户列表
 <%- contentFor('breadcrumb')%>
 <li>
     <i class="icon-angle-right"></i>
@@ -150,6 +148,12 @@
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/student/arrive_student_list">上门确认</a>
+    <a href="/student/arrive_student_list">客户列表</a>
 </li>
 <%- contentFor('script')%>
+<script>
+    $('#grade_id').val('<%= condition.grade_id%>');
+    $('#status').val('<%= condition.status%>');
+    $('#adviser_id').val('<%= condition.adviser_id%>');
+    $('#source_id').val('<%= condition.source_id%>');
+</script>
