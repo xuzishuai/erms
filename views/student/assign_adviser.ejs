@@ -74,9 +74,9 @@
                         </div>
                     </div>
                 </div>
-                <form action="/student/do_student_arrive" method="post" class="form-horizontal">
+                <form action="/student/do_assign_adviser" method="post" class="form-horizontal">
                     <input name="id" value="<%= student.id%>" type="hidden">
-                    <h3 class="form-section">确认上门</h3>
+                    <h3 class="form-section">分配顾问</h3>
                     <div class="control-group">
                         <label class="control-label">顾问<span class="required">*</span></label>
                         <div class="controls">
@@ -86,17 +86,6 @@
                                 <option value="<%= advisers[i].id%>"><%= advisers[i].name%></option>
                                 <%}%>
                             </select>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">上门状态<span class="required">*</span></label>
-                        <div class="controls">
-                            <label class="radio">
-                                <input type="radio" name="status" value="0" />未上门
-                            </label>
-                            <label class="radio">
-                                <input type="radio" name="status" value="1" checked />已上门
-                            </label>
                         </div>
                     </div>
                     <div class="form-actions">
@@ -109,7 +98,7 @@
     </div>
 </div>
 <%- contentFor('title')%>
-确认上门
+分配顾问
 <%- contentFor('breadcrumb')%>
 <li>
     <i class="icon-angle-right"></i>
@@ -117,14 +106,15 @@
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/student/arrive_student_list">客户列表</a>
+    <a href="/student/assign_adviser_student_list">客户分配</a>
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/student/student_arrive?id=<%= student.id%>">确认上门</a>
+    <a href="/student/assign_adviser?id=<%= student.id%>">分配顾问</a>
 </li>
 <%- contentFor('script')%>
 <script>
+    $('#adviser_id').val('<%= student.adviser_id%>');
     jQuery(document).ready(function() {
         $('form').validate({
             errorElement: 'span', //default input error message container

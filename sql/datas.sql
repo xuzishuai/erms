@@ -6,9 +6,9 @@ INSERT INTO menu VALUES ('2', '账号管理', '1', '/user/user_list', null, null
 INSERT INTO menu VALUES ('3', '角色管理', '1', '/user/role_list', null, null, '#/user/role_list#/user/new_role#/user/validate_role_name#/user/do_create_role#/user/edit_role#/user/do_update_role#/user/delete_role#', null);
 INSERT INTO menu VALUES ('4', '客户', null, null, '#5#6#7#8#9#10#', 'icon-briefcase', null, 1);
 INSERT INTO menu VALUES ('5', '客户登记', '4', '/student/new_student', null, null, '#/student/new_student#/student/do_create_student#', null);
-INSERT INTO menu VALUES ('6', '客户列表', '4', '/student/arrive_student_list', null, null, '#/student/arrive_student_list#/student/student_arrive#/student/do_student_arrive#', null);
-INSERT INTO menu VALUES ('7', '客户分配', '4', '', null, null, '##', null);
-INSERT INTO menu VALUES ('8', '客户审核', '4', '', null, null, '##', null);
+INSERT INTO menu VALUES ('6', '上门确认', '4', '/student/arrive_student_list', null, null, '#/student/arrive_student_list#/student/student_arrive#/student/do_student_arrive#', null);
+INSERT INTO menu VALUES ('7', '客户分配', '4', '/student/assign_adviser_student_list', null, null, '#/student/assign_adviser_student_list#/student/assign_adviser#/student/do_assign_adviser#', null);
+INSERT INTO menu VALUES ('8', '客户审核', '4', '/student/audit_student_list', null, null, '#/student/audit_student_list#', null);
 INSERT INTO menu VALUES ('9', '客户追踪', '4', '', null, null, '##', null);
 INSERT INTO menu VALUES ('10', '客户管理', '4', '', null, null, '##', null);
 

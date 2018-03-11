@@ -8,7 +8,7 @@
             </div>
             <div class="portlet-body">
                 <div class="booking-search">
-                    <form action="/student/arrive_student_list">
+                    <form action="/student/assign_adviser_student_list">
                         <div class="clearfix">
                             <div class="control-group span3">
                                 <label class="control-label">姓名:</label>
@@ -127,8 +127,8 @@
                         <td><%if (students[i].status == 0){%>未上门<%} else if (students[i].status == 1) {%>已上门<%} else if (students[i].status == 2) {%>已签约<%}%></td>
                         <td><% if (students[i].note){%><%= students[i].note%><%}%></td>
                         <td>
-                            <%if (students[i].status == 0){%>
-                            <a href="/student/do_student_arrive?id=<%= students[i].id%>" class="btn green mini"><i class="icon-ok"></i> 确认上门</a>
+                            <%if (students[i].status != 0){%>
+                            <a href="/student/assign_adviser?id=<%= students[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 分配顾问</a>
                             <%}%>
                         </td>
                     </tr>
@@ -140,7 +140,7 @@
     </div>
 </div>
 <%- contentFor('title')%>
-上门确认
+客户分配
 <%- contentFor('breadcrumb')%>
 <li>
     <i class="icon-angle-right"></i>
@@ -148,7 +148,7 @@
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/student/arrive_student_list">上门确认</a>
+    <a href="/student/assign_adviser_student_list">客户分配</a>
 </li>
 <%- contentFor('script')%>
 <script>

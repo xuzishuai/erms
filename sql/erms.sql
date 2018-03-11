@@ -120,6 +120,7 @@ create table student
    create_at            datetime not null comment '登记日期',
    note                 varchar(500) comment '备注',
    arrive_time          datetime comment '上门时间',
+   audit_status         tinyint(4) not null comment '客户审核状态，0未审核，1已通过，2未通过',
    primary key (id)
 );
 
