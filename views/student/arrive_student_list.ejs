@@ -26,7 +26,7 @@
                                 <label class="control-label">年级:</label>
                                 <div class="controls">
                                     <select class="span12 select2" tabindex="1" name="grade_id" id="grade_id">
-                                        <option value="">请选择年级</option>
+                                        <option value=""></option>
                                         <%for (let i = 0; i < grades.length; i++){%>
                                         <option value="<%= grades[i].id%>"><%= grades[i].name%></option>
                                         <%}%>
@@ -37,7 +37,7 @@
                                 <label class="control-label">状态:</label>
                                 <div class="controls">
                                     <select class="span12 select2" tabindex="1" name="status" id="status">
-                                        <option value="">请选择状态</option>
+                                        <option value=""></option>
                                         <option value="0">未上门</option>
                                         <option value="1">已上门</option>
                                     </select>
@@ -71,7 +71,7 @@
                                 <label class="control-label">顾问:</label>
                                 <div class="controls">
                                     <select class="span12 select2" tabindex="1" name="adviser_id" id="adviser_id">
-                                        <option value="">请选择顾问</option>
+                                        <option value=""></option>
                                         <%for (let i = 0; i < advisers.length; i++){%>
                                         <option value="<%= advisers[i].id%>"><%= advisers[i].name%></option>
                                         <%}%>
@@ -82,7 +82,7 @@
                                 <label class="control-label">途径:</label>
                                 <div class="controls">
                                     <select class="span12 select2" tabindex="1" name="source_id" id="source_id">
-                                        <option value="">请选择途径</option>
+                                        <option value=""></option>
                                         <%for (let i = 0; i < sources.length; i++){%>
                                         <option value="<%= sources[i].id%>"><%= sources[i].name%></option>
                                         <%}%>
