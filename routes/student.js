@@ -184,4 +184,34 @@ router.get('/do_audit_student', async function (req, res) {
     }
 });
 
+
+router.get('/follow_student_list', async function (req, res) {
+    try {
+        let condition = {};
+        condition.name = req.query.name;
+        condition.contact = req.query.contact;
+        condition.grade_id = req.query.grade_id;
+        condition.adviser_id = req.query.adviser_id;
+        condition.source_id = req.query.source_id;
+        condition.audit_status = 1;
+        let students = await studentDAO.getStudentByCondition(condition);
+        let grades = await baseDAO.getAll('grade');
+        let advisers = await userDAO.getAllAdviser();
+        let sources = await baseDAO.getAll('source');
+        res.render('student/follow_student_list', {
+            students: students,
+            grades: grades,
+            sources: sources,
+            advisers: advisers,
+            gradeMap: commonUtil.toMap(grades),
+            adviserMap: commonUtil.toMap(advisers),
+            sourceMap: commonUtil.toMap(sources),
+            condition: condition,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
 module.exports = router;

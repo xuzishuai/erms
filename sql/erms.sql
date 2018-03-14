@@ -126,6 +126,24 @@ create table student
 
 alter table student comment '学生表';
 
+/*==============================================================*/
+/* Table: student_tracking                                     */
+/*==============================================================*/
+create table student_tracking
+(
+   id                   varchar(36) not null,
+   student_id           varchar(36) not null comment '学生id',
+   track_date           date not null comment '追踪日期',
+   channel              tinyint(4) not null comment '追踪方式，0电话',
+   content              varchar(500) not null comment '追踪记录',
+   result               tinyint(4) not null comment '追踪结果，0继续电话',
+   possibility          tinyint(4) not null comment '签约可能性，0大,1一般,2小',
+   next_track_date      date comment '下次追踪日期',
+   primary key (id)
+);
+
+alter table student_tracking comment '学生追踪记录表';
+
 alter table menu add constraint FK_Reference_2 foreign key (parent_id)
       references menu (id) on delete restrict on update restrict;
 
@@ -140,4 +158,7 @@ alter table student add constraint FK_Reference_4 foreign key (adviser_id)
 
 alter table student add constraint FK_Reference_5 foreign key (source_id)
       references source (id) on delete restrict on update restrict;
+
+alter table student_tracking add constraint FK_Reference_6 foreign key (student_id)
+      references student (id) on delete restrict on update restrict;
 
