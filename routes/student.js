@@ -4,6 +4,7 @@ const exceptionHelper = require("../helper/exceptionHelper");
 const baseDAO = require('../dao/baseDAO');
 const userDAO = require('../dao/userDAO');
 const studentDAO = require('../dao/studentDAO');
+const studentTrackingDAO = require('../dao/studentTrackingDAO');
 const commonUtil = require('../util/commonUtil');
 const dateUtil = require('../util/dateUtil');
 
@@ -120,7 +121,6 @@ router.get('/assign_adviser', async function (req, res) {
             student: student[0],
             advisers: advisers,
             gradeMap: commonUtil.toMap(grades),
-            adviserMap: commonUtil.toMap(advisers),
             sourceMap: commonUtil.toMap(sources),
             dateUtil: dateUtil
         });
@@ -206,9 +206,50 @@ router.get('/follow_student_list', async function (req, res) {
             gradeMap: commonUtil.toMap(grades),
             adviserMap: commonUtil.toMap(advisers),
             sourceMap: commonUtil.toMap(sources),
-            condition: condition,
+            condition: condition
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+
+router.get('/student_tracking_list', async function (req, res) {
+    try {
+        let studentId = req.query.student_id;
+        let student = await baseDAO.getById('student', studentId);
+        student = student[0];
+        let studentTrackings = await studentTrackingDAO.getStudentTrackingBySId(studentId);
+        let trackers = await baseDAO.getAll('user');
+        let grades = await baseDAO.getAll('grade');
+        let sources = await baseDAO.getAll('source');
+        res.render('student/student_tracking_list', {
+            student: student,
+            studentTrackings: studentTrackings,
+            trackerMap: commonUtil.toMap(trackers),
+            gradeMap: commonUtil.toMap(grades),
+            sourceMap: commonUtil.toMap(sources),
             dateUtil: dateUtil
         });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/new_student_tracking', async function (req, res) {
+    try {
+        res.render('student/new_student_tracking', {student_id: req.query.student_id});
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_create_student_tracking', async function (req, res) {
+    try {
+        let studentId = req.body.student_id;
+        await studentTrackingDAO.saveStudentTracking(studentId, req.body.channel, req.body.result, req.body.possibility,
+            (req.body.next_track_date && req.body.next_track_date != '') ? req.body.next_track_date : null, req.body.content, req.session.user[0].id);
+        res.redirect('/student/student_tracking_list?student_id=' + studentId);
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }

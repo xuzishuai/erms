@@ -139,6 +139,7 @@ create table student_tracking
    result               tinyint(4) not null comment '追踪结果，0继续电话',
    possibility          tinyint(4) not null comment '签约可能性，0大,1一般,2小',
    next_track_date      date comment '下次追踪日期',
+   tracker_id           varchar(36) not null comment '追踪人id',
    primary key (id)
 );
 
@@ -161,4 +162,7 @@ alter table student add constraint FK_Reference_5 foreign key (source_id)
 
 alter table student_tracking add constraint FK_Reference_6 foreign key (student_id)
       references student (id) on delete restrict on update restrict;
+
+alter table student_tracking add constraint FK_Reference_7 foreign key (tracker_id)
+      references user (id) on delete restrict on update restrict;
 
