@@ -255,4 +255,36 @@ router.post('/do_create_student_tracking', async function (req, res) {
     }
 });
 
+router.get('/edit_student_tracking', async function (req, res) {
+    try {
+        let studentTracking = await baseDAO.getById('student_tracking', req.query.id);
+        res.render('student/edit_student_tracking', {
+            studentTracking: studentTracking[0],
+            student_id: req.query.student_id,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_update_student_tracking', async function (req, res) {
+    try {
+        let studentId = req.body.student_id;
+        await studentTrackingDAO.updateStudentTracking(req.body.id, req.body.channel, req.body.result, req.body.possibility, (req.body.next_track_date && req.body.next_track_date != '')?req.body.next_track_date:null, req.body.content);
+        res.redirect('/student/student_tracking_list?student_id=' + studentId);
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/delete_student_tracking', async function (req, res) {
+    try {
+        await baseDAO.deleteById('student_tracking', req.query.id);
+        res.redirect('/student/student_tracking_list?student_id=' + req.query.student_id);
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
 module.exports = router;

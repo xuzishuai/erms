@@ -24,3 +24,14 @@ exports.saveStudentTracking = function (student_id, channel, result, possibility
         }
     })
 };
+
+exports.updateStudentTracking = function (id, channel, result, possibility, next_track_date, content) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            await dataPool.query('update student_tracking set channel=?, result=?, possibility=?, next_track_date=?, content=? where id=?', [channel, result, possibility, next_track_date, content, id]);
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+};

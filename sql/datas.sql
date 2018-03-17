@@ -10,7 +10,7 @@ INSERT INTO menu VALUES ('6', '上门确认', '4', '/student/arrive_student_list
 INSERT INTO menu VALUES ('7', '客户分配', '4', '/student/assign_adviser_student_list', null, null, '#/student/assign_adviser_student_list#/student/assign_adviser#/student/do_assign_adviser#', null);
 INSERT INTO menu VALUES ('8', '客户审核', '4', '/student/audit_student_list', null, null, '#/student/audit_student_list#', null);
 INSERT INTO menu VALUES ('9', '客户追踪', '4', '/student/follow_student_list', null, null, '#/student/follow_student_list#/student/student_tracking_list#/student/new_student_tracking#
-/student/edit_student_tracking#/student/delete_student_tracking#/student/do_create_student_tracking#', null);
+/student/edit_student_tracking#/student/delete_student_tracking#/student/do_create_student_tracking#/student/do_update_student_tracking#', null);
 INSERT INTO menu VALUES ('10', '客户管理', '4', '', null, null, '##', null);
 
 -- ----------------------------

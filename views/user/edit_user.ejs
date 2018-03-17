@@ -135,12 +135,10 @@
                 $(element)
                     .closest('.control-group').removeClass('success').addClass('error'); // set error class to the control group
             },
-
             unhighlight: function (element) { // revert the change dony by hightlight
                 $(element)
                     .closest('.control-group').removeClass('error'); // set error class to the control group
             },
-
             success: function (label) {
                 label
                     .addClass('valid').addClass('help-inline ok') // mark the current input as valid and display OK icon
