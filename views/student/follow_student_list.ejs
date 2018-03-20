@@ -94,7 +94,7 @@
                         <td><% if (students[i].note){%><%= students[i].note%><%}%></td>
                         <td>
                             <a href="/student/student_tracking_list?student_id=<%= students[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 追踪记录</a>
-                            <a href="/student/assign_adviser?student_id=<%= students[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 上门记录</a>
+                            <a href="/student/visit_record_list?student_id=<%= students[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 上门记录</a>
                         </td>
                     </tr>
                     <%}%>

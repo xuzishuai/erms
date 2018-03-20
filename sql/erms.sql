@@ -18,6 +18,10 @@ drop table if exists how_know;
 
 drop table if exists student;
 
+drop table if exists student_tracking;
+
+drop table if exists visit_record;
+
 /*==============================================================*/
 /* Table: menu                                                  */
 /*==============================================================*/
@@ -145,6 +149,23 @@ create table student_tracking
 
 alter table student_tracking comment '学生追踪记录表';
 
+/*==============================================================*/
+/* Table: visit_record                                          */
+/*==============================================================*/
+create table visit_record
+(
+   id                   varchar(36) not null,
+   student_id           varchar(36) not null comment '学生id',
+   arrive_time          datetime not null comment '到访时间',
+   leave_time           datetime not null comment '离开时间',
+   possibility          tinyint(4) not null comment '签约可能性，0大,1一般,2小',
+   content              varchar(500) not null comment '到访记录',
+   receptionist_id      varchar(36) not null comment '接待人id',
+   primary key (id)
+);
+
+alter table visit_record comment '到访记录表';
+
 alter table menu add constraint FK_Reference_2 foreign key (parent_id)
       references menu (id) on delete restrict on update restrict;
 
@@ -164,5 +185,11 @@ alter table student_tracking add constraint FK_Reference_6 foreign key (student_
       references student (id) on delete restrict on update restrict;
 
 alter table student_tracking add constraint FK_Reference_7 foreign key (tracker_id)
+      references user (id) on delete restrict on update restrict;
+
+alter table visit_record add constraint FK_Reference_8 foreign key (student_id)
+      references student (id) on delete restrict on update restrict;
+
+alter table visit_record add constraint FK_Reference_9 foreign key (receptionist_id)
       references user (id) on delete restrict on update restrict;
 

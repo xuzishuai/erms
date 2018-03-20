@@ -4,6 +4,7 @@ const exceptionHelper = require("../helper/exceptionHelper");
 const baseDAO = require('../dao/baseDAO');
 const userDAO = require('../dao/userDAO');
 const studentDAO = require('../dao/studentDAO');
+const visitRecordDAO = require('../dao/visitRecordDAO');
 const studentTrackingDAO = require('../dao/studentTrackingDAO');
 const commonUtil = require('../util/commonUtil');
 const dateUtil = require('../util/dateUtil');
@@ -282,6 +283,79 @@ router.get('/delete_student_tracking', async function (req, res) {
     try {
         await baseDAO.deleteById('student_tracking', req.query.id);
         res.redirect('/student/student_tracking_list?student_id=' + req.query.student_id);
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+
+router.get('/visit_record_list', async function (req, res) {
+    try {
+        let studentId = req.query.student_id;
+        let student = await baseDAO.getById('student', studentId);
+        student = student[0];
+        let visitRecords = await visitRecordDAO.getVisitRecordBySId(studentId);
+        let receptionists = await baseDAO.getAll('user');
+        let grades = await baseDAO.getAll('grade');
+        let sources = await baseDAO.getAll('source');
+        res.render('student/visit_record_list', {
+            student: student,
+            visitRecords: visitRecords,
+            receptionistMap: commonUtil.toMap(receptionists),
+            gradeMap: commonUtil.toMap(grades),
+            sourceMap: commonUtil.toMap(sources),
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/new_visit_record', async function (req, res) {
+    try {
+        res.render('student/new_visit_record', {student_id: req.query.student_id});
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_create_visit_record', async function (req, res) {
+    try {
+        let studentId = req.body.student_id;
+        await visitRecordDAO.saveVisitRecord(studentId, req.body.arrive_time, req.body.leave_time, req.body.possibility, req.body.content, req.session.user[0].id);
+        res.redirect('/student/visit_record_list?student_id=' + studentId);
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/edit_visit_record', async function (req, res) {
+    try {
+        let visitRecord = await baseDAO.getById('visit_record', req.query.id);
+        res.render('student/edit_visit_record', {
+            visitRecord: visitRecord[0],
+            student_id: req.query.student_id,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_update_visit_record', async function (req, res) {
+    try {
+        let studentId = req.body.student_id;
+        await visitRecordDAO.updateVisitRecord(req.body.id, req.body.arrive_time, req.body.leave_time, req.body.possibility, req.body.content);
+        res.redirect('/student/visit_record_list?student_id=' + studentId);
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/delete_visit_record', async function (req, res) {
+    try {
+        await baseDAO.deleteById('visit_record', req.query.id);
+        res.redirect('/student/visit_record_list?student_id=' + req.query.student_id);
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }
