@@ -1,0 +1,157 @@
+<div class="row-fluid">
+    <div class="span12">
+        <div class="portlet box purple">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-reorder"></i>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="booking-search">
+                    <form action="/student/student_list">
+                        <div class="clearfix">
+                            <div class="control-group span3">
+                                <label class="control-label">姓名:</label>
+                                <div class="controls">
+                                    <input name="name" class="m-wrap span12" type="text" value="<%= condition.name%>">
+                                </div>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label">联系电话:</label>
+                                <div class="controls">
+                                    <input name="contact" class="m-wrap span12" type="text" value="<%= condition.contact%>">
+                                </div>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label">年级:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="grade_id" id="grade_id">
+                                        <option value=""></option>
+                                        <%for (let i = 0; i < grades.length; i++){%>
+                                        <option value="<%= grades[i].id%>"><%= grades[i].name%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label">状态:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="status" id="status">
+                                        <option value=""></option>
+                                        <option value="0">未上门</option>
+                                        <option value="1">已上门</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="control-group span3">
+                                <label class="control-label">预约上门起始时间:</label>
+                                <div class="controls">
+                                    <div class="input-append date form_datetime span12" style="padding-right: 56px;">
+                                        <input id="appointment_start_time" name="appointment_start_time" type="text"
+                                               <%if (condition.appointment_start_time){%>value="<%= dateUtil.dateTimeFormat(condition.appointment_start_time)%>"<%}%> readonly class="m-wrap span12"/>
+                                        <span class="add-on"><i class="icon-remove"></i></span>
+                                        <span class="add-on"><i class="icon-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label">预约上门截止时间:</label>
+                                <div class="controls">
+                                    <div class="input-append date form_datetime span12" style="padding-right: 56px;">
+                                        <input id="appointment_end_time" name="appointment_end_time" type="text"
+                                               <%if (condition.appointment_end_time){%>value="<%= dateUtil.dateTimeFormat(condition.appointment_end_time)%>"<%}%> readonly class="m-wrap span12"/>
+                                        <span class="add-on"><i class="icon-remove"></i></span>
+                                        <span class="add-on"><i class="icon-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label">顾问:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="adviser_id" id="adviser_id">
+                                        <option value=""></option>
+                                        <%for (let i = 0; i < advisers.length; i++){%>
+                                        <option value="<%= advisers[i].id%>"><%= advisers[i].name%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label">途径:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="source_id" id="source_id">
+                                        <option value=""></option>
+                                        <%for (let i = 0; i < sources.length; i++){%>
+                                        <option value="<%= sources[i].id%>"><%= sources[i].name%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="pull-right">
+                                <button class="btn yellow"><i class="icon-search m-icon-white"></i> 搜索</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>客户编号</th>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>年级</th>
+                        <th>联系电话</th>
+                        <th>预约上门时间</th>
+                        <th>顾问</th>
+                        <th>途径</th>
+                        <th>状态</th>
+                        <th>备注</th>
+                        <th class="table_action" data-colNum=10>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <%for (let i = 0; i < students.length; i++){%>
+                    <tr>
+                        <td><%= students[i].student_no%></td>
+                        <td><%= students[i].name%></td>
+                        <td><%if (students[i].gender == 0){%>男<%} else {%>女<%}%></td>
+                        <td><%= gradeMap[students[i].grade_id].name%></td>
+                        <td><%= students[i].contact%></td>
+                        <td><%= dateUtil.dateTimeFormat(students[i].appointment_time)%></td>
+                        <td><% if (students[i].adviser_id) {%><%= adviserMap[students[i].adviser_id].name%><%}%></td>
+                        <td><%= sourceMap[students[i].source_id].name%></td>
+                        <td><%if (students[i].status == 0){%>未上门<%} else if (students[i].status == 1) {%>已上门<%} else if (students[i].status == 2) {%>已签约<%}%></td>
+                        <td><% if (students[i].note){%><%= students[i].note%><%}%></td>
+                        <td>
+                            <a href="/student/edit_student?id=<%= students[i].id%>" class="btn blue mini"><i class="icon-ok"></i> 编辑</a>
+                        </td>
+                    </tr>
+                    <%}%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<%- contentFor('title')%>
+客户管理
+<%- contentFor('breadcrumb')%>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="javascript:void(0);">客户</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/student/student_list">客户管理</a>
+</li>
+<%- contentFor('script')%>
+<script>
+    $('#grade_id').val('<%= condition.grade_id%>');
+    $('#status').val('<%= condition.status%>');
+    $('#adviser_id').val('<%= condition.adviser_id%>');
+    $('#source_id').val('<%= condition.source_id%>');
+</script>

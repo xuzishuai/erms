@@ -84,62 +84,10 @@ exports.getStudentByCondition = function (condition) {
 exports.doUpdateStudent = function (student) {
     return new Promise(async function (resolve, reject) {
         try {
-            if (student.id && student.id != '') {
-                let sql = 'update student set ';
-                let params = [];
-                if (student.name && student.name != '') {
-                    sql += ' name=?';
-                    params[params.length] = student.name;
-                }
-                if (student.gender != null && student.gender != '') {
-                    sql += ' gender=?';
-                    params[params.length] = student.gender;
-                }
-                if (student.grade_id && student.grade_id != '') {
-                    sql += ' grade_id=?';
-                    params[params.length] = student.grade_id;
-                }
-                if (student.contact && student.contact != '') {
-                    sql += ' contact=?';
-                    params[params.length] = student.contact;
-                }
-                if (student.appointment_time && student.appointment_time != '') {
-                    sql += ' appointment_time=?';
-                    params[params.length] = student.appointment_time;
-                }
-                if (student.adviser_id && student.adviser_id != '') {
-                    sql += ' adviser_id=?';
-                    params[params.length] = student.adviser_id;
-                }
-                if (student.source_id && student.source_id != '') {
-                    sql += ' source_id=?';
-                    params[params.length] = student.source_id;
-                }
-                if (student.how_know_id && student.how_know_id != '') {
-                    sql += ' how_know_id=?';
-                    params[params.length] = student.how_know_id;
-                }
-                if (student.status != null && student.status != '') {
-                    sql += ' status=?';
-                    params[params.length] = student.status;
-                }
-                if (student.note && student.note != '') {
-                    sql += ' note=?';
-                    params[params.length] = student.note;
-                }
-                if (student.status == '1') {
-                    sql += ', arrive_time=?';
-                    params[params.length] = new Date();
-                }
-                if (student.audit_status != null && student.audit_status != '') {
-                    sql += ' audit_status=?';
-                    params[params.length] = student.audit_status;
-                }
-                params[params.length] = student.id;
-                if (params.length > 1) {
-                    await dataPool.query(sql + ' where id=?', params);
-                }
-            }
+            await dataPool.query('update student set name=?, gender=?, grade_id=?, contact=?, appointment_time=?, ' +
+                'adviser_id=?, source_id=?, how_know_id=?, status=?, note=?, arrive_time=?, audit_status=? where id=?',
+                [student.name, student.gender, student.grade_id, student.contact, student.appointment_time, student.adviser_id, student.source_id
+                    , student.how_know_id, student.status, student.note, new Date(), student.audit_status, student.id]);
             resolve();
         } catch (error) {
             reject(error);
