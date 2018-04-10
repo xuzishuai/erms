@@ -26,9 +26,16 @@ router.get('/new_student', async function (req, res) {
 
 router.post('/do_create_student', async function (req, res) {
     try {
-        await studentDAO.saveStudent(req.body.name, req.body.gender, req.body.grade_id, req.body.contact, req.body.appointment_time,
-            req.body.source_id, (req.body.how_know_id&&req.body.how_know_id!='')?req.body.how_know_id:null,
-            (req.body.note&&req.body.note!='')?req.body.note:null);
+        let student = {};
+        student.name = req.body.name;
+        student.gender = req.body.gender;
+        student.grade_id = req.body.grade_id;
+        student.contact = req.body.contact;
+        student.appointment_time = req.body.appointment_time;
+        student.source_id = req.body.source_id;
+        student.how_know_id = (req.body.how_know_id&&req.body.how_know_id!='')?req.body.how_know_id:null;
+        student.note = (req.body.note&&req.body.note!='')?req.body.note:null;
+        await studentDAO.saveStudent(student);
         res.send({status: true});
     } catch (error) {
         exceptionHelper.renderException(res, error);
@@ -419,10 +426,16 @@ router.post('/do_update_student', async function (req, res) {
         student.name = req.body.name;
         student.gender = req.body.gender;
         student.grade_id = req.body.grade_id;
+        student.school = (req.body.school&&req.body.school!='')?req.body.school:null;
+        student.birthday = (req.body.birthday&&req.body.birthday!='')?req.body.birthday:null;
         student.contact = req.body.contact;
+        student.email = (req.body.email&&req.body.email!='')?req.body.email:null;
+        student.parent_name = (req.body.parent_name&&req.body.parent_name!='')?req.body.parent_name:null;
+        student.relationship = (req.body.relationship&&req.body.relationship!='')?req.body.relationship:null;
         student.appointment_time = req.body.appointment_time;
         student.source_id = (req.body.source_id&&req.body.source_id!='')?req.body.source_id:null;
         student.how_know_id = (req.body.how_know_id&&req.body.how_know_id!='')?req.body.how_know_id:null;
+        student.home_address = (req.body.home_address&&req.body.home_address!='')?req.body.home_address:null;
         student.note = (req.body.note&&req.body.note!='')?req.body.note:null;
         await studentDAO.doUpdateStudent(student);
         res.redirect('/student/student_list');

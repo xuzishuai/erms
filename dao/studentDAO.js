@@ -2,7 +2,7 @@ const dataPool = require('../util/dataPool');
 const Promise = require('promise');
 const uuid = require('node-uuid');
 
-exports.saveStudent = function (name, gender, grade_id, contact, appointment_time, source_id, how_know_id, note) {
+exports.saveStudent = function (student) {
     return new Promise(async function (resolve, reject) {
         try {
             let create_at = new Date();
@@ -21,8 +21,9 @@ exports.saveStudent = function (name, gender, grade_id, contact, appointment_tim
                 num = '00' + num;
             else if (num < 1000)
                 num = '0' + num;
-            await dataPool.query('insert into student values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                [uuid.v1(), year.toString() + month.toString() + day.toString() + num, name, gender, grade_id, contact, appointment_time, null, source_id, how_know_id, 0, create_at, note, null, 0]);
+            await dataPool.query('insert into student(id, student_no, name, gender, grade_id, contact, appointment_time, source_id, how_know_id, note) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                [uuid.v1(), year.toString() + month.toString() + day.toString() + num, student.name, student.gender, student.grade_id, student.contact, student.appointment_time,
+                    student.source_id, student.how_know_id, student.note]);
             resolve();
         } catch (error) {
             reject(error);
@@ -84,10 +85,11 @@ exports.getStudentByCondition = function (condition) {
 exports.doUpdateStudent = function (student) {
     return new Promise(async function (resolve, reject) {
         try {
-            await dataPool.query('update student set name=?, gender=?, grade_id=?, contact=?, appointment_time=?, ' +
-                'adviser_id=?, source_id=?, how_know_id=?, status=?, note=?, arrive_time=?, audit_status=? where id=?',
-                [student.name, student.gender, student.grade_id, student.contact, student.appointment_time, student.adviser_id, student.source_id
-                    , student.how_know_id, student.status, student.note, new Date(), student.audit_status, student.id]);
+            await dataPool.query('update student set name=?, gender=?, grade_id=?, school=?, birthday=?, contact=?, email=?, parent_name=?, relationship=?, appointment_time=?, ' +
+                'adviser_id=?, source_id=?, how_know_id=?, status=?, home_address=?, note=?, arrive_time=?, audit_status=? where id=?',
+                [student.name, student.gender, student.grade_id, student.school, student.birthday, student.contact, student.email, student.parent_name, student.relationship,
+                    student.appointment_time, student.adviser_id, student.source_id, student.how_know_id, student.status, student.home_address, student.note, new Date(),
+                    student.audit_status, student.id]);
             resolve();
         } catch (error) {
             reject(error);

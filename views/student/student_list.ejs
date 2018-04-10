@@ -127,7 +127,7 @@
                         <td><%if (students[i].status == 0){%>未上门<%} else if (students[i].status == 1) {%>已上门<%} else if (students[i].status == 2) {%>已签约<%}%></td>
                         <td><% if (students[i].note){%><%= students[i].note%><%}%></td>
                         <td>
-                            <a href="/student/edit_student?id=<%= students[i].id%>" class="btn blue mini"><i class="icon-ok"></i> 编辑</a>
+                            <a href="/student/edit_student?id=<%= students[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
                         </td>
                     </tr>
                     <%}%>

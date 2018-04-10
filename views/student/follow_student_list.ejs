@@ -93,8 +93,8 @@
                         <td><%if (students[i].status == 0){%>未上门<%} else if (students[i].status == 1) {%>已上门<%} else if (students[i].status == 2) {%>已签约<%}%></td>
                         <td><% if (students[i].note){%><%= students[i].note%><%}%></td>
                         <td>
-                            <a href="/student/student_tracking_list?student_id=<%= students[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 追踪记录</a>
-                            <a href="/student/visit_record_list?student_id=<%= students[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 上门记录</a>
+                            <a href="/student/student_tracking_list?student_id=<%= students[i].id%>" class="btn purple mini"> 追踪记录</a>
+                            <a href="/student/visit_record_list?student_id=<%= students[i].id%>" class="btn purple mini"> 上门记录</a>
                         </td>
                     </tr>
                     <%}%>

@@ -41,9 +41,43 @@
                         </div>
                     </div>
                     <div class="control-group">
+                        <label class="control-label">就读学校</label>
+                        <div class="controls">
+                            <input type="text" class="m-wrap span6" name="school" id="school" value="<%= student.school%>">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">出生日期</label>
+                        <div class="controls">
+                            <div class="input-append date date-picker">
+                                <input id="birthday" name="birthday" size="16" type="text" readonly class="m-wrap" <%if (student.birthday){%>value="<%= dateUtil.dateTimeFormat(student.birthday)%>"<%}%>/>
+                                <span class="add-on"><i class="icon-remove"></i></span>
+                                <span class="add-on"><i class="icon-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
                         <label class="control-label">联系电话<span class="required">*</span></label>
                         <div class="controls">
                             <input type="text" class="m-wrap span6" name="contact" id="contact" value="<%= student.contact%>">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">电子邮件</label>
+                        <div class="controls">
+                            <input type="text" class="m-wrap span6" name="email" id="email" value="<%= student.email%>">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">家长姓名</label>
+                        <div class="controls">
+                            <input type="text" class="m-wrap span6" name="parent_name" id="parent_name" value="<%= student.parent_name%>">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">家长关系</label>
+                        <div class="controls">
+                            <input type="text" class="m-wrap span6" name="relationship" id="relationship" value="<%= student.relationship%>">
                         </div>
                     </div>
                     <div class="control-group">
@@ -76,6 +110,12 @@
                                 <option <%if (student.how_know_id==howKnows[i].id){%>selected<%}%> value="<%= howKnows[i].id%>"><%= howKnows[i].name%></option>
                                 <%}%>
                             </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">家庭住址</label>
+                        <div class="controls">
+                            <textarea name="home_address" class="span6 m-wrap" rows="3"><%= student.home_address%></textarea>
                         </div>
                     </div>
                     <div class="control-group">
@@ -126,6 +166,9 @@
                     digits: true,
                     required: true
                 },
+                email: {
+                    email: true
+                },
                 appointment_time: {
                     required: true
                 },
@@ -143,6 +186,9 @@
                 contact: {
                     digits: "请输入数字",
                     required: "请输入联系电话"
+                },
+                email: {
+                    email: "请输入正确格式的电子邮件"
                 },
                 appointment_time: {
                     required: "请输入预约上门时间"
