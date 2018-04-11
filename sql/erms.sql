@@ -229,6 +229,7 @@ create table contract_detail
    subject_id           varchar(36) not null comment '科目id',
    grade_id             varchar(36) not null comment '年级id',
    lesson_period        int not null comment '课时数',
+   finished_lesson      int not null comment '已完成课时数',
    type                 tinyint(4) not null comment '类型，0新签，1常规赠送，2校长赠送',
    price                double not null comment '单价',
    status               tinyint(4) not null default 0 comment '状态，0待确认，1执行中',
@@ -236,6 +237,27 @@ create table contract_detail
 );
 
 alter table contract_detail comment '合同明细表';
+
+/*==============================================================*/
+/* Table: contract_detail_log                                   */
+/*==============================================================*/
+create table contract_detail_log
+(
+   id                   varchar(36) not null,
+   contract_id          varchar(36) not null comment '合同id',
+   operator_id          varchar(36) not null comment '操作人id，为新建合同人或变更发起人',
+   subject_id           varchar(36) not null comment '科目id',
+   grade_id             varchar(36) not null comment '年级id',
+   lesson_period        int not null comment '课时数',
+   finished_lesson      int not null comment '已完成课时数',
+   type                 tinyint(4) not null comment '类型，0新签，1常规赠送，2校长赠送',
+   price                double not null comment '单价',
+   status               tinyint(4) not null default 0 comment '状态，0待确认，1执行中',
+   update_time          datetime not null comment '更新时间，同一合同的不同明细更新时间要完全一致',
+   primary key (id)
+);
+
+alter table contract_detail_log comment '合同明细更新记录表';
 
 alter table menu add constraint FK_Reference_2 foreign key (parent_id)
       references menu (id) on delete restrict on update restrict;
@@ -284,3 +306,15 @@ alter table contract_detail add constraint FK_Reference_15 foreign key (subject_
 
 alter table contract_detail add constraint FK_Reference_16 foreign key (grade_id)
       references grade (id) on delete restrict on update restrict;
+
+alter table contract_detail_log add constraint FK_Reference_17 foreign key (contract_id)
+      references contract (id) on delete restrict on update restrict;
+
+alter table contract_detail_log add constraint FK_Reference_18 foreign key (subject_id)
+      references subject (id) on delete restrict on update restrict;
+
+alter table contract_detail_log add constraint FK_Reference_19 foreign key (grade_id)
+      references grade (id) on delete restrict on update restrict;
+
+alter table contract_detail_log add constraint FK_Reference_20 foreign key (operator_id)
+      references user (id) on delete restrict on update restrict;

@@ -11,6 +11,7 @@ const menuDAO = require('./dao/menuDAO');
 const index = require('./routes/index');
 const user = require('./routes/user');
 const student = require('./routes/student');
+const contract = require('./routes/contract');
 
 const app = express();
 
@@ -80,6 +81,7 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/user', user);
 app.use('/student', student);
+app.use('/contract', contract);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
