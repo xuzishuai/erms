@@ -22,6 +22,12 @@ drop table if exists student_tracking;
 
 drop table if exists visit_record;
 
+drop table if exists subject;
+
+drop table if exists contract;
+
+drop table if exists contract_detail;
+
 /*==============================================================*/
 /* Table: menu                                                  */
 /*==============================================================*/
@@ -111,7 +117,7 @@ alter table how_know comment '从何得知表';
 create table student
 (
    id                   varchar(36) not null,
-   student_no           varchar(100) not null,
+   student_no           varchar(100) not null comment '学生编号',
    name                 varchar(50) not null comment '学生姓名',
    gender               tinyint(2) not null comment '性别，0男，1女',
    grade_id             varchar(36) not null comment '年级id',
@@ -172,6 +178,65 @@ create table visit_record
 
 alter table visit_record comment '到访记录表';
 
+/*==============================================================*/
+/* Table: subject                                               */
+/*==============================================================*/
+create table subject
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '科目名称',
+   primary key (id)
+);
+
+alter table subject comment '科目表';
+
+/*==============================================================*/
+/* Table: contract                                              */
+/*==============================================================*/
+create table contract
+(
+   id                   varchar(36) not null,
+   student_id           varchar(36) not null comment '学生id',
+   contract_no          varchar(100) not null comment '合同编号',
+   attribute            tinyint(4) not null comment '合同属性，0新签，1赠送，2续费，3结课后新签',
+   type                 tinyint(4) not null comment '合同类型，0常规课程，1寒假独立课程，2暑假独立课程',
+   grade_id             varchar(36) not null comment '年级id',
+   total_money          double not null comment '合同金额',
+   prepay               double not null comment '已付款',
+   left_money           double not null comment '未付款',
+   lesson_period        int not null comment '总课时数',
+   start_date           date not null comment '合同开始日期',
+   is_recommend         tinyint(2) not null comment '是否被推荐，0否，1是',
+   recommend_type       varchar(50) comment '推荐方式',
+   recommender_id       varchar(36) comment '推荐人id',
+   signer_id            varchar(36) not null comment '签约人id',
+   possibility          tinyint(4) not null comment '续费可能性，0大,1一般,2小',
+   status               tinyint(4) not null default 0 comment '合同状态，0待确认，1执行中，2已驳回，3修改中，4变更中，5已作废',
+   create_at            timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '签约时间',
+   note                 varchar(500) comment '备注',
+   primary key (id)
+);
+
+alter table contract comment '合同表';
+
+/*==============================================================*/
+/* Table: contract_detail                                       */
+/*==============================================================*/
+create table contract_detail
+(
+   id                   varchar(36) not null,
+   contract_id          varchar(36) not null comment '合同id',
+   subject_id           varchar(36) not null comment '科目id',
+   grade_id             varchar(36) not null comment '年级id',
+   lesson_period        int not null comment '课时数',
+   type                 tinyint(4) not null comment '类型，0新签，1常规赠送，2校长赠送',
+   price                double not null comment '单价',
+   status               tinyint(4) not null default 0 comment '状态，0待确认，1执行中',
+   primary key (id)
+);
+
+alter table contract_detail comment '合同明细表';
+
 alter table menu add constraint FK_Reference_2 foreign key (parent_id)
       references menu (id) on delete restrict on update restrict;
 
@@ -199,3 +264,23 @@ alter table visit_record add constraint FK_Reference_8 foreign key (student_id)
 alter table visit_record add constraint FK_Reference_9 foreign key (receptionist_id)
       references user (id) on delete restrict on update restrict;
 
+alter table contract add constraint FK_Reference_10 foreign key (student_id)
+      references student (id) on delete restrict on update restrict;
+
+alter table contract add constraint FK_Reference_11 foreign key (grade_id)
+      references grade (id) on delete restrict on update restrict;
+
+alter table contract add constraint FK_Reference_12 foreign key (recommender_id)
+      references user (id) on delete restrict on update restrict;
+
+alter table contract add constraint FK_Reference_13 foreign key (signer_id)
+      references user (id) on delete restrict on update restrict;
+
+alter table contract_detail add constraint FK_Reference_14 foreign key (contract_id)
+      references contract (id) on delete restrict on update restrict;
+
+alter table contract_detail add constraint FK_Reference_15 foreign key (subject_id)
+      references subject (id) on delete restrict on update restrict;
+
+alter table contract_detail add constraint FK_Reference_16 foreign key (grade_id)
+      references grade (id) on delete restrict on update restrict;

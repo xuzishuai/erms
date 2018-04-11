@@ -62,3 +62,22 @@ INSERT INTO how_know VALUES ('10', '手机短信');
 INSERT INTO how_know VALUES ('11', '中心门头或招牌');
 INSERT INTO how_know VALUES ('12', '报刊亭');
 INSERT INTO how_know VALUES ('13', '其他');
+
+-- ----------------------------
+-- Records of subject
+-- ----------------------------
+INSERT INTO subject VALUES ('01', '语文');
+INSERT INTO subject VALUES ('02', '数学');
+INSERT INTO subject VALUES ('03', '英语');
+INSERT INTO subject VALUES ('04', '物理');
+INSERT INTO subject VALUES ('05', '化学');
+INSERT INTO subject VALUES ('06', '生物');
+INSERT INTO subject VALUES ('07', '历史');
+INSERT INTO subject VALUES ('08', '政治');
+INSERT INTO subject VALUES ('09', '地理');
+INSERT INTO subject VALUES ('10', '心理');
+INSERT INTO subject VALUES ('11', '家教');
+INSERT INTO subject VALUES ('12', '志愿');
+INSERT INTO subject VALUES ('13', '奥数');
+INSERT INTO subject VALUES ('14', '综合');
+INSERT INTO subject VALUES ('15', '其他');
