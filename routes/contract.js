@@ -12,12 +12,14 @@ router.get('/new_contract', async function (req, res) {
         let student = await baseDAO.getById('student', req.query.id);
         let grades = await baseDAO.getAll('grade');
         let sources = await baseDAO.getAll('source');
-        let advisers = await userDAO.getAllAdviser();
+        let users = await baseDAO.getAll('user');
         res.render('contract/new_contract', {
             student: student[0],
             gradeMap: commonUtil.toMap(grades),
             sourceMap: commonUtil.toMap(sources),
-            adviserMap: commonUtil.toMap(advisers),
+            userMap: commonUtil.toMap(users),
+            grades: grades,
+            users: users,
             dateUtil: dateUtil
         });
     } catch (error) {
@@ -33,6 +35,14 @@ router.post('/validate_contract_no', async function (req, res) {
         } else {
             res.send(true);
         }
+    } catch (error) {
+        res.send(false);
+    }
+});
+
+router.post('/do_create_contract', async function (req, res) {
+    try {
+        res.redirect('/student/student_list');
     } catch (error) {
         res.send(false);
     }
