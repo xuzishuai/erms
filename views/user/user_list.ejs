@@ -17,8 +17,7 @@
                             <th>姓名</th>
                             <th>密码</th>
                             <th>角色</th>
-                            <th>是否顾问</th>
-                            <th class="table_action" data-colNum=5>操作</th>
+                            <th class="table_action" data-colNum=4>操作</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,7 +27,6 @@
                             <td><%= users[i].name%></td>
                             <td><%= users[i].password%></td>
                             <td><%= roleMap[users[i].role_id].name%></td>
-                            <td><%if (users[i].is_adviser == 1){%>是<%} else {%>否<%}%></td>
                             <td>
                                 <a href="/user/edit_user?id=<%= users[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
                                 <a data-toggle="modal" data-target="#confirm" data-id="<%= users[i].id%>" class="btn red mini"><i class="icon-minus"></i> 删除</a>

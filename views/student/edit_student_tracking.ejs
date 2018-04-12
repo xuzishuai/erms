@@ -14,6 +14,16 @@
                     <input id="id" name="id" value="<%= studentTracking.id%>" type="hidden">
                     <input id="student_id" name="student_id" value="<%= student_id%>" type="hidden">
                     <div class="control-group">
+                        <label class="control-label">追踪日期<span class="required">*</span></label>
+                        <div class="controls">
+                            <div class="input-append date date-picker">
+                                <input id="track_date" name="track_date" size="16" type="text" readonly class="m-wrap" <%if (studentTracking.track_date){%>value="<%= dateUtil.dateFormat(studentTracking.track_date)%>"<%}%>/>
+                                <span class="add-on"><i class="icon-remove"></i></span>
+                                <span class="add-on"><i class="icon-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
                         <label class="control-label">追踪方式<span class="required">*</span></label>
                         <div class="controls">
                             <select class="span6 select2"  data-placeholder="请选择追踪方式" tabindex="1" name="channel" id="channel">
@@ -91,6 +101,9 @@
             errorClass: 'help-inline', // default input error message class
             focusInvalid: false, // do not focus the last invalid input
             rules: {
+                track_date: {
+                    required: true
+                },
                 channel: {
                     required: true
                 },
@@ -105,6 +118,9 @@
                 }
             },
             messages: {
+                track_date: {
+                    required: "请选择追踪日期"
+                },
                 channel: {
                     required: "请选择追踪方式"
                 },

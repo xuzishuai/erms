@@ -40,17 +40,6 @@
                             </select>
                         </div>
                     </div>
-                    <div class="control-group">
-                        <label class="control-label">是否顾问<span class="required">*</span></label>
-                        <div class="controls">
-                            <label class="radio">
-                                <input type="radio" name="is_adviser" value="1" <%if (user.is_adviser == 1){%>checked<%}%> />是
-                            </label>
-                            <label class="radio">
-                                <input type="radio" name="is_adviser" value="0" <%if (user.is_adviser == 0){%>checked<%}%> />否
-                            </label>
-                        </div>
-                    </div>
                     <div class="form-actions">
                         <button type="submit" class="btn green"><i class="icon-ok"></i> 提交</button>
                         <button type="button" class="btn" onclick="javascript:history.back(-1);"><i class="icon-remove"></i> 取消</button>

@@ -15,7 +15,15 @@ INSERT INTO menu VALUES ('10', '客户管理', '4', '/student/student_list', nul
 -- ----------------------------
 -- Records of user,插入超级管理员用户
 -- ----------------------------
-INSERT INTO `user` VALUES ('1cbb1360-d57d-11e7-9634-4d058774421e', 'ermsAdmin', '超级管理员', 'Xzs_825197298?', null, false);
+INSERT INTO `user` VALUES ('1cbb1360-d57d-11e7-9634-4d058774421e', 'ermsAdmin', '超级管理员', 'Xzs_825197298?', null);
+
+-- ----------------------------
+-- Records of role
+-- ----------------------------
+INSERT INTO `role` VALUES ('01', '校长', null);
+INSERT INTO `role` VALUES ('02', '教务主任', null);
+INSERT INTO `role` VALUES ('03', '教育顾问', null);
+INSERT INTO `role` VALUES ('04', '班主任', null);
 
 -- ----------------------------
 -- Records of grade

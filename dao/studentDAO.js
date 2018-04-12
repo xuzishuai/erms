@@ -21,9 +21,9 @@ exports.saveStudent = function (student) {
                 num = '00' + num;
             else if (num < 1000)
                 num = '0' + num;
-            await dataPool.query('insert into student(id, student_no, name, gender, grade_id, contact, appointment_time, source_id, how_know_id, note) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            await dataPool.query('insert into student(id, student_no, name, gender, grade_id, contact, appointment_time, source_id, how_know_id, note, create_at, update_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 [uuid.v1(), year.toString() + month.toString() + day.toString() + num, student.name, student.gender, student.grade_id, student.contact, student.appointment_time,
-                    student.source_id, student.how_know_id, student.note]);
+                    student.source_id, student.how_know_id, student.note, create_at, create_at]);
             resolve();
         } catch (error) {
             reject(error);
@@ -86,10 +86,10 @@ exports.doUpdateStudent = function (student) {
     return new Promise(async function (resolve, reject) {
         try {
             await dataPool.query('update student set name=?, gender=?, grade_id=?, school=?, birthday=?, contact=?, email=?, parent_name=?, relationship=?, appointment_time=?, ' +
-                'adviser_id=?, source_id=?, how_know_id=?, status=?, home_address=?, note=?, arrive_time=?, audit_status=? where id=?',
+                'adviser_id=?, source_id=?, how_know_id=?, status=?, home_address=?, note=?, arrive_time=?, audit_status=?, update_at=? where id=?',
                 [student.name, student.gender, student.grade_id, student.school, student.birthday, student.contact, student.email, student.parent_name, student.relationship,
-                    student.appointment_time, student.adviser_id, student.source_id, student.how_know_id, student.status, student.home_address, student.note, new Date(),
-                    student.audit_status, student.id]);
+                    student.appointment_time, student.adviser_id, student.source_id, student.how_know_id, student.status, student.home_address, student.note, student.arrive_time,
+                    student.audit_status, new Date(), student.id]);
             resolve();
         } catch (error) {
             reject(error);

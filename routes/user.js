@@ -102,7 +102,7 @@ router.post('/validate_user_no', async function (req, res) {
 
 router.post('/do_create_user', async function (req, res) {
     try {
-        await userDAO.saveUser(req.body.user_no, req.body.name, req.body.password, req.body.role_id, req.body.is_adviser);
+        await userDAO.saveUser(req.body.user_no, req.body.name, req.body.password, req.body.role_id);
         res.redirect('/user/user_list');
     } catch (error) {
         exceptionHelper.renderException(res, error);
@@ -124,7 +124,7 @@ router.get('/edit_user', async function (req, res) {
 
 router.post('/do_update_user', async function (req, res) {
     try {
-        await userDAO.updateUser(req.body.id, req.body.user_no, req.body.name, req.body.password, req.body.role_id, req.body.is_adviser);
+        await userDAO.updateUser(req.body.id, req.body.user_no, req.body.name, req.body.password, req.body.role_id);
         res.redirect('/user/user_list');
     } catch (error) {
         exceptionHelper.renderException(res, error);
@@ -183,14 +183,17 @@ router.post('/validate_role_name', async function (req, res) {
 
 router.post('/do_create_role', async function (req, res) {
     try {
+        let role = {};
+        role.name = req.body.name;
+        role.menu_ids = "#";
         let menuIds = req.body.menu_ids;
-        let menu_ids = "#";
         if (menuIds) {
             for (let i = 0; i < menuIds.length; i++) {
-                menu_ids += menuIds[i] + "#";
+                role.menu_ids += menuIds[i] + "#";
             }
         }
-        await roleDAO.saveRole(req.body.name, menu_ids=="#"?null:menu_ids);
+        role.menu_ids = role.menu_ids=="#"?null:role.menu_ids;
+        await roleDAO.saveRole(role);
         res.redirect('/user/role_list');
     } catch (error) {
         exceptionHelper.renderException(res, error);
@@ -217,14 +220,18 @@ router.get('/edit_role', async function (req, res) {
 
 router.post('/do_update_role', async function (req, res) {
     try {
+        let role = {};
+        role.id = req.body.id;
+        role.name = req.body.name;
+        role.menu_ids = "#";
         let menuIds = req.body.menu_ids;
-        let menu_ids = "#";
         if (menuIds) {
             for (let i = 0; i < menuIds.length; i++) {
-                menu_ids += menuIds[i] + "#";
+                role.menu_ids += menuIds[i] + "#";
             }
         }
-        await roleDAO.updateRole(req.body.id, req.body.name, menu_ids);
+        role.menu_ids = role.menu_ids=="#"?null:role.menu_ids;
+        await roleDAO.updateRole(role);
         res.redirect('/user/role_list');
     } catch (error) {
         exceptionHelper.renderException(res, error);

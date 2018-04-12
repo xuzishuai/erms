@@ -69,7 +69,6 @@ create table user
    name                 varchar(50) not null comment '用户名',
    password             varchar(64) not null comment '密码',
    role_id              varchar(36) comment '角色id',
-   is_adviser           tinyint(1) not null comment '是否顾问',
    primary key (id)
 );
 
@@ -132,11 +131,12 @@ create table student
    source_id            varchar(36) not null comment '途径id',
    how_know_id          varchar(36) comment '从何得知id',
    status               tinyint(4) not null default 0 comment '客户状态，0未上门，1已上门，2已签约',
-   create_at            timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '登记日期',
    home_address         varchar(200) comment '家庭住址',
    note                 varchar(500) comment '备注',
    arrive_time          datetime comment '上门时间',
    audit_status         tinyint(4) not null default 0 comment '客户审核状态，0未审核，1已通过，2未通过',
+   create_at            datetime not null comment '登记时间',
+   update_at            datetime not null comment '更新时间',
    primary key (id)
 );
 
@@ -156,6 +156,8 @@ create table student_tracking
    possibility          tinyint(4) not null comment '签约可能性，0大,1一般,2小',
    next_track_date      date comment '下次追踪日期',
    tracker_id           varchar(36) not null comment '追踪人id',
+   create_at            datetime not null comment '创建时间',
+   update_at            datetime not null comment '更新时间',
    primary key (id)
 );
 
@@ -171,8 +173,10 @@ create table visit_record
    arrive_time          datetime not null comment '到访时间',
    leave_time           datetime not null comment '离开时间',
    possibility          tinyint(4) not null comment '签约可能性，0大,1一般,2小',
-   content              varchar(500) not null comment '到访记录',
+   content             varchar(500) not null comment '到访记录',
    receptionist_id      varchar(36) not null comment '接待人id',
+   create_at            datetime not null comment '创建时间',
+   update_at            datetime not null comment '更新时间',
    primary key (id)
 );
 
@@ -198,7 +202,7 @@ create table contract
    id                   varchar(36) not null,
    student_id           varchar(36) not null comment '学生id',
    contract_no          varchar(100) not null comment '合同编号',
-   attribute            tinyint(4) not null comment '合同属性，0新签，1赠送，2续费，3结课后新签',
+   attribute           tinyint(4) not null comment '合同属性，0新签，1赠送，2续费，3结课后新签',
    type                 tinyint(4) not null comment '合同类型，0常规课程，1寒假独立课程，2暑假独立课程',
    grade_id             varchar(36) not null comment '年级id',
    total_money          double not null comment '合同金额',
@@ -212,7 +216,8 @@ create table contract
    signer_id            varchar(36) not null comment '签约人id',
    possibility          tinyint(4) not null comment '续费可能性，0大,1一般,2小',
    status               tinyint(4) not null default 0 comment '合同状态，0待确认，1执行中，2已驳回，3修改中，4变更中，5已作废',
-   create_at            timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '签约时间',
+   create_at            datetime not null comment '签约时间',
+   update_at            datetime not null comment '更新时间',
    note                 varchar(500) comment '备注',
    primary key (id)
 );
@@ -233,6 +238,8 @@ create table contract_detail
    type                 tinyint(4) not null comment '类型，0新签，1常规赠送，2校长赠送',
    price                double not null comment '单价',
    status               tinyint(4) not null default 0 comment '状态，0待确认，1执行中',
+   create_at            datetime not null comment '创建时间',
+   update_at            datetime not null comment '更新时间，变更申请提交后，审核通过的时间',
    primary key (id)
 );
 
@@ -253,7 +260,7 @@ create table contract_detail_log
    type                 tinyint(4) not null comment '类型，0新签，1常规赠送，2校长赠送',
    price                double not null comment '单价',
    status               tinyint(4) not null default 0 comment '状态，0待确认，1执行中',
-   update_time          datetime not null comment '更新时间，同一合同的不同明细更新时间要完全一致',
+   update_at            datetime not null comment '更新时间，变更申请提交后，审核通过的时间，同一合同的不同明细更新时间要完全一致',
    primary key (id)
 );
 

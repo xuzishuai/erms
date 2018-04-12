@@ -27,7 +27,7 @@
                             <br>
                             <%for (let j = 0; j < menuMap[parentMenus[i].id].length; j++){%>
                             <label class="checkbox">
-                                <input type="checkbox" <%if (role.menu_ids.indexOf('#'+menuMap[parentMenus[i].id][j].id+'#')>-1){%>checked<%}%> name="menu_ids" value="<%= menuMap[parentMenus[i].id][j].id%>"> <%= menuMap[parentMenus[i].id][j].name%>
+                                <input type="checkbox" <%if (role.menu_ids&&role.menu_ids.indexOf('#'+menuMap[parentMenus[i].id][j].id+'#')>-1){%>checked<%}%> name="menu_ids" value="<%= menuMap[parentMenus[i].id][j].id%>"> <%= menuMap[parentMenus[i].id][j].name%>
                             </label>
                             <%}%>
                             <%}%>

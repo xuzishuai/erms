@@ -18,10 +18,10 @@ exports.isRoleExist = function (id, name) {
     })
 };
 
-exports.saveRole = function (name, menu_ids) {
+exports.saveRole = function (role) {
     return new Promise(async function (resolve, reject) {
         try {
-            await dataPool.query('insert into role values (?, ?, ?)', [uuid.v1(), name, menu_ids]);
+            await dataPool.query('insert into role(id, name, menu_ids) values (?, ?, ?)', [uuid.v1(), role.name, role.menu_ids]);
             resolve();
         } catch (error) {
             reject(error);
@@ -29,10 +29,10 @@ exports.saveRole = function (name, menu_ids) {
     })
 };
 
-exports.updateRole = function (id, name, menu_ids) {
+exports.updateRole = function (role) {
     return new Promise(async function (resolve, reject) {
         try {
-            await dataPool.query('update role set name=?, menu_ids=? where id=?', [name, menu_ids, id]);
+            await dataPool.query('update role set name=?, menu_ids=? where id=?', [role.name, role.menu_ids, role.id]);
             resolve();
         } catch (error) {
             reject(error);

@@ -13,11 +13,13 @@ exports.getStudentTrackingBySId = function (student_id) {
     })
 };
 
-exports.saveStudentTracking = function (student_id, channel, result, possibility, next_track_date, content, tracker_id) {
+exports.saveStudentTracking = function (studentTracking) {
     return new Promise(async function (resolve, reject) {
         try {
-            let track_date = new Date();
-            await dataPool.query('insert into student_tracking values (?, ?, ?, ?, ?, ?, ?, ?, ?)', [uuid.v1(), student_id, track_date, channel, content, result, possibility, next_track_date, tracker_id]);
+            let now = new Date();
+            await dataPool.query('insert into student_tracking(id, student_id, track_date, channel, content, result, possibility, next_track_date, tracker_id, create_at, update_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                [uuid.v1(), studentTracking.student_id, studentTracking.track_date, studentTracking.channel, studentTracking.content, studentTracking.result, studentTracking.possibility, studentTracking.next_track_date,
+                    studentTracking.tracker_id, now, now]);
             resolve();
         } catch (error) {
             reject(error);
@@ -25,10 +27,11 @@ exports.saveStudentTracking = function (student_id, channel, result, possibility
     })
 };
 
-exports.updateStudentTracking = function (id, channel, result, possibility, next_track_date, content) {
+exports.updateStudentTracking = function (studentTracking) {
     return new Promise(async function (resolve, reject) {
         try {
-            await dataPool.query('update student_tracking set channel=?, result=?, possibility=?, next_track_date=?, content=? where id=?', [channel, result, possibility, next_track_date, content, id]);
+            await dataPool.query('update student_tracking set track_date=?, channel=?, result=?, possibility=?, next_track_date=?, content=?, update_at=? where id=?',
+                [studentTracking.track_date, studentTracking.channel, studentTracking.result, studentTracking.possibility, studentTracking.next_track_date, studentTracking.content, new Date(), studentTracking.id]);
             resolve();
         } catch (error) {
             reject(error);

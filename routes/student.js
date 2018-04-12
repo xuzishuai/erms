@@ -79,6 +79,7 @@ router.get('/do_student_arrive', async function (req, res) {
         student = student[0];
         student.id = req.query.id;
         student.status = 1;
+        student.arrive_time = new Date();
         await studentDAO.doUpdateStudent(student);
         res.redirect('/student/arrive_student_list');
     } catch (error) {
@@ -255,10 +256,17 @@ router.get('/new_student_tracking', async function (req, res) {
 
 router.post('/do_create_student_tracking', async function (req, res) {
     try {
-        let studentId = req.body.student_id;
-        await studentTrackingDAO.saveStudentTracking(studentId, req.body.channel, req.body.result, req.body.possibility,
-            (req.body.next_track_date && req.body.next_track_date != '') ? req.body.next_track_date : null, req.body.content, req.session.user[0].id);
-        res.redirect('/student/student_tracking_list?student_id=' + studentId);
+        let studentTracking = {};
+        studentTracking.student_id = req.body.student_id;
+        studentTracking.track_date = req.body.track_date;
+        studentTracking.channel = req.body.channel;
+        studentTracking.result = req.body.result;
+        studentTracking.possibility = req.body.possibility;
+        studentTracking.next_track_date = (req.body.next_track_date && req.body.next_track_date != '') ? req.body.next_track_date : null;
+        studentTracking.content = req.body.content;
+        studentTracking.tracker_id = req.session.user[0].id;
+        await studentTrackingDAO.saveStudentTracking(studentTracking);
+        res.redirect('/student/student_tracking_list?student_id=' + studentTracking.student_id);
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }
@@ -279,9 +287,16 @@ router.get('/edit_student_tracking', async function (req, res) {
 
 router.post('/do_update_student_tracking', async function (req, res) {
     try {
-        let studentId = req.body.student_id;
-        await studentTrackingDAO.updateStudentTracking(req.body.id, req.body.channel, req.body.result, req.body.possibility, (req.body.next_track_date && req.body.next_track_date != '')?req.body.next_track_date:null, req.body.content);
-        res.redirect('/student/student_tracking_list?student_id=' + studentId);
+        let studentTracking = {};
+        studentTracking.id = req.body.id;
+        studentTracking.track_date = req.body.track_date;
+        studentTracking.channel = req.body.channel;
+        studentTracking.result = req.body.result;
+        studentTracking.possibility = req.body.possibility;
+        studentTracking.next_track_date = (req.body.next_track_date && req.body.next_track_date != '') ? req.body.next_track_date : null;
+        studentTracking.content = req.body.content;
+        await studentTrackingDAO.updateStudentTracking(studentTracking);
+        res.redirect('/student/student_tracking_list?student_id=' + req.body.student_id);
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }
@@ -329,9 +344,15 @@ router.get('/new_visit_record', async function (req, res) {
 
 router.post('/do_create_visit_record', async function (req, res) {
     try {
-        let studentId = req.body.student_id;
-        await visitRecordDAO.saveVisitRecord(studentId, req.body.arrive_time, req.body.leave_time, req.body.possibility, req.body.content, req.session.user[0].id);
-        res.redirect('/student/visit_record_list?student_id=' + studentId);
+        let visitRecord = {};
+        visitRecord.student_id = req.body.student_id;
+        visitRecord.arrive_time = req.body.arrive_time;
+        visitRecord.leave_time = req.body.leave_time;
+        visitRecord.possibility = req.body.possibility;
+        visitRecord.content = req.body.content;
+        visitRecord.receptionist_id = req.session.user[0].id;
+        await visitRecordDAO.saveVisitRecord(visitRecord);
+        res.redirect('/student/visit_record_list?student_id=' + visitRecord.student_id);
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }
@@ -352,9 +373,14 @@ router.get('/edit_visit_record', async function (req, res) {
 
 router.post('/do_update_visit_record', async function (req, res) {
     try {
-        let studentId = req.body.student_id;
-        await visitRecordDAO.updateVisitRecord(req.body.id, req.body.arrive_time, req.body.leave_time, req.body.possibility, req.body.content);
-        res.redirect('/student/visit_record_list?student_id=' + studentId);
+        let visitRecord = {};
+        visitRecord.id = req.body.id;
+        visitRecord.arrive_time = req.body.arrive_time;
+        visitRecord.leave_time = req.body.leave_time;
+        visitRecord.possibility = req.body.possibility;
+        visitRecord.content = req.body.content;
+        await visitRecordDAO.updateVisitRecord(visitRecord);
+        res.redirect('/student/visit_record_list?student_id=' + req.body.student_id);
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }
