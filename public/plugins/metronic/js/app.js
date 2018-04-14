@@ -750,7 +750,7 @@ var App = function () {
     // Handle DataTable
     var handleDataTable = function () {
         if ($().dataTable) {
-            $('table').dataTable({
+            $('.table-list').dataTable({
                 "aLengthMenu": [
                     [15, 30, 50, -1],
                     [15, 30, 50, "全部"] // change per page values here
