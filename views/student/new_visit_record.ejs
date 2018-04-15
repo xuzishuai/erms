@@ -80,9 +80,7 @@
 <script>
     jQuery(document).ready(function() {
         $('form').validate({
-            errorElement: 'span', //default input error message container
             errorClass: 'help-inline', // default input error message class
-            focusInvalid: false, // do not focus the last invalid input
             rules: {
                 arrive_time: {
                     required: true
@@ -112,7 +110,7 @@
                 }
             },
             errorPlacement: function(error, element) {
-                error.appendTo( element.parents(".controls") );
+                error.appendTo( element.parent() );
             },
             highlight: function (element) { // hightlight error inputs
                 $(element)

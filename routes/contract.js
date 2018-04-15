@@ -13,6 +13,7 @@ router.get('/new_contract', async function (req, res) {
         let grades = await baseDAO.getAll('grade');
         let sources = await baseDAO.getAll('source');
         let users = await baseDAO.getAll('user');
+        let subjects = await baseDAO.getAll('subject');
         res.render('contract/new_contract', {
             student: student[0],
             gradeMap: commonUtil.toMap(grades),
@@ -20,6 +21,7 @@ router.get('/new_contract', async function (req, res) {
             userMap: commonUtil.toMap(users),
             grades: grades,
             users: users,
+            subjects: subjects,
             dateUtil: dateUtil
         });
     } catch (error) {
@@ -40,8 +42,42 @@ router.post('/validate_contract_no', async function (req, res) {
     }
 });
 
+router.post('/add_contract_detail_tr', async function (req, res) {
+    try {
+        let subjects = await baseDAO.getAll('subject');
+        res.render('contract/add_contract_detail_tr', {
+            hideLayout: true,
+            subjects: subjects,
+            detail_index: req.body.detail_index
+        });
+    } catch (error) {
+        res.send(false);
+    }
+});
+
 router.post('/do_create_contract', async function (req, res) {
     try {
+        let contractDetail = [];
+        for (let key in req.body) {
+            let pattSubject = new RegExp('^subject_id_');
+            if (pattSubject.test(key)) {
+                let detail = {};
+                detail.subject_id = req.body[key];
+                contractDetail[contractDetail.length] = detail;
+            }
+            let pattLessonPeriod = new RegExp('^lesson_period_');
+            if (pattLessonPeriod.test(key)) {
+                contractDetail[contractDetail.length - 1].lesson_period = req.body[key];
+            }
+            let pattType = new RegExp('^type_');
+            if (pattType.test(key)) {
+                contractDetail[contractDetail.length - 1].type = req.body[key];
+            }
+            let pattPrice = new RegExp('^price_');
+            if (pattPrice.test(key)) {
+                contractDetail[contractDetail.length - 1].price = req.body[key];
+            }
+        }
         res.redirect('/student/student_list');
     } catch (error) {
         res.send(false);

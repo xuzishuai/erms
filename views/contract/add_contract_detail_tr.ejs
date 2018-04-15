@@ -1,0 +1,21 @@
+<tr id="contract_detail_<%= detail_index%>">
+    <td class="control-group">
+        <select name="subject_id_<%= detail_index%>" class="select2">
+            <option value="">请选择科目</option>
+            <%for (let i = 0; i < subjects.length; i++){%>
+            <option value="<%= subjects[i].id%>"><%= subjects[i].name%></option>
+            <%}%>
+        </select>
+    </td>
+    <td class="control-group"><input name="lesson_period_<%= detail_index%>" type="text" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9]+/,'');}).call(this)"></td>
+    <td class="control-group">
+        <select name="type_<%= detail_index%>" class="select2">
+            <option value="">请选择类型</option>
+            <option value="0">新签</option>
+            <option value="1">常规赠送</option>
+            <option value="2">校长赠送</option>
+        </select>
+    </td>
+    <td class="control-group"><input name="price_<%= detail_index%>" type="number"></td>
+    <td><a onclick="removeDetailTr('<%= detail_index%>')" class="btn red mini"><i class="icon-minus"></i> 删除</a></td>
+</tr>

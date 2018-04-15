@@ -1,6 +1,6 @@
 <div class="row-fluid">
     <div class="span12">
-        <div class="portlet box blue">
+        <div class="portlet box green">
             <div class="portlet-title">
                 <div class="caption">
                     <i class="icon-reorder"></i>
@@ -118,7 +118,7 @@
                     <div class="control-group">
                         <label class="control-label">合同类型<span class="required">*</span></label>
                         <div class="controls">
-                            <select class="span6 select2" tabindex="1" name="attribute" id="attribute">
+                            <select class="span6 select2" tabindex="1" name="contract_type" id="contract_type">
                                 <option value="0">常规课程</option>
                                 <option value="1">寒假独立课程</option>
                                 <option value="2">暑假独立课程</option>
@@ -157,10 +157,10 @@
                         </div>
                     </div>
                     <div class="control-group">
-                        <input id="lesson_period" name="lesson_period" value="0" type="hidden">
+                        <input id="total_lesson_period" name="total_lesson_period" value="0" type="hidden">
                         <label class="control-label">总课时数</label>
                         <div class="controls">
-                            <span id="lesson_period_span" class="text bold">0</span>
+                            <span id="total_lesson_period_span" class="text bold">0</span>
                         </div>
                     </div>
                     <div class="control-group">
@@ -213,86 +213,42 @@
                     </div>
                     <h3 class="form-section">合同明细</h3>
                     <table class="table table-striped table-hover">
-
                         <thead>
-
                         <tr>
-
-                            <th>#</th>
-
-                            <th>First Name</th>
-
-                            <th>Last Name</th>
-
-                            <th class="hidden-480">Username</th>
-
-                            <th>Status</th>
-
+                            <th width="20%">科目</th>
+                            <th width="20%">课时</th>
+                            <th width="20%">类型</th>
+                            <th width="20%">单价</th>
+                            <th width="20%">操作</th>
                         </tr>
-
                         </thead>
-
-                        <tbody>
-
+                        <tbody id="contract_detail_body">
                         <tr>
-
-                            <td>1</td>
-
-                            <td>Mark</td>
-
-                            <td>Otto</td>
-
-                            <td class="hidden-480">makr124</td>
-
-                            <td><span class="label label-success">Approved</span></td>
-
+                            <td class="control-group">
+                                <select name="subject_id_0" class="select2">
+                                    <option value="">请选择科目</option>
+                                    <%for (let i = 0; i < subjects.length; i++){%>
+                                    <option value="<%= subjects[i].id%>"><%= subjects[i].name%></option>
+                                    <%}%>
+                                </select>
+                            </td>
+                            <td class="control-group"><input name="lesson_period_0" type="text" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9]+/,'');}).call(this)"></td>
+                            <td class="control-group">
+                                <select name="type_0" class="select2">
+                                    <option value="">请选择类型</option>
+                                    <option value="0">新签</option>
+                                    <option value="1">常规赠送</option>
+                                    <option value="2">校长赠送</option>
+                                </select>
+                            </td>
+                            <td class="control-group"><input name="price_0" type="number"></td>
+                            <td></td>
                         </tr>
-
-                        <tr>
-
-                            <td>2</td>
-
-                            <td>Jacob</td>
-
-                            <td>Nilson</td>
-
-                            <td class="hidden-480">jac123</td>
-
-                            <td><span class="label label-info">Pending</span></td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td>3</td>
-
-                            <td>Larry</td>
-
-                            <td>Cooper</td>
-
-                            <td class="hidden-480">lar</td>
-
-                            <td><span class="label label-warning">Suspended</span></td>
-
-                        </tr>
-
-                        <tr>
-
-                            <td>3</td>
-
-                            <td>Sandy</td>
-
-                            <td>Lim</td>
-
-                            <td class="hidden-480">sanlim</td>
-
-                            <td><span class="label label-danger">Blocked</span></td>
-
-                        </tr>
-
                         </tbody>
-
                     </table>
+                    <div class="text-right" style="margin-bottom: 10px;">
+                        <a class="btn green" onclick="addDetailTr()"><i class="icon-plus"></i> 添加</a>
+                    </div>
                     <div class="form-actions">
                         <button type="submit" class="btn green"><i class="icon-ok"></i> 提交</button>
                         <button type="button" class="btn" onclick="javascript:history.back(-1);"><i class="icon-remove"></i> 取消</button>
@@ -319,11 +275,14 @@
 </li>
 <%- contentFor('script')%>
 <script>
+    let validate = {};
     jQuery(document).ready(function() {
-        $('form').validate({
-            errorElement: 'span', //default input error message container
+        validator();
+    });
+
+    function validator() {
+        validate = $('form').validate({
             errorClass: 'help-inline', // default input error message class
-            focusInvalid: false, // do not focus the last invalid input
             rules: {
                 contract_no: {
                     required: true,
@@ -376,7 +335,7 @@
                 }
             },
             errorPlacement: function(error, element) {
-                error.appendTo( element.parents(".controls") );
+                error.appendTo( element.parent() );
             },
             highlight: function (element) { // hightlight error inputs
                 $(element)
@@ -394,7 +353,39 @@
                     .closest('.control-group').removeClass('error').addClass('success'); // set success class to the control group
             }
         });
-    });
+        $("[name^='subject_id_']").each(function(){
+            $(this).rules("add", {
+                required: true,
+                messages: {
+                    required: "请选择科目"
+                }
+            });
+        });
+        $("[name^='lesson_period_']").each(function(){
+            $(this).rules("add", {
+                required: true,
+                messages: {
+                    required: "请输入课时"
+                }
+            });
+        });
+        $("[name^='type_']").each(function(){
+            $(this).rules("add", {
+                required: true,
+                messages: {
+                    required: "请选择类型"
+                }
+            });
+        });
+        $("[name^='price_']").each(function(){
+            $(this).rules("add", {
+                required: true,
+                messages: {
+                    required: "请输入单价"
+                }
+            });
+        });
+    }
 
     function showRecommend(isShow) {
         if (isShow) {
@@ -406,5 +397,29 @@
             $('#recommend_type').val('');
             $('#recommender_id').val('').select2();
         }
+    }
+
+    let detailIndex = 0;//当前详情的索引
+    function addDetailTr() {
+        detailIndex += 1;
+        $.post('/contract/add_contract_detail_tr', {detail_index: detailIndex}, function (result) {
+            $('#contract_detail_body').append(result);
+            $('select[class="select2"]').each(function(){
+                $(this).select2({
+                    placeholder: "",
+                    allowClear: true,
+                    formatNoMatches: function () { return "没有找到匹配项"; },
+                    formatLoadMore: function () { return "加载结果中…"; },
+                    formatSearching: function () { return "搜索中…"; }
+                });
+                $('.select2').attr("style", "width: 220px;")
+            });
+            validate.resetForm();
+            validator();
+        })
+    }
+
+    function removeDetailTr(index) {
+        $('#contract_detail_' + index).remove();
     }
 </script>
