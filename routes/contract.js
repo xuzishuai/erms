@@ -57,6 +57,21 @@ router.post('/add_contract_detail_tr', async function (req, res) {
 
 router.post('/do_create_contract', async function (req, res) {
     try {
+        let contract = {};
+        contract.student_id = req.body.student_id;
+        contract.contract_no = req.body.contract_no;
+        contract.attribute = req.body.attribute;
+        contract.contract_type = req.body.contract_type;
+        contract.grade_id = req.body.grade_id;
+        contract.total_money = req.body.total_money;
+        contract.prepay = req.body.prepay;
+        contract.left_money = req.body.left_money;
+        contract.total_lesson_period = req.body.total_lesson_period;
+        contract.start_date = req.body.start_date;
+        contract.is_recommend = req.body.is_recommend;
+        contract.recommend_type = (req.body.recommend_type && req.body.recommend_type != '')?req.body.recommend_type:null;
+        contract.recommender_id = (req.body.recommender_id && req.body.recommender_id != '')?req.body.recommender_id:null;
+        contract.possibility = req.body.possibility;
         let contractDetail = [];
         for (let key in req.body) {
             let pattSubject = new RegExp('^subject_id_');
@@ -78,6 +93,8 @@ router.post('/do_create_contract', async function (req, res) {
                 contractDetail[contractDetail.length - 1].price = req.body[key];
             }
         }
+        contract.contractDetail = contractDetail;
+        await contractDAO.saveContract(contract);
         res.redirect('/student/student_list');
     } catch (error) {
         res.send(false);

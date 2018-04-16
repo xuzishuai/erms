@@ -12,3 +12,15 @@ exports.isContractExist = function (user_no) {
         }
     })
 };
+
+exports.saveContract = function (contract) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let sqls = ['insert into contract(id, student_id, contract_no) values (?, ?, ?)'];
+            let params = [[]];
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
