@@ -146,7 +146,7 @@
                     <div class="control-group">
                         <label class="control-label">已付款<span class="required">*</span></label>
                         <div class="controls">
-                            <input type="number" class="m-wrap span6" name="prepay" id="prepay">
+                            <input type="number" class="m-wrap span6" name="prepay" id="prepay" onkeyup="calculateTotal()">
                         </div>
                     </div>
                     <div class="control-group">
@@ -211,6 +211,12 @@
                             </select>
                         </div>
                     </div>
+                    <div class="control-group">
+                        <label class="control-label">备注</label>
+                        <div class="controls">
+                            <textarea name="note" class="span6 m-wrap" rows="3"></textarea>
+                        </div>
+                    </div>
                     <h3 class="form-section">合同明细</h3>
                     <table class="table table-striped table-hover">
                         <thead>
@@ -232,7 +238,7 @@
                                     <%}%>
                                 </select>
                             </td>
-                            <td class="control-group"><input name="lesson_period_0" type="text" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9]+/,'');}).call(this)"></td>
+                            <td class="control-group"><input name="lesson_period_0" type="text" onkeyup="calculateTotal(this, 'lesson_period')"></td>
                             <td class="control-group">
                                 <select name="type_0" class="select2">
                                     <option value="">请选择类型</option>
@@ -241,7 +247,7 @@
                                     <option value="2">校长赠送</option>
                                 </select>
                             </td>
-                            <td class="control-group"><input name="price_0" type="number"></td>
+                            <td class="control-group"><input name="price_0" type="number" onkeyup="calculateTotal()"></td>
                             <td></td>
                         </tr>
                         </tbody>
@@ -399,6 +405,45 @@
         }
     }
 
+    function calculateTotal(element, eleName) {
+        if (eleName == 'lesson_period') {
+            $(element).val($(element).val().replace(/[^0-9]+/,''));
+        }
+        //计算合同金额
+        let totalPrice = 0;
+        let prices = $("[name^='price_']");
+        for (let i = 0; i < prices.length; i++) {
+            totalPrice += (prices[i].value && prices[i].value != '')?parseFloat(prices[i].value):0;
+        }
+        let totalDecimalStr = totalPrice.toString().split('.')[1];
+        if (totalDecimalStr && totalDecimalStr.length > 2) {
+            totalPrice = parseFloat(totalPrice.toFixed(2));
+        }
+        //计算总课时数
+        let totalLessonPeriod = 0;
+        let lessonPeriods = $("[name^='lesson_period_']");
+        for (let i = 0; i < lessonPeriods.length; i++) {
+            totalLessonPeriod += (lessonPeriods[i].value && lessonPeriods[i].value != '')?parseFloat(lessonPeriods[i].value):0;
+        }
+        //计算未付款
+        let leftMoney = totalPrice - parseFloat($('#prepay').val());
+        if (!leftMoney) {
+            leftMoney = 0;
+        }
+        let leftDecimalStr = leftMoney.toString().split('.')[1];
+        if (leftDecimalStr && leftDecimalStr.length > 2) {
+            leftMoney = leftMoney.toFixed(2);
+        }
+
+        //刷新页面各个值
+        $('#total_money_span').html(totalPrice);
+        $('#total_money').val(totalPrice);
+        $('#total_lesson_period_span').html(totalLessonPeriod);
+        $('#total_lesson_period').val(totalLessonPeriod);
+        $('#left_money_span').html(leftMoney);
+        $('#left_money').val(leftMoney);
+    }
+
     let detailIndex = 0;//当前详情的索引
     function addDetailTr() {
         detailIndex += 1;
@@ -421,5 +466,6 @@
 
     function removeDetailTr(index) {
         $('#contract_detail_' + index).remove();
+        calculateTotal();
     }
 </script>

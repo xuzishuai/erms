@@ -71,7 +71,9 @@ router.post('/do_create_contract', async function (req, res) {
         contract.is_recommend = req.body.is_recommend;
         contract.recommend_type = (req.body.recommend_type && req.body.recommend_type != '')?req.body.recommend_type:null;
         contract.recommender_id = (req.body.recommender_id && req.body.recommender_id != '')?req.body.recommender_id:null;
+        contract.signer_id = req.session.user[0].id;
         contract.possibility = req.body.possibility;
+        contract.note = (req.body.note && req.body.note != '')?req.body.note:null;
         let contractDetail = [];
         for (let key in req.body) {
             let pattSubject = new RegExp('^subject_id_');
