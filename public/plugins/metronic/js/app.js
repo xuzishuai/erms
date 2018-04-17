@@ -744,7 +744,6 @@ var App = function () {
                 formatLoadMore: function () { return "加载结果中…"; },
                 formatSearching: function () { return "搜索中…"; }
             });
-            $('.select2').attr("style", "width: 220px;")
         }
     };
 
