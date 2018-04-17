@@ -103,4 +103,35 @@ router.post('/do_create_contract', async function (req, res) {
     }
 });
 
+router.get('/audit_contract_list', async function (req, res) {
+    try {
+        let condition = {};
+        // condition.name = req.query.name;
+        // condition.contact = req.query.contact;
+        // condition.grade_id = req.query.grade_id;
+        // condition.audit_status = req.query.audit_status!=null?req.query.audit_status:0;
+        // condition.appointment_start_time = req.query.appointment_start_time;
+        // condition.appointment_end_time = req.query.appointment_end_time;
+        // condition.adviser_id = req.query.adviser_id;
+        // condition.source_id = req.query.source_id;
+        // let students = await studentDAO.getStudentByCondition(condition);
+        // let grades = await baseDAO.getAll('grade');
+        // let advisers = await userDAO.getAllAdviser();
+        // let sources = await baseDAO.getAll('source');
+        res.render('contract/audit_contract_list', {
+            // students: students,
+            // grades: grades,
+            // sources: sources,
+            // advisers: advisers,
+            // gradeMap: commonUtil.toMap(grades),
+            // adviserMap: commonUtil.toMap(advisers),
+            // sourceMap: commonUtil.toMap(sources),
+            // condition: condition,
+            // dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
 module.exports = router;
