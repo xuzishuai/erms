@@ -106,28 +106,28 @@ router.post('/do_create_contract', async function (req, res) {
 router.get('/audit_contract_list', async function (req, res) {
     try {
         let condition = {};
-        // condition.name = req.query.name;
-        // condition.contact = req.query.contact;
-        // condition.grade_id = req.query.grade_id;
-        // condition.audit_status = req.query.audit_status!=null?req.query.audit_status:0;
-        // condition.appointment_start_time = req.query.appointment_start_time;
-        // condition.appointment_end_time = req.query.appointment_end_time;
-        // condition.adviser_id = req.query.adviser_id;
-        // condition.source_id = req.query.source_id;
-        // let students = await studentDAO.getStudentByCondition(condition);
-        // let grades = await baseDAO.getAll('grade');
-        // let advisers = await userDAO.getAllAdviser();
-        // let sources = await baseDAO.getAll('source');
+        condition.student_id = req.query.student_id;
+        condition.contract_no = req.query.contract_no;
+        condition.attribute = req.query.attribute!=null?req.query.attribute:0;
+        condition.contract_type = req.query.contract_type!=null?req.query.contract_type:0;
+        condition.grade_id = req.query.grade_id;
+        condition.start_date_from = req.query.start_date_from;
+        condition.start_date_to = req.query.start_date_to;
+        condition.signer_id = req.query.signer_id;
+        let contracts = await contractDAO.getContractByCondition(condition);
+        let students = await baseDAO.getAll('student');
+        let grades = await baseDAO.getAll('grade');
+        let signers = await userDAO.getUserByRole(['03', '04']);
         res.render('contract/audit_contract_list', {
-            // students: students,
-            // grades: grades,
-            // sources: sources,
-            // advisers: advisers,
-            // gradeMap: commonUtil.toMap(grades),
-            // adviserMap: commonUtil.toMap(advisers),
-            // sourceMap: commonUtil.toMap(sources),
-            // condition: condition,
-            // dateUtil: dateUtil
+            contracts: contracts,
+            students: students,
+            grades: grades,
+            signers: signers,
+            studentMap: commonUtil.toMap(students),
+            gradeMap: commonUtil.toMap(grades),
+            signerMap: commonUtil.toMap(signers),
+            condition: condition,
+            dateUtil: dateUtil
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);

@@ -72,3 +72,14 @@ exports.getAllAdviser = function () {
         }
     })
 };
+
+exports.getUserByRole = function (roles) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let user = await dataPool.query('select * from user where role_id in (?)', [roles]);
+            resolve(user);
+        } catch (error) {
+            reject(error);
+        }
+    })
+};

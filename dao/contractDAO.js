@@ -38,3 +38,50 @@ exports.saveContract = function (contract) {
         }
     })
 };
+
+exports.getContractByCondition = function (condition) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let sql = 'select * from contract where 1=1';
+            let params = [];
+            if (condition) {
+                if (condition.student_id && condition.student_id != '') {
+                    sql += ' and student_id=?';
+                    params[params.length] = condition.student_id;
+                }
+                if (condition.contract_no && condition.contract_no != '') {
+                    sql += ' and contract_no like ?';
+                    params[params.length] = '%' + condition.contract_no + '%';
+                }
+                if (condition.attribute != null && condition.attribute != '') {
+                    sql += ' and attribute=?';
+                    params[params.length] = condition.attribute;
+                }
+                if (condition.contract_type != null && condition.contract_type !== '') {
+                    sql += ' and contract_type=?';
+                    params[params.length] = condition.contract_type;
+                }
+                if (condition.grade_id && condition.grade_id != '') {
+                    sql += ' and grade_id=?';
+                    params[params.length] = condition.grade_id;
+                }
+                if (condition.start_date_from && condition.start_date_from != '') {
+                    sql += ' and start_date<=?';
+                    params[params.length] = condition.start_date_from;
+                }
+                if (condition.start_date_to && condition.start_date_to != '') {
+                    sql += ' and start_date<=?';
+                    params[params.length] = condition.start_date_to;
+                }
+                if (condition.signer_id && condition.signer_id != '') {
+                    sql += ' and signer_id=?';
+                    params[params.length] = condition.signer_id;
+                }
+            }
+            let contracts = await dataPool.query(sql, params);
+            resolve(contracts);
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
