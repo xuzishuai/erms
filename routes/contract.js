@@ -114,6 +114,7 @@ router.get('/audit_contract_list', async function (req, res) {
         condition.start_date_from = req.query.start_date_from;
         condition.start_date_to = req.query.start_date_to;
         condition.signer_id = req.query.signer_id;
+        condition.status = [0, 3, 4];//查询待确认、修改中和变更中的合同
         let contracts = await contractDAO.getContractByCondition(condition);
         let students = await baseDAO.getAll('student');
         let grades = await baseDAO.getAll('grade');

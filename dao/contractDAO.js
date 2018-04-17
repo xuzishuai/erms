@@ -77,7 +77,12 @@ exports.getContractByCondition = function (condition) {
                     sql += ' and signer_id=?';
                     params[params.length] = condition.signer_id;
                 }
+                if (condition.status && condition.status.length > 0) {
+                    sql += ' and status in (?)';
+                    params[params.length] = condition.status;
+                }
             }
+            sql += ' order by update_at';
             let contracts = await dataPool.query(sql, params);
             resolve(contracts);
         } catch (error) {
