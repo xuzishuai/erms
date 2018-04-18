@@ -17,8 +17,8 @@ exports.saveStudentTracking = function (studentTracking) {
     return new Promise(async function (resolve, reject) {
         try {
             let now = new Date();
-            await dataPool.query('insert into student_tracking(id, student_id, track_date, channel, content, result, possibility, next_track_date, tracker_id, create_at, update_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                [uuid.v1(), studentTracking.student_id, studentTracking.track_date, studentTracking.channel, studentTracking.content, studentTracking.result, studentTracking.possibility, studentTracking.next_track_date,
+            await dataPool.query('insert into student_tracking(id, student_id, track_date, channel, content, result, possibility_id, next_track_date, tracker_id, create_at, update_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                [uuid.v1(), studentTracking.student_id, studentTracking.track_date, studentTracking.channel, studentTracking.content, studentTracking.result, studentTracking.possibility_id, studentTracking.next_track_date,
                     studentTracking.tracker_id, now, now]);
             resolve();
         } catch (error) {
@@ -30,8 +30,8 @@ exports.saveStudentTracking = function (studentTracking) {
 exports.updateStudentTracking = function (studentTracking) {
     return new Promise(async function (resolve, reject) {
         try {
-            await dataPool.query('update student_tracking set track_date=?, channel=?, result=?, possibility=?, next_track_date=?, content=?, update_at=? where id=?',
-                [studentTracking.track_date, studentTracking.channel, studentTracking.result, studentTracking.possibility, studentTracking.next_track_date, studentTracking.content, new Date(), studentTracking.id]);
+            await dataPool.query('update student_tracking set track_date=?, channel=?, result=?, possibility_id=?, next_track_date=?, content=?, update_at=? where id=?',
+                [studentTracking.track_date, studentTracking.channel, studentTracking.result, studentTracking.possibility_id, studentTracking.next_track_date, studentTracking.content, new Date(), studentTracking.id]);
             resolve();
         } catch (error) {
             reject(error);

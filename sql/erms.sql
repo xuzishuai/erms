@@ -153,7 +153,7 @@ create table student_tracking
    channel              tinyint(4) not null comment '追踪方式，0电话',
    content              varchar(500) not null comment '追踪记录',
    result               tinyint(4) not null comment '追踪结果，0继续电话',
-   possibility          tinyint(4) not null comment '签约可能性，0大,1一般,2小',
+   possibility_id       varchar(36) not null comment '签约可能性id',
    next_track_date      date comment '下次追踪日期',
    tracker_id           varchar(36) not null comment '追踪人id',
    create_at            datetime not null comment '创建时间',
@@ -172,7 +172,7 @@ create table visit_record
    student_id           varchar(36) not null comment '学生id',
    arrive_time          datetime not null comment '到访时间',
    leave_time           datetime not null comment '离开时间',
-   possibility          tinyint(4) not null comment '签约可能性，0大,1一般,2小',
+   possibility_id       varchar(36) not null comment '签约可能性id',
    content              varchar(500) not null comment '到访记录',
    receptionist_id      varchar(36) not null comment '接待人id',
    create_at            datetime not null comment '创建时间',
@@ -195,6 +195,54 @@ create table subject
 alter table subject comment '科目表';
 
 /*==============================================================*/
+/* Table: contract_attribute                                    */
+/*==============================================================*/
+create table contract_attribute
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '合同属性',
+   primary key (id)
+);
+
+alter table contract_attribute comment '合同属性表';
+
+/*==============================================================*/
+/* Table: contract_type                                         */
+/*==============================================================*/
+create table contract_type
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '合同类型',
+   primary key (id)
+);
+
+alter table contract_type comment '合同类型表';
+
+/*==============================================================*/
+/* Table: possibility                                           */
+/*==============================================================*/
+create table possibility
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '可能性',
+   primary key (id)
+);
+
+alter table possibility comment '可能性表';
+
+/*==============================================================*/
+/* Table: contract_status                                       */
+/*==============================================================*/
+create table contract_status
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '合同状态',
+   primary key (id)
+);
+
+alter table contract_status comment '合同状态表';
+
+/*==============================================================*/
 /* Table: contract                                              */
 /*==============================================================*/
 create table contract
@@ -202,8 +250,8 @@ create table contract
    id                   varchar(36) not null,
    student_id           varchar(36) not null comment '学生id',
    contract_no          varchar(100) not null comment '合同编号',
-   attribute            tinyint(4) not null comment '合同属性，0新签，1赠送，2续费，3结课后新签',
-   contract_type        tinyint(4) not null comment '合同类型，0常规课程，1寒假独立课程，2暑假独立课程',
+   attribute_id         varchar(36) not null comment '合同属性id',
+   contract_type_id     varchar(36) not null comment '合同类型id',
    grade_id             varchar(36) not null comment '年级id',
    total_money          double not null comment '合同金额',
    prepay               double not null comment '已付款',
@@ -214,8 +262,8 @@ create table contract
    recommend_type       varchar(50) comment '推荐方式',
    recommender_id       varchar(36) comment '推荐人id',
    signer_id            varchar(36) not null comment '签约人id',
-   possibility          tinyint(4) not null comment '续费可能性，0大,1一般,2小',
-   status               tinyint(4) not null default 0 comment '合同状态，0待确认，1执行中，2已驳回，3修改中，4变更中，5已作废',
+   possibility_id       varchar(36) not null comment '续费可能性id',
+   status_id            varchar(36) not null comment '合同状态id',
    create_at            datetime not null comment '签约时间',
    update_at            datetime not null comment '更新时间',
    note                 varchar(500) comment '备注',
@@ -223,6 +271,30 @@ create table contract
 );
 
 alter table contract comment '合同表';
+
+/*==============================================================*/
+/* Table: contract_detail_status                                */
+/*==============================================================*/
+create table contract_detail_status
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '合同明细状态',
+   primary key (id)
+);
+
+alter table contract_detail_status comment '合同明细状态表';
+
+/*==============================================================*/
+/* Table: contract_detail_type                                  */
+/*==============================================================*/
+create table contract_detail_type
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '合同明细类型',
+   primary key (id)
+);
+
+alter table contract_detail_type comment '合同明细类型表';
 
 /*==============================================================*/
 /* Table: contract_detail                                       */
@@ -235,9 +307,9 @@ create table contract_detail
    grade_id             varchar(36) not null comment '年级id',
    lesson_period        int not null comment '课时数',
    finished_lesson      int not null comment '已完成课时数',
-   type                 tinyint(4) not null comment '类型，0新签，1常规赠送，2校长赠送',
+   type_id              varchar(36) not null comment '类型id',
    price                double not null comment '单价',
-   status               tinyint(4) not null default 0 comment '状态，0待确认，1执行中',
+   status_id            varchar(36) not null comment '状态id',
    create_at            datetime not null comment '创建时间',
    update_at            datetime not null comment '更新时间，变更申请提交后，审核通过的时间',
    primary key (id)
@@ -257,9 +329,9 @@ create table contract_detail_log
    grade_id             varchar(36) not null comment '年级id',
    lesson_period        int not null comment '课时数',
    finished_lesson      int not null comment '已完成课时数',
-   type                 tinyint(4) not null comment '类型，0新签，1常规赠送，2校长赠送',
+   type_id              varchar(36) not null comment '类型id',
    price                double not null comment '单价',
-   status               tinyint(4) not null default 0 comment '状态，0待确认，1执行中',
+   status_id            varchar(36) not null comment '状态id',
    update_at            datetime not null comment '更新时间，变更申请提交后，审核通过的时间，同一合同的不同明细更新时间要完全一致',
    primary key (id)
 );
@@ -325,3 +397,33 @@ alter table contract_detail_log add constraint FK_Reference_19 foreign key (grad
 
 alter table contract_detail_log add constraint FK_Reference_20 foreign key (operator_id)
       references user (id) on delete restrict on update restrict;
+
+alter table contract add constraint FK_Reference_21 foreign key (attribute_id)
+      references contract_attribute (id) on delete restrict on update restrict;
+
+alter table contract add constraint FK_Reference_22 foreign key (contract_type_id)
+      references contract_type (id) on delete restrict on update restrict;
+
+alter table contract add constraint FK_Reference_23 foreign key (possibility_id)
+      references possibility (id) on delete restrict on update restrict;
+
+alter table student_tracking add constraint FK_Reference_24 foreign key (possibility_id)
+      references possibility (id) on delete restrict on update restrict;
+
+alter table visit_record add constraint FK_Reference_25 foreign key (possibility_id)
+      references possibility (id) on delete restrict on update restrict;
+
+alter table contract add constraint FK_Reference_26 foreign key (status_id)
+      references contract_status (id) on delete restrict on update restrict;
+
+alter table contract_detail add constraint FK_Reference_27 foreign key (status_id)
+      references contract_detail_status (id) on delete restrict on update restrict;
+
+alter table contract_detail_log add constraint FK_Reference_28 foreign key (status_id)
+      references contract_detail_status (id) on delete restrict on update restrict;
+
+alter table contract_detail add constraint FK_Reference_29 foreign key (type_id)
+      references contract_detail_type (id) on delete restrict on update restrict;
+
+alter table contract_detail_log add constraint FK_Reference_30 foreign key (type_id)
+      references contract_detail_type (id) on delete restrict on update restrict;

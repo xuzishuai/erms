@@ -18,18 +18,18 @@ exports.saveContract = function (contract) {
         try {
             let contractId = uuid.v1();
             let now = new Date();
-            let sqls = ['insert into contract(id, student_id, contract_no, attribute, contract_type, grade_id, total_money, prepay, left_money, ' +
-                'total_lesson_period, start_date, is_recommend, recommend_type, recommender_id, signer_id, possibility, status, create_at, update_at, note)' +
+            let sqls = ['insert into contract(id, student_id, contract_no, attribute_id, contract_type_id, grade_id, total_money, prepay, left_money, ' +
+                'total_lesson_period, start_date, is_recommend, recommend_type, recommender_id, signer_id, possibility_id, status_id, create_at, update_at, note)' +
                 ' values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'];
-            let params = [[contractId, contract.student_id, contract.contract_no, contract.attribute, contract.contract_type, contract.grade_id,
+            let params = [[contractId, contract.student_id, contract.contract_no, contract.attribute_id, contract.contract_type_id, contract.grade_id,
                 contract.total_money, contract.prepay, contract.left_money, contract.total_lesson_period, contract.start_date, contract.is_recommend,
-                contract.recommend_type, contract.recommender_id, contract.signer_id, contract.possibility, 0, now, now, contract.note]];
+                contract.recommend_type, contract.recommender_id, contract.signer_id, contract.possibility_id, '01', now, now, contract.note]];
             let contractDetail = contract.contractDetail;
             for (let i = 0; i < contractDetail.length; i++) {
-                sqls[sqls.length] = 'insert into contract_detail(id, contract_id, subject_id, grade_id, lesson_period, finished_lesson, type, price, ' +
-                    'status, create_at, update_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-                params[params.length] = [uuid.v1(), contractId, contractDetail[i].subject_id, contract.grade_id, contractDetail[i].lesson_period, 0,
-                    contractDetail[i].type, contractDetail[i].price, 0, now, now];
+                sqls[sqls.length] = 'insert into contract_detail(id, contract_id, subject_id, grade_id, lesson_period, finished_lesson, type_id, price, ' +
+                    'status_id, create_at, update_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                params[params.length] = [uuid.v1(), contractId, contractDetail[i].subject_id, contract.grade_id, contractDetail[i].lesson_period, '01',
+                    contractDetail[i].type_id, contractDetail[i].price, 0, now, now];
             }
             await dataPool.batchQuery(sqls, params);
             resolve();
@@ -53,13 +53,13 @@ exports.getContractByCondition = function (condition) {
                     sql += ' and contract_no like ?';
                     params[params.length] = '%' + condition.contract_no + '%';
                 }
-                if (condition.attribute != null && condition.attribute != '') {
-                    sql += ' and attribute=?';
-                    params[params.length] = condition.attribute;
+                if (condition.attribute_id && condition.attribute_id != '') {
+                    sql += ' and attribute_id=?';
+                    params[params.length] = condition.attribute_id;
                 }
-                if (condition.contract_type != null && condition.contract_type !== '') {
-                    sql += ' and contract_type=?';
-                    params[params.length] = condition.contract_type;
+                if (condition.contract_type_id && condition.contract_type_id !== '') {
+                    sql += ' and contract_type_id=?';
+                    params[params.length] = condition.contract_type_id;
                 }
                 if (condition.grade_id && condition.grade_id != '') {
                     sql += ' and grade_id=?';
@@ -77,9 +77,9 @@ exports.getContractByCondition = function (condition) {
                     sql += ' and signer_id=?';
                     params[params.length] = condition.signer_id;
                 }
-                if (condition.status && condition.status.length > 0) {
-                    sql += ' and status in (?)';
-                    params[params.length] = condition.status;
+                if (condition.status_id && condition.status_id.length > 0) {
+                    sql += ' and status_id in (?)';
+                    params[params.length] = condition.status_id;
                 }
             }
             sql += ' order by update_at';

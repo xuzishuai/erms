@@ -98,7 +98,7 @@
                             <td><%= dateUtil.dateFormat(studentTrackings[i].track_date)%></td>
                             <td><%if (studentTrackings[i].channel == 0){%>电话<%}%></td>
                             <td><%if (studentTrackings[i].result == 0){%>继续电话<%}%></td>
-                            <td><%if (studentTrackings[i].possibility == 0){%>大<%} else if (studentTrackings[i].possibility == 1) {%>一般<%} else if (studentTrackings[i].possibility == 2) {%>小<%}%></td>
+                            <td><%= possibilityMap[studentTrackings[i].possibility_id].name%></td>
                             <td><%if (studentTrackings[i].next_track_date){%><%= dateUtil.dateFormat(studentTrackings[i].next_track_date)%><%}%></td>
                             <td><%= studentTrackings[i].content%></td>
                             <td>

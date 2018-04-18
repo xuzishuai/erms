@@ -89,3 +89,48 @@ INSERT INTO subject VALUES ('12', '志愿');
 INSERT INTO subject VALUES ('13', '奥数');
 INSERT INTO subject VALUES ('14', '综合');
 INSERT INTO subject VALUES ('15', '其他');
+
+-- ----------------------------
+-- Records of contract_attribute
+-- ----------------------------
+INSERT INTO contract_attribute VALUES ('01', '新签');
+INSERT INTO contract_attribute VALUES ('02', '赠送');
+INSERT INTO contract_attribute VALUES ('03', '续费');
+INSERT INTO contract_attribute VALUES ('04', '结课后新签');
+
+-- ----------------------------
+-- Records of contract_type
+-- ----------------------------
+INSERT INTO contract_type VALUES ('01', '常规课程');
+INSERT INTO contract_type VALUES ('02', '寒假独立课程');
+INSERT INTO contract_type VALUES ('03', '暑假独立课程');
+
+-- ----------------------------
+-- Records of possibility
+-- ----------------------------
+INSERT INTO possibility VALUES ('01', '大');
+INSERT INTO possibility VALUES ('02', '一般');
+INSERT INTO possibility VALUES ('03', '小');
+
+-- ----------------------------
+-- Records of contract_status
+-- ----------------------------
+INSERT INTO contract_status VALUES ('01', '待确认');
+INSERT INTO contract_status VALUES ('02', '执行中');
+INSERT INTO contract_status VALUES ('03', '已驳回');
+INSERT INTO contract_status VALUES ('04', '修改中');
+INSERT INTO contract_status VALUES ('05', '变更中');
+INSERT INTO contract_status VALUES ('06', '已作废');
+
+-- ----------------------------
+-- Records of contract_detail_status
+-- ----------------------------
+INSERT INTO contract_detail_status VALUES ('01', '待确认');
+INSERT INTO contract_detail_status VALUES ('02', '执行中');
+
+-- ----------------------------
+-- Records of contract_detail_type
+-- ----------------------------
+INSERT INTO contract_detail_type VALUES ('01', '新签');
+INSERT INTO contract_detail_type VALUES ('02', '常规赠送');
+INSERT INTO contract_detail_type VALUES ('03', '校长赠送');

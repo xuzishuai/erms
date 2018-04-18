@@ -36,10 +36,10 @@
                     <div class="control-group">
                         <label class="control-label">签约可能性<span class="required">*</span></label>
                         <div class="controls">
-                            <select class="span6 select2"  data-placeholder="请选择签约可能性" tabindex="1" name="possibility" id="possibility">
-                                <option <%if (visitRecord.possibility == 0){%>selected<%}%> value="0">大</option>
-                                <option <%if (visitRecord.possibility == 1){%>selected<%}%> value="1">一般</option>
-                                <option <%if (visitRecord.possibility == 2){%>selected<%}%> value="2">小</option>
+                            <select class="span6 select2"  data-placeholder="请选择签约可能性" tabindex="1" name="possibility_id" id="possibility_id">
+                                <%for (let i = 0; i < possibilities.length; i++){%>
+                                <option <%if (visitRecord.possibility_id == possibilities[i].id){%>selected<%}%> value="<%= possibilities[i].id%>"><%= possibilities[i].name%></option>
+                                <%}%>
                             </select>
                         </div>
                     </div>
@@ -89,7 +89,7 @@
                 leave_time: {
                     required: true
                 },
-                possibility: {
+                possibility_id: {
                     required: true
                 },
                 content: {
@@ -103,7 +103,7 @@
                 leave_time: {
                     required: "请选择离开时间"
                 },
-                possibility: {
+                possibility_id: {
                     required: "请选择签约可能性"
                 },
                 content: {

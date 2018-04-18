@@ -107,21 +107,20 @@
                     <div class="control-group">
                         <label class="control-label">合同属性<span class="required">*</span></label>
                         <div class="controls">
-                            <select class="span6 select2" tabindex="1" name="attribute" id="attribute">
-                                <option value="0">新签</option>
-                                <option value="1">赠送</option>
-                                <option value="2">续费</option>
-                                <option value="3">结课后新签</option>
+                            <select class="span6 select2" tabindex="1" name="attribute_id" id="attribute_id">
+                                <%for (let i = 0; i < contractAttributes.length; i++){%>
+                                <option value="<%= contractAttributes[i].id%>"><%= contractAttributes[i].name%></option>
+                                <%}%>
                             </select>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label">合同类型<span class="required">*</span></label>
                         <div class="controls">
-                            <select class="span6 select2" tabindex="1" name="contract_type" id="contract_type">
-                                <option value="0">常规课程</option>
-                                <option value="1">寒假独立课程</option>
-                                <option value="2">暑假独立课程</option>
+                            <select class="span6 select2" tabindex="1" name="contract_type_id" id="contract_type_id">
+                                <%for (let i = 0; i < contractTypes.length; i++){%>
+                                <option value="<%= contractTypes[i].id%>"><%= contractTypes[i].name%></option>
+                                <%}%>
                             </select>
                         </div>
                     </div>
@@ -204,10 +203,10 @@
                     <div class="control-group">
                         <label class="control-label">续费可能性<span class="required">*</span></label>
                         <div class="controls">
-                            <select class="span6 select2" tabindex="1" name="possibility" id="possibility">
-                                <option value="0">大</option>
-                                <option value="1">一般</option>
-                                <option value="2">小</option>
+                            <select class="span6 select2" tabindex="1" name="possibility_id" id="possibility_id">
+                                <%for (let i = 0; i < possibilities.length; i++){%>
+                                <option value="<%= possibilities[i].id%>"><%= possibilities[i].name%></option>
+                                <%}%>
                             </select>
                         </div>
                     </div>
@@ -240,11 +239,11 @@
                             </td>
                             <td class="control-group"><input name="lesson_period_0" type="text" onkeyup="calculateTotal(this, 'lesson_period')"></td>
                             <td class="control-group">
-                                <select name="type_0" class="select2">
+                                <select name="type_id_0" class="select2">
                                     <option value="">请选择类型</option>
-                                    <option value="0">新签</option>
-                                    <option value="1">常规赠送</option>
-                                    <option value="2">校长赠送</option>
+                                    <%for (let i = 0; i < types.length; i++){%>
+                                    <option value="<%= types[i].id%>"><%= types[i].name%></option>
+                                    <%}%>
                                 </select>
                             </td>
                             <td class="control-group"><input name="price_0" type="number" onkeyup="calculateTotal()"></td>

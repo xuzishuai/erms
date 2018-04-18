@@ -9,11 +9,11 @@
     </td>
     <td class="control-group"><input name="lesson_period_<%= detail_index%>" type="text" onkeyup="calculateTotal(this, 'lesson_period')"></td>
     <td class="control-group">
-        <select name="type_<%= detail_index%>" class="select2">
+        <select name="type_id_<%= detail_index%>" class="select2">
             <option value="">请选择类型</option>
-            <option value="0">新签</option>
-            <option value="1">常规赠送</option>
-            <option value="2">校长赠送</option>
+            <%for (let i = 0; i < types.length; i++){%>
+            <option value="<%= types[i].id%>"><%= types[i].name%></option>
+            <%}%>
         </select>
     </td>
     <td class="control-group"><input name="price_<%= detail_index%>" type="number" onkeyup="calculateTotal()"></td>

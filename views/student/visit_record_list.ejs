@@ -95,7 +95,7 @@
                             <td><%= receptionistMap[visitRecords[i].receptionist_id].name%></td>
                             <td><%= dateUtil.dateTimeFormat(visitRecords[i].arrive_time)%></td>
                             <td><%= dateUtil.dateTimeFormat(visitRecords[i].leave_time)%></td>
-                            <td><%if (visitRecords[i].possibility == 0){%>大<%} else if (visitRecords[i].possibility == 1) {%>一般<%} else if (visitRecords[i].possibility == 2) {%>小<%}%></td>
+                            <td><%= possibilityMap[visitRecords[i].possibility_id].name%></td>
                             <td><%= visitRecords[i].content%></td>
                             <td>
                                 <a href="/student/edit_visit_record?id=<%= visitRecords[i].id%>&student_id=<%= student.id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>

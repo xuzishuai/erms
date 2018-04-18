@@ -233,12 +233,14 @@ router.get('/student_tracking_list', async function (req, res) {
         let trackers = await baseDAO.getAll('user');
         let grades = await baseDAO.getAll('grade');
         let sources = await baseDAO.getAll('source');
+        let possibilities = await baseDAO.getAll('possibility');
         res.render('student/student_tracking_list', {
             student: student,
             studentTrackings: studentTrackings,
             trackerMap: commonUtil.toMap(trackers),
             gradeMap: commonUtil.toMap(grades),
             sourceMap: commonUtil.toMap(sources),
+            possibilityMap: commonUtil.toMap(possibilities),
             dateUtil: dateUtil
         });
     } catch (error) {
@@ -248,7 +250,11 @@ router.get('/student_tracking_list', async function (req, res) {
 
 router.get('/new_student_tracking', async function (req, res) {
     try {
-        res.render('student/new_student_tracking', {student_id: req.query.student_id});
+        let possibilities = await baseDAO.getAll('possibility');
+        res.render('student/new_student_tracking', {
+            student_id: req.query.student_id,
+            possibilities: possibilities
+        });
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }
@@ -261,7 +267,7 @@ router.post('/do_create_student_tracking', async function (req, res) {
         studentTracking.track_date = req.body.track_date;
         studentTracking.channel = req.body.channel;
         studentTracking.result = req.body.result;
-        studentTracking.possibility = req.body.possibility;
+        studentTracking.possibility_id = req.body.possibility_id;
         studentTracking.next_track_date = (req.body.next_track_date && req.body.next_track_date != '') ? req.body.next_track_date : null;
         studentTracking.content = req.body.content;
         studentTracking.tracker_id = req.session.user[0].id;
@@ -275,9 +281,11 @@ router.post('/do_create_student_tracking', async function (req, res) {
 router.get('/edit_student_tracking', async function (req, res) {
     try {
         let studentTracking = await baseDAO.getById('student_tracking', req.query.id);
+        let possibilities = await baseDAO.getAll('possibility');
         res.render('student/edit_student_tracking', {
             studentTracking: studentTracking[0],
             student_id: req.query.student_id,
+            possibilities: possibilities,
             dateUtil: dateUtil
         });
     } catch (error) {
@@ -292,7 +300,7 @@ router.post('/do_update_student_tracking', async function (req, res) {
         studentTracking.track_date = req.body.track_date;
         studentTracking.channel = req.body.channel;
         studentTracking.result = req.body.result;
-        studentTracking.possibility = req.body.possibility;
+        studentTracking.possibility_id = req.body.possibility_id;
         studentTracking.next_track_date = (req.body.next_track_date && req.body.next_track_date != '') ? req.body.next_track_date : null;
         studentTracking.content = req.body.content;
         await studentTrackingDAO.updateStudentTracking(studentTracking);
@@ -321,12 +329,14 @@ router.get('/visit_record_list', async function (req, res) {
         let receptionists = await baseDAO.getAll('user');
         let grades = await baseDAO.getAll('grade');
         let sources = await baseDAO.getAll('source');
+        let possibilities = await baseDAO.getAll('possibility');
         res.render('student/visit_record_list', {
             student: student,
             visitRecords: visitRecords,
             receptionistMap: commonUtil.toMap(receptionists),
             gradeMap: commonUtil.toMap(grades),
             sourceMap: commonUtil.toMap(sources),
+            possibilityMap: commonUtil.toMap(possibilities),
             dateUtil: dateUtil
         });
     } catch (error) {
@@ -336,7 +346,11 @@ router.get('/visit_record_list', async function (req, res) {
 
 router.get('/new_visit_record', async function (req, res) {
     try {
-        res.render('student/new_visit_record', {student_id: req.query.student_id});
+        let possibilities = await baseDAO.getAll('possibility');
+        res.render('student/new_visit_record', {
+            student_id: req.query.student_id,
+            possibilities: possibilities
+        });
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }
@@ -348,7 +362,7 @@ router.post('/do_create_visit_record', async function (req, res) {
         visitRecord.student_id = req.body.student_id;
         visitRecord.arrive_time = req.body.arrive_time;
         visitRecord.leave_time = req.body.leave_time;
-        visitRecord.possibility = req.body.possibility;
+        visitRecord.possibility_id = req.body.possibility_id;
         visitRecord.content = req.body.content;
         visitRecord.receptionist_id = req.session.user[0].id;
         await visitRecordDAO.saveVisitRecord(visitRecord);
@@ -361,9 +375,11 @@ router.post('/do_create_visit_record', async function (req, res) {
 router.get('/edit_visit_record', async function (req, res) {
     try {
         let visitRecord = await baseDAO.getById('visit_record', req.query.id);
+        let possibilities = await baseDAO.getAll('possibility');
         res.render('student/edit_visit_record', {
             visitRecord: visitRecord[0],
             student_id: req.query.student_id,
+            possibilities: possibilities,
             dateUtil: dateUtil
         });
     } catch (error) {
@@ -377,7 +393,7 @@ router.post('/do_update_visit_record', async function (req, res) {
         visitRecord.id = req.body.id;
         visitRecord.arrive_time = req.body.arrive_time;
         visitRecord.leave_time = req.body.leave_time;
-        visitRecord.possibility = req.body.possibility;
+        visitRecord.possibility_id = req.body.possibility_id;
         visitRecord.content = req.body.content;
         await visitRecordDAO.updateVisitRecord(visitRecord);
         res.redirect('/student/visit_record_list?student_id=' + req.body.student_id);

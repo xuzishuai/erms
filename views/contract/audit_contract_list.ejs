@@ -30,23 +30,22 @@
                             <div class="control-group span3">
                                 <label class="control-label">合同属性:</label>
                                 <div class="controls">
-                                    <select class="span12 select2" tabindex="1" name="attribute" id="attribute">
+                                    <select class="span12 select2" tabindex="1" name="attribute_id" id="attribute_id">
                                         <option value=""></option>
-                                        <option value="0">新签</option>
-                                        <option value="1">赠送</option>
-                                        <option value="2">续费</option>
-                                        <option value="3">结课后新签</option>
+                                        <%for (let i = 0; i < contractAttributes.length; i++){%>
+                                        <option value="<%= contractAttributes[i].id%>"><%= contractAttributes[i].name%></option>
+                                        <%}%>
                                     </select>
                                 </div>
                             </div>
                             <div class="control-group span3">
                                 <label class="control-label">合同类型:</label>
                                 <div class="controls">
-                                    <select class="span12 select2" tabindex="1" name="contract_type" id="contract_type">
+                                    <select class="span12 select2" tabindex="1" name="contract_type_id" id="contract_type_id">
                                         <option value=""></option>
-                                        <option value="0">常规课程</option>
-                                        <option value="1">寒假独立课程</option>
-                                        <option value="2">暑假独立课程</option>
+                                        <%for (let i = 0; i < contractTypes.length; i++){%>
+                                        <option value="<%= contractTypes[i].id%>"><%= contractTypes[i].name%></option>
+                                        <%}%>
                                     </select>
                                 </div>
                             </div>
@@ -109,41 +108,28 @@
                     <tr>
                         <th>合同编号</th>
                         <th>学员(编号)</th>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        <th>性别</th>
+                        <th>合同属性</th>
+                        <th>合同类型</th>
                         <th>年级</th>
-                        <th>联系电话</th>
-                        <th>预约上门时间</th>
-                        <th>顾问</th>
-                        <th>途径</th>
-                        <th>审核状态</th>
-                        <th>备注</th>
+                        <th>合同金额</th>
+                        <th>未付款</th>
+                        <th>合同开始日期</th>
+                        <th>签约人</th>
+                        <th>合同状态</th>
                         <th class="table_action" data-colNum=10>操作</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <%for (let i = 0; i < students.length; i++){%>
+                    <%for (let i = 0; i < contracts.length; i++){%>
                     <tr>
-                        <td><%= students[i].student_no%></td>
-                        <td><%= students[i].name%></td>
+                        <td><%= contracts[i].contract_no%></td>
+                        <td><%= studentMap[contracts[i].student_id].name%>(<%= studentMap[contracts[i].student_id].student_no%>)</td>
+
+
+
+
+
+
                         <td><%if (students[i].gender == 0){%>男<%} else {%>女<%}%></td>
                         <td><%= gradeMap[students[i].grade_id].name%></td>
                         <td><%= students[i].contact%></td>
