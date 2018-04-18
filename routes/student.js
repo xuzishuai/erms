@@ -234,6 +234,7 @@ router.get('/student_tracking_list', async function (req, res) {
         let grades = await baseDAO.getAll('grade');
         let sources = await baseDAO.getAll('source');
         let possibilities = await baseDAO.getAll('possibility');
+        let channels = await baseDAO.getAll('student_tracking_channel');
         res.render('student/student_tracking_list', {
             student: student,
             studentTrackings: studentTrackings,
@@ -241,6 +242,7 @@ router.get('/student_tracking_list', async function (req, res) {
             gradeMap: commonUtil.toMap(grades),
             sourceMap: commonUtil.toMap(sources),
             possibilityMap: commonUtil.toMap(possibilities),
+            channelMap: commonUtil.toMap(channels),
             dateUtil: dateUtil
         });
     } catch (error) {
@@ -251,9 +253,11 @@ router.get('/student_tracking_list', async function (req, res) {
 router.get('/new_student_tracking', async function (req, res) {
     try {
         let possibilities = await baseDAO.getAll('possibility');
+        let channels = await baseDAO.getAll('student_tracking_channel');
         res.render('student/new_student_tracking', {
             student_id: req.query.student_id,
-            possibilities: possibilities
+            possibilities: possibilities,
+            channels: channels
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);
@@ -265,7 +269,7 @@ router.post('/do_create_student_tracking', async function (req, res) {
         let studentTracking = {};
         studentTracking.student_id = req.body.student_id;
         studentTracking.track_date = req.body.track_date;
-        studentTracking.channel = req.body.channel;
+        studentTracking.channel_id = req.body.channel_id;
         studentTracking.result = req.body.result;
         studentTracking.possibility_id = req.body.possibility_id;
         studentTracking.next_track_date = (req.body.next_track_date && req.body.next_track_date != '') ? req.body.next_track_date : null;
@@ -298,7 +302,7 @@ router.post('/do_update_student_tracking', async function (req, res) {
         let studentTracking = {};
         studentTracking.id = req.body.id;
         studentTracking.track_date = req.body.track_date;
-        studentTracking.channel = req.body.channel;
+        studentTracking.channel_id = req.body.channel_id;
         studentTracking.result = req.body.result;
         studentTracking.possibility_id = req.body.possibility_id;
         studentTracking.next_track_date = (req.body.next_track_date && req.body.next_track_date != '') ? req.body.next_track_date : null;

@@ -25,8 +25,10 @@
                     <div class="control-group">
                         <label class="control-label">追踪方式<span class="required">*</span></label>
                         <div class="controls">
-                            <select class="span6 select2"  data-placeholder="请选择追踪方式" tabindex="1" name="channel" id="channel">
-                                <option value="0">电话</option>
+                            <select class="span6 select2"  data-placeholder="请选择追踪方式" tabindex="1" name="channel_id" id="channel_id">
+                                <%for (let i = 0; i < channels.length; i++){%>
+                                <option value="<%= channels[i].id%>"><%= channels[i].name%></option>
+                                <%}%>
                             </select>
                         </div>
                     </div>
@@ -101,7 +103,7 @@
                 track_date: {
                     required: true
                 },
-                channel: {
+                channel_id: {
                     required: true
                 },
                 result: {
@@ -118,7 +120,7 @@
                 track_date: {
                     required: "请选择追踪日期"
                 },
-                channel: {
+                channel_id: {
                     required: "请选择追踪方式"
                 },
                 result: {

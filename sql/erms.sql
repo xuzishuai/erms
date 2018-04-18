@@ -143,6 +143,18 @@ create table student
 alter table student comment '学生表';
 
 /*==============================================================*/
+/* Table: student_tracking_channel                              */
+/*==============================================================*/
+create table student_tracking_channel
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '追踪方式',
+   primary key (id)
+);
+
+alter table student_tracking_channel comment '学生追踪方式表';
+
+/*==============================================================*/
 /* Table: student_tracking                                     */
 /*==============================================================*/
 create table student_tracking
@@ -150,7 +162,7 @@ create table student_tracking
    id                   varchar(36) not null,
    student_id           varchar(36) not null comment '学生id',
    track_date           date not null comment '追踪日期',
-   channel              tinyint(4) not null comment '追踪方式，0电话',
+   channel_id           varchar(36) not null comment '追踪方式，0电话',
    content              varchar(500) not null comment '追踪记录',
    result               tinyint(4) not null comment '追踪结果，0继续电话',
    possibility_id       varchar(36) not null comment '签约可能性id',
@@ -426,4 +438,7 @@ alter table contract_detail add constraint FK_Reference_29 foreign key (type_id)
       references contract_detail_type (id) on delete restrict on update restrict;
 
 alter table contract_detail_log add constraint FK_Reference_30 foreign key (type_id)
+      references contract_detail_type (id) on delete restrict on update restrict;
+
+alter table student_tracking_channel add constraint FK_Reference_31 foreign key (channel_id)
       references contract_detail_type (id) on delete restrict on update restrict;

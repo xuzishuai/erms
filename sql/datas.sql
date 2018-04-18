@@ -134,3 +134,8 @@ INSERT INTO contract_detail_status VALUES ('02', '执行中');
 INSERT INTO contract_detail_type VALUES ('01', '新签');
 INSERT INTO contract_detail_type VALUES ('02', '常规赠送');
 INSERT INTO contract_detail_type VALUES ('03', '校长赠送');
+
+-- ----------------------------
+-- Records of student_tracking_channel
+-- ----------------------------
+INSERT INTO student_tracking_channel VALUES ('01', '电话');
