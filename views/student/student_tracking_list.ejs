@@ -97,7 +97,7 @@
                             <td><%= trackerMap[studentTrackings[i].tracker_id].name%></td>
                             <td><%= dateUtil.dateFormat(studentTrackings[i].track_date)%></td>
                             <td><%= channelMap[studentTrackings[i].channel_id].name%></td>
-                            <td><%if (studentTrackings[i].result == 0){%>继续电话<%}%></td>
+                            <td><%= resultMap[studentTrackings[i].result_id].name%></td>
                             <td><%= possibilityMap[studentTrackings[i].possibility_id].name%></td>
                             <td><%if (studentTrackings[i].next_track_date){%><%= dateUtil.dateFormat(studentTrackings[i].next_track_date)%><%}%></td>
                             <td><%= studentTrackings[i].content%></td>

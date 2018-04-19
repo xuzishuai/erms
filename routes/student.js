@@ -48,7 +48,7 @@ router.get('/arrive_student_list', async function (req, res) {
         condition.name = req.query.name;
         condition.contact = req.query.contact;
         condition.grade_id = req.query.grade_id;
-        condition.status = req.query.status!=null?req.query.status:0;
+        condition.status_id = req.query.status_id!=null?req.query.status_id:'01';
         condition.appointment_start_time = req.query.appointment_start_time;
         condition.appointment_end_time = req.query.appointment_end_time;
         condition.adviser_id = req.query.adviser_id;
@@ -57,14 +57,17 @@ router.get('/arrive_student_list', async function (req, res) {
         let grades = await baseDAO.getAll('grade');
         let advisers = await userDAO.getAllAdviser();
         let sources = await baseDAO.getAll('source');
+        let status = await baseDAO.getAll('student_status');
         res.render('student/arrive_student_list', {
             students: students,
             grades: grades,
             sources: sources,
             advisers: advisers,
+            status: status,
             gradeMap: commonUtil.toMap(grades),
             adviserMap: commonUtil.toMap(advisers),
             sourceMap: commonUtil.toMap(sources),
+            statusMap: commonUtil.toMap(status),
             condition: condition,
             dateUtil: dateUtil
         });
@@ -78,7 +81,7 @@ router.get('/do_student_arrive', async function (req, res) {
         let student = await baseDAO.getById('student', req.query.id);
         student = student[0];
         student.id = req.query.id;
-        student.status = 1;
+        student.status_id = '02';
         student.arrive_time = new Date();
         await studentDAO.doUpdateStudent(student);
         res.redirect('/student/arrive_student_list');
@@ -94,7 +97,7 @@ router.get('/assign_adviser_student_list', async function (req, res) {
         condition.name = req.query.name;
         condition.contact = req.query.contact;
         condition.grade_id = req.query.grade_id;
-        condition.status = req.query.status;
+        condition.status_id = req.query.status_id;
         condition.appointment_start_time = req.query.appointment_start_time;
         condition.appointment_end_time = req.query.appointment_end_time;
         condition.adviser_id = req.query.adviser_id;
@@ -103,14 +106,17 @@ router.get('/assign_adviser_student_list', async function (req, res) {
         let grades = await baseDAO.getAll('grade');
         let advisers = await userDAO.getAllAdviser();
         let sources = await baseDAO.getAll('source');
+        let status = await baseDAO.getAll('student_status');
         res.render('student/assign_adviser_student_list', {
             students: students,
             grades: grades,
             sources: sources,
             advisers: advisers,
+            status: status,
             gradeMap: commonUtil.toMap(grades),
             adviserMap: commonUtil.toMap(advisers),
             sourceMap: commonUtil.toMap(sources),
+            statusMap: commonUtil.toMap(status),
             condition: condition,
             dateUtil: dateUtil
         });
@@ -156,7 +162,7 @@ router.get('/audit_student_list', async function (req, res) {
         condition.name = req.query.name;
         condition.contact = req.query.contact;
         condition.grade_id = req.query.grade_id;
-        condition.audit_status = req.query.audit_status!=null?req.query.audit_status:0;
+        condition.audit_status_id = req.query.audit_status_id!=null?req.query.audit_status_id:'01';
         condition.appointment_start_time = req.query.appointment_start_time;
         condition.appointment_end_time = req.query.appointment_end_time;
         condition.adviser_id = req.query.adviser_id;
@@ -165,14 +171,17 @@ router.get('/audit_student_list', async function (req, res) {
         let grades = await baseDAO.getAll('grade');
         let advisers = await userDAO.getAllAdviser();
         let sources = await baseDAO.getAll('source');
+        let auditStatus = await baseDAO.getAll('student_audit_status');
         res.render('student/audit_student_list', {
             students: students,
             grades: grades,
             sources: sources,
             advisers: advisers,
+            auditStatus: auditStatus,
             gradeMap: commonUtil.toMap(grades),
             adviserMap: commonUtil.toMap(advisers),
             sourceMap: commonUtil.toMap(sources),
+            auditStatusMap: commonUtil.toMap(auditStatus),
             condition: condition,
             dateUtil: dateUtil
         });
@@ -186,7 +195,7 @@ router.get('/do_audit_student', async function (req, res) {
         let student = await baseDAO.getById('student', req.query.id);
         student = student[0];
         student.id = req.query.id;
-        student.audit_status = req.query.audit_status;
+        student.audit_status_id = req.query.audit_status_id;
         await studentDAO.doUpdateStudent(student);
         res.redirect('/student/audit_student_list');
     } catch (error) {
@@ -203,11 +212,12 @@ router.get('/follow_student_list', async function (req, res) {
         condition.grade_id = req.query.grade_id;
         condition.adviser_id = req.query.adviser_id;
         condition.source_id = req.query.source_id;
-        condition.audit_status = 1;
+        condition.audit_status_id = '02';
         let students = await studentDAO.getStudentByCondition(condition);
         let grades = await baseDAO.getAll('grade');
         let advisers = await userDAO.getAllAdviser();
         let sources = await baseDAO.getAll('source');
+        let status = await baseDAO.getAll('student_status');
         res.render('student/follow_student_list', {
             students: students,
             grades: grades,
@@ -216,6 +226,7 @@ router.get('/follow_student_list', async function (req, res) {
             gradeMap: commonUtil.toMap(grades),
             adviserMap: commonUtil.toMap(advisers),
             sourceMap: commonUtil.toMap(sources),
+            statusMap: commonUtil.toMap(status),
             condition: condition
         });
     } catch (error) {
@@ -235,6 +246,7 @@ router.get('/student_tracking_list', async function (req, res) {
         let sources = await baseDAO.getAll('source');
         let possibilities = await baseDAO.getAll('possibility');
         let channels = await baseDAO.getAll('student_tracking_channel');
+        let results = await baseDAO.getAll('student_tracking_result');
         res.render('student/student_tracking_list', {
             student: student,
             studentTrackings: studentTrackings,
@@ -243,6 +255,7 @@ router.get('/student_tracking_list', async function (req, res) {
             sourceMap: commonUtil.toMap(sources),
             possibilityMap: commonUtil.toMap(possibilities),
             channelMap: commonUtil.toMap(channels),
+            resultMap: commonUtil.toMap(results),
             dateUtil: dateUtil
         });
     } catch (error) {
@@ -254,10 +267,12 @@ router.get('/new_student_tracking', async function (req, res) {
     try {
         let possibilities = await baseDAO.getAll('possibility');
         let channels = await baseDAO.getAll('student_tracking_channel');
+        let results = await baseDAO.getAll('student_tracking_result');
         res.render('student/new_student_tracking', {
             student_id: req.query.student_id,
             possibilities: possibilities,
-            channels: channels
+            channels: channels,
+            results: results
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);
@@ -270,7 +285,7 @@ router.post('/do_create_student_tracking', async function (req, res) {
         studentTracking.student_id = req.body.student_id;
         studentTracking.track_date = req.body.track_date;
         studentTracking.channel_id = req.body.channel_id;
-        studentTracking.result = req.body.result;
+        studentTracking.result_id = req.body.result_id;
         studentTracking.possibility_id = req.body.possibility_id;
         studentTracking.next_track_date = (req.body.next_track_date && req.body.next_track_date != '') ? req.body.next_track_date : null;
         studentTracking.content = req.body.content;
@@ -286,10 +301,14 @@ router.get('/edit_student_tracking', async function (req, res) {
     try {
         let studentTracking = await baseDAO.getById('student_tracking', req.query.id);
         let possibilities = await baseDAO.getAll('possibility');
+        let channels = await baseDAO.getAll('student_tracking_channel');
+        let results = await baseDAO.getAll('student_tracking_result');
         res.render('student/edit_student_tracking', {
             studentTracking: studentTracking[0],
             student_id: req.query.student_id,
             possibilities: possibilities,
+            channels: channels,
+            results: results,
             dateUtil: dateUtil
         });
     } catch (error) {
@@ -303,7 +322,7 @@ router.post('/do_update_student_tracking', async function (req, res) {
         studentTracking.id = req.body.id;
         studentTracking.track_date = req.body.track_date;
         studentTracking.channel_id = req.body.channel_id;
-        studentTracking.result = req.body.result;
+        studentTracking.result_id = req.body.result_id;
         studentTracking.possibility_id = req.body.possibility_id;
         studentTracking.next_track_date = (req.body.next_track_date && req.body.next_track_date != '') ? req.body.next_track_date : null;
         studentTracking.content = req.body.content;
@@ -421,7 +440,7 @@ router.get('/student_list', async function (req, res) {
         condition.name = req.query.name;
         condition.contact = req.query.contact;
         condition.grade_id = req.query.grade_id;
-        condition.status = req.query.status;
+        condition.status_id = req.query.status_id;
         condition.appointment_start_time = req.query.appointment_start_time;
         condition.appointment_end_time = req.query.appointment_end_time;
         condition.adviser_id = req.query.adviser_id;
@@ -430,14 +449,17 @@ router.get('/student_list', async function (req, res) {
         let grades = await baseDAO.getAll('grade');
         let advisers = await userDAO.getAllAdviser();
         let sources = await baseDAO.getAll('source');
+        let status = await baseDAO.getAll('student_status');
         res.render('student/student_list', {
             students: students,
             grades: grades,
             sources: sources,
             advisers: advisers,
+            status: status,
             gradeMap: commonUtil.toMap(grades),
             adviserMap: commonUtil.toMap(advisers),
             sourceMap: commonUtil.toMap(sources),
+            statusMap: commonUtil.toMap(status),
             condition: condition,
             dateUtil: dateUtil
         });

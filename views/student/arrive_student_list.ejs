@@ -36,10 +36,11 @@
                             <div class="control-group span3">
                                 <label class="control-label">状态:</label>
                                 <div class="controls">
-                                    <select class="span12 select2" tabindex="1" name="status" id="status">
+                                    <select class="span12 select2" tabindex="1" name="status_id" id="status_id">
                                         <option value=""></option>
-                                        <option value="0">未上门</option>
-                                        <option value="1">已上门</option>
+                                        <%for (let i = 0; i < status.length; i++){%>
+                                        <option value="<%= status[i].id%>"><%= status[i].name%></option>
+                                        <%}%>
                                     </select>
                                 </div>
                             </div>
@@ -124,10 +125,10 @@
                         <td><%= dateUtil.dateTimeFormat(students[i].appointment_time)%></td>
                         <td><% if (students[i].adviser_id) {%><%= adviserMap[students[i].adviser_id].name%><%}%></td>
                         <td><%= sourceMap[students[i].source_id].name%></td>
-                        <td><%if (students[i].status == 0){%>未上门<%} else if (students[i].status == 1) {%>已上门<%} else if (students[i].status == 2) {%>已签约<%}%></td>
+                        <td><%= statusMap[students[i].status_id].name%></td>
                         <td><% if (students[i].note){%><%= students[i].note%><%}%></td>
                         <td>
-                            <%if (students[i].status == 0){%>
+                            <%if (students[i].status_id == '01'){%>
                             <a href="/student/do_student_arrive?id=<%= students[i].id%>" class="btn green mini"><i class="icon-ok"></i> 确认上门</a>
                             <%}%>
                         </td>
@@ -153,7 +154,7 @@
 <%- contentFor('script')%>
 <script>
     $('#grade_id').val('<%= condition.grade_id%>');
-    $('#status').val('<%= condition.status%>');
+    $('#status_id').val('<%= condition.status_id%>');
     $('#adviser_id').val('<%= condition.adviser_id%>');
     $('#source_id').val('<%= condition.source_id%>');
 </script>

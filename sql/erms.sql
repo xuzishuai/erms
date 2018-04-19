@@ -111,6 +111,30 @@ create table how_know
 alter table how_know comment '从何得知表';
 
 /*==============================================================*/
+/* Table: student_audit_status                                  */
+/*==============================================================*/
+create table student_audit_status
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '客户审核状态',
+   primary key (id)
+);
+
+alter table student_audit_status comment '客户审核状态表';
+
+/*==============================================================*/
+/* Table: student_status                                        */
+/*==============================================================*/
+create table student_status
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '客户状态',
+   primary key (id)
+);
+
+alter table student_status comment '客户状态表';
+
+/*==============================================================*/
 /* Table: student                                               */
 /*==============================================================*/
 create table student
@@ -130,11 +154,11 @@ create table student
    adviser_id           varchar(36) comment '顾问id，来源于user表',
    source_id            varchar(36) not null comment '途径id',
    how_know_id          varchar(36) comment '从何得知id',
-   status               tinyint(4) not null default 0 comment '客户状态，0未上门，1已上门，2已签约',
+   status_id            varchar(36) not null comment '客户状态id',
    home_address         varchar(200) comment '家庭住址',
    note                 varchar(500) comment '备注',
    arrive_time          datetime comment '上门时间',
-   audit_status         tinyint(4) not null default 0 comment '客户审核状态，0未审核，1已通过，2未通过',
+   audit_status_id      varchar(36) not null comment '客户审核状态id',
    create_at            datetime not null comment '登记时间',
    update_at            datetime not null comment '更新时间',
    primary key (id)
@@ -155,6 +179,18 @@ create table student_tracking_channel
 alter table student_tracking_channel comment '学生追踪方式表';
 
 /*==============================================================*/
+/* Table: student_tracking_result                               */
+/*==============================================================*/
+create table student_tracking_result
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '追踪结果',
+   primary key (id)
+);
+
+alter table student_tracking_result comment '学生追踪结果表';
+
+/*==============================================================*/
 /* Table: student_tracking                                     */
 /*==============================================================*/
 create table student_tracking
@@ -162,9 +198,9 @@ create table student_tracking
    id                   varchar(36) not null,
    student_id           varchar(36) not null comment '学生id',
    track_date           date not null comment '追踪日期',
-   channel_id           varchar(36) not null comment '追踪方式，0电话',
+   channel_id           varchar(36) not null comment '追踪方式id',
    content              varchar(500) not null comment '追踪记录',
-   result               tinyint(4) not null comment '追踪结果，0继续电话',
+   result_id            varchar(36) not null comment '追踪结果id',
    possibility_id       varchar(36) not null comment '签约可能性id',
    next_track_date      date comment '下次追踪日期',
    tracker_id           varchar(36) not null comment '追踪人id',
@@ -440,5 +476,14 @@ alter table contract_detail add constraint FK_Reference_29 foreign key (type_id)
 alter table contract_detail_log add constraint FK_Reference_30 foreign key (type_id)
       references contract_detail_type (id) on delete restrict on update restrict;
 
-alter table student_tracking_channel add constraint FK_Reference_31 foreign key (channel_id)
-      references contract_detail_type (id) on delete restrict on update restrict;
+alter table student_tracking add constraint FK_Reference_31 foreign key (channel_id)
+      references student_tracking_channel (id) on delete restrict on update restrict;
+
+alter table student_tracking add constraint FK_Reference_32 foreign key (result_id)
+      references student_tracking_result (id) on delete restrict on update restrict;
+
+alter table student add constraint FK_Reference_33 foreign key (audit_status_id)
+      references student_audit_status (id) on delete restrict on update restrict;
+
+alter table student add constraint FK_Reference_34 foreign key (status_id)
+      references student_status (id) on delete restrict on update restrict;

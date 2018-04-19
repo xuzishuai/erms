@@ -36,11 +36,11 @@
                             <div class="control-group span3">
                                 <label class="control-label">审核状态:</label>
                                 <div class="controls">
-                                    <select class="span12 select2" tabindex="1" name="audit_status" id="audit_status">
+                                    <select class="span12 select2" tabindex="1" name="audit_status_id" id="audit_status_id">
                                         <option value=""></option>
-                                        <option value="0">未审核</option>
-                                        <option value="1">已通过</option>
-                                        <option value="2">未通过</option>
+                                        <%for (let i = 0; i < auditStatus.length; i++){%>
+                                        <option value="<%= auditStatus[i].id%>"><%= auditStatus[i].name%></option>
+                                        <%}%>
                                     </select>
                                 </div>
                             </div>
@@ -125,12 +125,12 @@
                         <td><%= dateUtil.dateTimeFormat(students[i].appointment_time)%></td>
                         <td><% if (students[i].adviser_id) {%><%= adviserMap[students[i].adviser_id].name%><%}%></td>
                         <td><%= sourceMap[students[i].source_id].name%></td>
-                        <td><%if (students[i].audit_status == 0){%>未审核<%} else if (students[i].audit_status == 1) {%>已通过<%} else if (students[i].audit_status == 2) {%>未通过<%}%></td>
+                        <td><%= auditStatusMap[students[i].audit_status_id].name%></td>
                         <td><% if (students[i].note){%><%= students[i].note%><%}%></td>
                         <td>
-                            <%if (students[i].audit_status == 0){%>
-                            <a href="/student/do_audit_student?id=<%= students[i].id%>&audit_status=1" class="btn green mini"><i class="icon-ok"></i> 通过</a>
-                            <a href="/student/do_audit_student?id=<%= students[i].id%>&audit_status=2" class="btn red mini"><i class="icon-remove"></i> 不通过</a>
+                            <%if (students[i].audit_status_id == '01'){%>
+                            <a href="/student/do_audit_student?id=<%= students[i].id%>&audit_status_id=02" class="btn green mini"><i class="icon-ok"></i> 通过</a>
+                            <a href="/student/do_audit_student?id=<%= students[i].id%>&audit_status_id=03" class="btn red mini"><i class="icon-remove"></i> 不通过</a>
                             <%}%>
                         </td>
                     </tr>
@@ -155,7 +155,7 @@
 <%- contentFor('script')%>
 <script>
     $('#grade_id').val('<%= condition.grade_id%>');
-    $('#audit_status').val('<%= condition.audit_status%>');
+    $('#audit_status_id').val('<%= condition.audit_status_id%>');
     $('#adviser_id').val('<%= condition.adviser_id%>');
     $('#source_id').val('<%= condition.source_id%>');
 </script>

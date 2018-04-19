@@ -139,9 +139,9 @@
                         <td><%if (students[i].audit_status == 0){%>未审核<%} else if (students[i].audit_status == 1) {%>已通过<%} else if (students[i].audit_status == 2) {%>未通过<%}%></td>
                         <td><% if (students[i].note){%><%= students[i].note%><%}%></td>
                         <td>
-                            <%if (students[i].audit_status == 0){%>
-                            <a href="/student/do_audit_student?id=<%= students[i].id%>&audit_status=1" class="btn green mini"><i class="icon-ok"></i> 通过</a>
-                            <a href="/student/do_audit_student?id=<%= students[i].id%>&audit_status=2" class="btn red mini"><i class="icon-remove"></i> 不通过</a>
+                            <%if (students[i].audit_status_id == '01'){%>
+                            <a href="/student/do_audit_student?id=<%= students[i].id%>&audit_status_id=02" class="btn green mini"><i class="icon-ok"></i> 通过</a>
+                            <a href="/student/do_audit_student?id=<%= students[i].id%>&audit_status_id=03" class="btn red mini"><i class="icon-remove"></i> 不通过</a>
                             <%}%>
                         </td>
                     </tr>
@@ -166,7 +166,7 @@
 <%- contentFor('script')%>
 <script>
     $('#grade_id').val('<%= condition.grade_id%>');
-    $('#audit_status').val('<%= condition.audit_status%>');
+    $('#audit_status_id').val('<%= condition.audit_status_id%>');
     $('#adviser_id').val('<%= condition.adviser_id%>');
     $('#source_id').val('<%= condition.source_id%>');
 </script>

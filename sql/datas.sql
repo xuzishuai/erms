@@ -139,3 +139,22 @@ INSERT INTO contract_detail_type VALUES ('03', '校长赠送');
 -- Records of student_tracking_channel
 -- ----------------------------
 INSERT INTO student_tracking_channel VALUES ('01', '电话');
+
+-- ----------------------------
+-- Records of student_tracking_result
+-- ----------------------------
+INSERT INTO student_tracking_result VALUES ('01', '继续电话');
+
+-- ----------------------------
+-- Records of student_audit_status
+-- ----------------------------
+INSERT INTO student_audit_status VALUES ('01', '未审核');
+INSERT INTO student_audit_status VALUES ('02', '已通过');
+INSERT INTO student_audit_status VALUES ('03', '未通过');
+
+-- ----------------------------
+-- Records of student_status
+-- ----------------------------
+INSERT INTO student_status VALUES ('01', '未上门');
+INSERT INTO student_status VALUES ('02', '已上门');
+INSERT INTO student_status VALUES ('03', '已签约');

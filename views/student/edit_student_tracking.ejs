@@ -36,8 +36,10 @@
                     <div class="control-group">
                         <label class="control-label">追踪结果<span class="required">*</span></label>
                         <div class="controls">
-                            <select class="span6 select2"  data-placeholder="请选择追踪结果" tabindex="1" name="result" id="result">
-                                <option <%if (studentTracking.result == 0){%>selected<%}%> value="0">继续电话</option>
+                            <select class="span6 select2"  data-placeholder="请选择追踪结果" tabindex="1" name="result_id" id="result_id">
+                                <%for (let i = 0; i < results.length; i++){%>
+                                <option <%if (studentTracking.result_id == results[i].id){%>selected<%}%> value="<%= results[i].id%>"><%= results[i].name%></option>
+                                <%}%>
                             </select>
                         </div>
                     </div>
@@ -107,7 +109,7 @@
                 channel_id: {
                     required: true
                 },
-                result: {
+                result_id: {
                     required: true
                 },
                 possibility_id: {
@@ -124,7 +126,7 @@
                 channel_id: {
                     required: "请选择追踪方式"
                 },
-                result: {
+                result_id: {
                     required: "请选择追踪结果"
                 },
                 possibility_id: {
