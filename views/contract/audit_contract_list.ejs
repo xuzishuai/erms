@@ -67,7 +67,7 @@
                                 <div class="controls">
                                     <div class="input-append date date-picker span12" style="padding-right: 56px;">
                                         <input id="start_date_from" name="start_date_from" type="text"
-                                               <%if (condition.start_date_from){%>value="<%= dateUtil.dateTimeFormat(condition.start_date_from)%>"<%}%> readonly class="m-wrap span12"/>
+                                               <%if (condition.start_date_from){%>value="<%= dateUtil.dateFormat(condition.start_date_from)%>"<%}%> readonly class="m-wrap span12"/>
                                         <span class="add-on"><i class="icon-remove"></i></span>
                                         <span class="add-on"><i class="icon-calendar"></i></span>
                                     </div>
@@ -78,7 +78,7 @@
                                 <div class="controls">
                                     <div class="input-append date date-picker span12" style="padding-right: 56px;">
                                         <input id="start_date_to" name="start_date_to" type="text"
-                                               <%if (condition.start_date_to){%>value="<%= dateUtil.dateTimeFormat(condition.start_date_to)%>"<%}%> readonly class="m-wrap span12"/>
+                                               <%if (condition.start_date_to){%>value="<%= dateUtil.dateFormat(condition.start_date_to)%>"<%}%> readonly class="m-wrap span12"/>
                                         <span class="add-on"><i class="icon-remove"></i></span>
                                         <span class="add-on"><i class="icon-calendar"></i></span>
                                     </div>
@@ -124,25 +124,16 @@
                     <tr>
                         <td><%= contracts[i].contract_no%></td>
                         <td><%= studentMap[contracts[i].student_id].name%>(<%= studentMap[contracts[i].student_id].student_no%>)</td>
-
-
-
-
-
-
-                        <td><%if (students[i].gender == 0){%>男<%} else {%>女<%}%></td>
-                        <td><%= gradeMap[students[i].grade_id].name%></td>
-                        <td><%= students[i].contact%></td>
-                        <td><%= dateUtil.dateTimeFormat(students[i].appointment_time)%></td>
-                        <td><% if (students[i].adviser_id) {%><%= adviserMap[students[i].adviser_id].name%><%}%></td>
-                        <td><%= sourceMap[students[i].source_id].name%></td>
-                        <td><%if (students[i].audit_status == 0){%>未审核<%} else if (students[i].audit_status == 1) {%>已通过<%} else if (students[i].audit_status == 2) {%>未通过<%}%></td>
-                        <td><% if (students[i].note){%><%= students[i].note%><%}%></td>
+                        <td><%= contractAttributeMap[contracts[i].attribute_id].name%></td>
+                        <td><%= contractTypeMap[contracts[i].contract_type_id].name%></td>
+                        <td><%= gradeMap[contracts[i].grade_id].name%></td>
+                        <td><%= contracts[i].total_money%></td>
+                        <td><%= contracts[i].left_money%></td>
+                        <td><%= dateUtil.dateFormat(contracts[i].start_date)%></td>
+                        <td><%= signerMap[contracts[i].signer_id].name%></td>
+                        <td><%= contractStatusMap[contracts[i].status_id].name%></td>
                         <td>
-                            <%if (students[i].audit_status_id == '01'){%>
-                            <a href="/student/do_audit_student?id=<%= students[i].id%>&audit_status_id=02" class="btn green mini"><i class="icon-ok"></i> 通过</a>
-                            <a href="/student/do_audit_student?id=<%= students[i].id%>&audit_status_id=03" class="btn red mini"><i class="icon-remove"></i> 不通过</a>
-                            <%}%>
+                            <a href="/contract/do_audit_contract?id=<%= contracts[i].id%>" class="btn blue mini"><i class="icon-check"></i> 审核</a>
                         </td>
                     </tr>
                     <%}%>
@@ -153,20 +144,21 @@
     </div>
 </div>
 <%- contentFor('title')%>
-客户审核
+合同审核
 <%- contentFor('breadcrumb')%>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="javascript:void(0);">客户</a>
+    <a href="javascript:void(0);">合同</a>
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/student/audit_student_list">客户审核</a>
+    <a href="/contract/audit_contract_list">合同审核</a>
 </li>
 <%- contentFor('script')%>
 <script>
+    $('#student_id').val('<%= condition.student_id%>');
+    $('#attribute_id').val('<%= condition.attribute_id%>');
+    $('#contract_type_id').val('<%= condition.contract_type_id%>');
     $('#grade_id').val('<%= condition.grade_id%>');
-    $('#audit_status_id').val('<%= condition.audit_status_id%>');
-    $('#adviser_id').val('<%= condition.adviser_id%>');
-    $('#source_id').val('<%= condition.source_id%>');
+    $('#signer_id').val('<%= condition.signer_id%>');
 </script>

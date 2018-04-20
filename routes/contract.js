@@ -61,7 +61,7 @@ router.post('/add_contract_detail_tr', async function (req, res) {
             detail_index: req.body.detail_index
         });
     } catch (error) {
-        res.send(false);
+        exceptionHelper.renderException(res, error);
     }
 });
 
@@ -109,7 +109,7 @@ router.post('/do_create_contract', async function (req, res) {
         await contractDAO.saveContract(contract);
         res.redirect('/student/student_list');
     } catch (error) {
-        res.send(false);
+        exceptionHelper.renderException(res, error);
     }
 });
 
@@ -128,10 +128,11 @@ router.get('/audit_contract_list', async function (req, res) {
         let contracts = await contractDAO.getContractByCondition(condition);
         let students = await baseDAO.getAll('student');
         let grades = await baseDAO.getAll('grade');
-        let signers = await userDAO.getUserByRole(['03', '04']);
+        let signers = await userDAO.getUserByRole(['03', '04']);//角色为顾问和班主任
         let contractAttributes = await baseDAO.getAll('contract_attribute');
         let contractTypes = await baseDAO.getAll('contract_type');
         let possibilities = await baseDAO.getAll('possibility');
+        let contractStatus = await baseDAO.getAll('contract_status');
         res.render('contract/audit_contract_list', {
             contracts: contracts,
             students: students,
@@ -143,6 +144,9 @@ router.get('/audit_contract_list', async function (req, res) {
             studentMap: commonUtil.toMap(students),
             gradeMap: commonUtil.toMap(grades),
             signerMap: commonUtil.toMap(signers),
+            contractAttributeMap: commonUtil.toMap(contractAttributes),
+            contractTypeMap: commonUtil.toMap(contractTypes),
+            contractStatusMap: commonUtil.toMap(contractStatus),
             condition: condition,
             dateUtil: dateUtil
         });

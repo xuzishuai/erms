@@ -93,8 +93,8 @@
                         <td><%= statusMap[students[i].status_id].name%></td>
                         <td><% if (students[i].note){%><%= students[i].note%><%}%></td>
                         <td>
-                            <a href="/student/student_tracking_list?student_id=<%= students[i].id%>" class="btn purple mini"> 追踪记录</a>
-                            <a href="/student/visit_record_list?student_id=<%= students[i].id%>" class="btn purple mini"> 上门记录</a>
+                            <a href="/student/student_tracking_list?student_id=<%= students[i].id%>" class="btn purple mini"><i class="icon-table"></i> 追踪记录</a>
+                            <a href="/student/visit_record_list?student_id=<%= students[i].id%>" class="btn purple mini"><i class="icon-table"></i> 上门记录</a>
                         </td>
                     </tr>
                     <%}%>

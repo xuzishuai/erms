@@ -29,7 +29,7 @@ exports.saveContract = function (contract) {
                 sqls[sqls.length] = 'insert into contract_detail(id, contract_id, subject_id, grade_id, lesson_period, finished_lesson, type_id, price, ' +
                     'status_id, create_at, update_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
                 params[params.length] = [uuid.v1(), contractId, contractDetail[i].subject_id, contract.grade_id, contractDetail[i].lesson_period, '01',
-                    contractDetail[i].type_id, contractDetail[i].price, 0, now, now];
+                    contractDetail[i].type_id, contractDetail[i].price, '01', now, now];
             }
             await dataPool.batchQuery(sqls, params);
             resolve();
@@ -66,7 +66,7 @@ exports.getContractByCondition = function (condition) {
                     params[params.length] = condition.grade_id;
                 }
                 if (condition.start_date_from && condition.start_date_from != '') {
-                    sql += ' and start_date<=?';
+                    sql += ' and start_date>=?';
                     params[params.length] = condition.start_date_from;
                 }
                 if (condition.start_date_to && condition.start_date_to != '') {
