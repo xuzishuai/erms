@@ -1,6 +1,7 @@
 const dataPool = require('../util/dataPool');
 const Promise = require('promise');
 const uuid = require('node-uuid');
+const baseDAO = require('../dao/baseDAO');
 
 exports.isContractExist = function (user_no) {
     return new Promise(async function (resolve, reject) {
@@ -85,6 +86,71 @@ exports.getContractByCondition = function (condition) {
             sql += ' order by update_at';
             let contracts = await dataPool.query(sql, params);
             resolve(contracts);
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
+
+function getDetailsByContractId (contract_id) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let contractDetails = await dataPool.query('select * from contract_detail where contract_id=?', [contract_id]);
+            resolve(contractDetails);
+        } catch (error) {
+            reject(error);
+        }
+    })
+}
+
+exports.getDetailsByContractId = getDetailsByContractId;
+
+exports.auditContract = function (id, audit_status) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let contract = await baseDAO.getById('contract', id);
+            contract = contract[0];
+            let student  = await baseDAO.getById('student', contract.status_id);
+            student = student[0];
+            let details = await getDetailsByContractId(contract.id);
+            let now = new Date();
+            let detailLogs = [];
+            if (contract.status_id == '01') {//合同待确认的审核
+                if (audit_status == '1') {//审核通过
+                    contract.status_id = '02';
+                    student.status_id = '03';
+                    student.update_at = now;
+                    for (let i = 0; i < details.length; i++) {//更新合同明细状态
+                        details[i].status_id = '02';
+                        details[i].update_at = now;
+                    }
+                    detailLogs = details;//写入明细日志
+                } else {//审核不通过
+                    contract.status_id = '03';
+                }
+                contract.update_at = now;
+            }
+            let sqls = ['update contract set student_id=?, contract_no=?, attribute_id=?, contract_type_id=?, grade_id=?, total_money=?, ' +
+                'prepay=?, left_money=?, total_lesson_period=?, start_date=?, is_recommend=?, recommend_type=?, recommender_id=?, signer_id=?, possibility_id=?, ' +
+                'status_id=?, create_at=?, update_at=?, note=? where id=?',
+                'update student set status_id=?, update_at=? where id=?',
+                'delete from '];//todo:删除合同临时表里面此合同的数据（提出修改合同的申请，储存在临时表中一条数据，无论是否通过，都要删除临时数据）
+            let params = [[contract.student_id, contract.contract_no, contract.attribute_id, contract.contract_type_id, contract.grade_id, contract.total_money, contract.prepay,
+                contract.left_money, contract.total_lesson_period, contract.start_date, contract.is_recommend, contract.recommend_type, contract.recommender_id,
+                contract.signer_id, contract.possibility_id, contract.status_id, contract.create_at, contract.update_at, contract.note, contract.id],
+                [student.status_id, student.update_at]];
+            for (let i = 0; i < details.length; i++) {
+                sqls[sqls.length] = 'update contract_detail set status_id=?, update_at=? where id=?';
+                params[params.length] = [details[i].status_id, details[i].update_at];
+            }
+            for (let i = 0; i < detailLogs.length; i++) {
+                sqls[sqls.length] = 'insert into contract_detail_log(id, contract_id, subject_id, grade_id, lesson_period, finished_lesson, type_id, price, status_id, update_at)' +
+                    'values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                params[params.length] = [uuid.v1(), detailLogs[i].contract_id, detailLogs[i].subject_id, detailLogs[i].grade_id, detailLogs[i].lesson_period, detailLogs[i].finished_lesson,
+                    detailLogs[i].type_id, detailLogs[i].price, detailLogs[i].status_id, detailLogs[i].update_at];
+            }
+            await dataPool.batchQuery(sqls, params);
+            resolve();
         } catch (error) {
             reject(error);
         }

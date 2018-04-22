@@ -133,7 +133,7 @@
                         <td><%= signerMap[contracts[i].signer_id].name%></td>
                         <td><%= contractStatusMap[contracts[i].status_id].name%></td>
                         <td>
-                            <a href="/contract/do_audit_contract?id=<%= contracts[i].id%>" class="btn blue mini"><i class="icon-check"></i> 审核</a>
+                            <a href="/contract/audit_contract?id=<%= contracts[i].id%>" class="btn blue mini"><i class="icon-check"></i> 审核</a>
                         </td>
                     </tr>
                     <%}%>

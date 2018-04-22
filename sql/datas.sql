@@ -12,7 +12,7 @@ INSERT INTO menu VALUES ('8', '客户审核', '4', '/student/audit_student_list'
 INSERT INTO menu VALUES ('9', '客户追踪', '4', '/student/follow_student_list', null, null, '#/student/follow_student_list#/student/student_tracking_list#/student/new_student_tracking#/student/edit_student_tracking#/student/delete_student_tracking#/student/do_create_student_tracking#/student/do_update_student_tracking#/student/visit_record_list#/student/new_visit_record#/student/edit_visit_record#/student/delete_visit_record#/student/do_create_visit_record#/student/do_update_visit_record#', null);
 INSERT INTO menu VALUES ('10', '客户管理', '4', '/student/student_list', null, null, '#/student/student_list#/student/edit_student#/student/do_update_student#/contract/new_contract#/contract/validate_contract_no#/contract/do_create_contract#', null);
 INSERT INTO menu VALUES ('11', '合同', null, null, '#12#', 'icon-file-text', null, 2);
-INSERT INTO menu VALUES ('12', '合同审核', '11', '/contract/audit_contract_list', null, null, '#/contract/audit_contract_list#', null);
+INSERT INTO menu VALUES ('12', '待审核合同', '11', '/contract/audit_contract_list', null, null, '#/contract/audit_contract_list#/contract/audit_contract#', null);
 
 -- ----------------------------
 -- Records of user,插入超级管理员用户

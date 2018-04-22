@@ -155,4 +155,49 @@ router.get('/audit_contract_list', async function (req, res) {
     }
 });
 
+router.get('/audit_contract', async function (req, res) {
+    try {
+        let id = req.query.id;
+        let contract = await baseDAO.getById('contract', id);
+        contract = contract[0];
+        let student = await baseDAO.getById('student', contract.student_id);
+        let contractDetails = await contractDAO.getDetailsByContractId(id);
+        let grades = await baseDAO.getAll('grade');
+        let users = await baseDAO.getAll('user');
+        let attributes = await baseDAO.getAll('contract_attribute');
+        let types = await baseDAO.getAll('contract_type');
+        let possibilities = await baseDAO.getAll('possibility');
+        let status = await baseDAO.getAll('contract_status');
+        let subjects = await baseDAO.getAll('subject');
+        let detailTypes = await baseDAO.getAll('contract_detail_type');
+        let detailStatus = await baseDAO.getAll('contract_detail_status');
+        res.render('contract/audit_contract', {
+            gradeMap: commonUtil.toMap(grades),
+            userMap: commonUtil.toMap(users),
+            attributeMap: commonUtil.toMap(attributes),
+            typeMap: commonUtil.toMap(types),
+            possibilityMap: commonUtil.toMap(possibilities),
+            statusMap: commonUtil.toMap(status),
+            subjectMap: commonUtil.toMap(subjects),
+            detailTypeMap: commonUtil.toMap(detailTypes),
+            detailStatusMap: commonUtil.toMap(detailStatus),
+            contract: contract,
+            student: student[0],
+            contractDetails: contractDetails,
+            dateUtil: dateUtil
+        })
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_audit_contract', async function (req, res) {
+    try {
+        await contractDAO.auditContract(req.body.id, req.body.audit_status);
+        res.redirect('/student/audit_contract_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
 module.exports = router;

@@ -372,7 +372,6 @@ create table contract_detail_log
 (
    id                   varchar(36) not null,
    contract_id          varchar(36) not null comment '合同id',
-   operator_id          varchar(36) not null comment '操作人id，为新建合同人或变更发起人',
    subject_id           varchar(36) not null comment '科目id',
    grade_id             varchar(36) not null comment '年级id',
    lesson_period        int not null comment '课时数',
@@ -443,9 +442,6 @@ alter table contract_detail_log add constraint FK_Reference_18 foreign key (subj
 alter table contract_detail_log add constraint FK_Reference_19 foreign key (grade_id)
       references grade (id) on delete restrict on update restrict;
 
-alter table contract_detail_log add constraint FK_Reference_20 foreign key (operator_id)
-      references user (id) on delete restrict on update restrict;
-
 alter table contract add constraint FK_Reference_21 foreign key (attribute_id)
       references contract_attribute (id) on delete restrict on update restrict;
 
@@ -485,5 +481,5 @@ alter table student_tracking add constraint FK_Reference_32 foreign key (result_
 alter table student add constraint FK_Reference_33 foreign key (audit_status_id)
       references student_audit_status (id) on delete restrict on update restrict;
 
-alter table student add constraint FK_Reference_34 foreign key (status_id)
+alter table student add constraint FK_Reference_20 foreign key (status_id)
       references student_status (id) on delete restrict on update restrict;
