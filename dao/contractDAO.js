@@ -3,10 +3,14 @@ const Promise = require('promise');
 const uuid = require('node-uuid');
 const baseDAO = require('../dao/baseDAO');
 
-exports.isContractExist = function (user_no) {
+exports.isContractNoExist = function (contract_no, id) {
     return new Promise(async function (resolve, reject) {
         try {
-            let contract = await dataPool.query('select * from contract where contract_no=?', [user_no]);
+            let contract = [];
+            if (!id || id == '')
+                contract = await dataPool.query('select * from contract where contract_no=?', [contract_no]);
+            else
+                contract = await dataPool.query('select * from contract where contract_no=? and id<>?', [contract_no, id]);
             resolve(contract);
         } catch (error) {
             reject(error);
@@ -105,6 +109,25 @@ function getDetailsByContractId (contract_id) {
 
 exports.getDetailsByContractId = getDetailsByContractId;
 
+exports.saveContractTemp = function (contractTemp) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let sqls = ['insert into contract_temp(id, student_id, contract_no, attribute_id, contract_type_id, grade_id, total_money, prepay, left_money, ' +
+                'total_lesson_period, start_date, is_recommend, recommend_type, recommender_id, signer_id, possibility_id, status_id, create_at, update_at, note)' +
+                ' values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                'update contract set status_id=? where id=?'];
+            let params = [[contractTemp.id, contractTemp.student_id, contractTemp.contract_no, contractTemp.attribute_id, contractTemp.contract_type_id, contractTemp.grade_id,
+                contractTemp.total_money, contractTemp.prepay, contractTemp.left_money, contractTemp.total_lesson_period, contractTemp.start_date, contractTemp.is_recommend,
+                contractTemp.recommend_type, contractTemp.recommender_id, contractTemp.signer_id, contractTemp.possibility_id, '04', contractTemp.create_at, new Date(), contractTemp.note],
+                ['04', contractTemp.id]];
+            await dataPool.batchQuery(sqls, params);
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
+
 exports.auditContract = function (id, audit_status) {
     return new Promise(async function (resolve, reject) {
         try {
@@ -133,11 +156,13 @@ exports.auditContract = function (id, audit_status) {
             let sqls = ['update contract set student_id=?, contract_no=?, attribute_id=?, contract_type_id=?, grade_id=?, total_money=?, ' +
                 'prepay=?, left_money=?, total_lesson_period=?, start_date=?, is_recommend=?, recommend_type=?, recommender_id=?, signer_id=?, possibility_id=?, ' +
                 'status_id=?, create_at=?, update_at=?, note=? where id=?',
-                'update student set status_id=?, update_at=? where id=?'];//todo:删除合同临时表里面此合同的数据（提出修改合同的申请，储存在临时表中一条数据，无论是否通过，都要删除临时数据）
+                'update student set status_id=?, update_at=? where id=?',
+                'delete from contract_temp where id=?'];
             let params = [[contract.student_id, contract.contract_no, contract.attribute_id, contract.contract_type_id, contract.grade_id, contract.total_money, contract.prepay,
                 contract.left_money, contract.total_lesson_period, contract.start_date, contract.is_recommend, contract.recommend_type, contract.recommender_id,
                 contract.signer_id, contract.possibility_id, contract.status_id, contract.create_at, contract.update_at, contract.note, contract.id],
-                [student.status_id, student.update_at, student.id]];
+                [student.status_id, student.update_at, student.id],
+                [contract.id]];
             for (let i = 0; i < details.length; i++) {
                 sqls[sqls.length] = 'update contract_detail set status_id=?, update_at=? where id=?';
                 params[params.length] = [details[i].status_id, details[i].update_at, details[i].id];

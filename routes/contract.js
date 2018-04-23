@@ -39,7 +39,7 @@ router.get('/new_contract', async function (req, res) {
 
 router.post('/validate_contract_no', async function (req, res) {
     try {
-        let contract = await contractDAO.isContractExist(req.body.id, req.body.user_no);
+        let contract = await contractDAO.isContractNoExist(req.body.contract_no);
         if (contract && contract.length > 0) {
             res.send(false);
         } else {
@@ -247,28 +247,74 @@ router.get('/my_contract_list', async function (req, res) {
 
 router.get('/edit_contract', async function (req, res) {
     try {
-        // let students = await baseDAO.getAll('student');
-        // let grades = await baseDAO.getAll('grade');
-        // let signers = await userDAO.getUserByRole(['03', '04']);//角色为顾问和班主任
-        // let contractAttributes = await baseDAO.getAll('contract_attribute');
-        // let contractTypes = await baseDAO.getAll('contract_type');
-        // let possibilities = await baseDAO.getAll('possibility');
-        // let contractStatus = await baseDAO.getAll('contract_status');
-        // res.render('contract/edit_contract', {
-        //     students: students,
-        //     grades: grades,
-        //     contractStatus: contractStatus,
-        //     contractAttributes: contractAttributes,
-        //     contractTypes: contractTypes,
-        //     possibilities: possibilities,
-        //     studentMap: commonUtil.toMap(students),
-        //     gradeMap: commonUtil.toMap(grades),
-        //     signerMap: commonUtil.toMap(signers),
-        //     contractAttributeMap: commonUtil.toMap(contractAttributes),
-        //     contractTypeMap: commonUtil.toMap(contractTypes),
-        //     contractStatusMap: commonUtil.toMap(contractStatus),
-        //     dateUtil: dateUtil
-        // });
+        let contract = await baseDAO.getById('contract', req.query.id);
+        contract = contract[0];
+        let student = await baseDAO.getById('student', contract.student_id);
+        let grades = await baseDAO.getAll('grade');
+        let users = await baseDAO.getAll('user');
+        let contractAttributes = await baseDAO.getAll('contract_attribute');
+        let contractTypes = await baseDAO.getAll('contract_type');
+        let possibilities = await baseDAO.getAll('possibility');
+        let contractStatus = await baseDAO.getAll('contract_status');
+        res.render('contract/edit_contract', {
+            contract: contract,
+            student: student[0],
+            grades: grades,
+            users: users,
+            contractStatus: contractStatus,
+            contractAttributes: contractAttributes,
+            contractTypes: contractTypes,
+            possibilities: possibilities,
+            gradeMap: commonUtil.toMap(grades),
+            userMap: commonUtil.toMap(users),
+            contractAttributeMap: commonUtil.toMap(contractAttributes),
+            contractTypeMap: commonUtil.toMap(contractTypes),
+            contractStatusMap: commonUtil.toMap(contractStatus),
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/validate_edit_contract_no', async function (req, res) {
+    try {
+        let contract = await contractDAO.isContractNoExist(req.body.contract_no, req.body.id);
+        if (contract && contract.length > 0) {
+            res.send(false);
+        } else {
+            res.send(true);
+        }
+    } catch (error) {
+        res.send(false);
+    }
+});
+
+router.post('/do_update_contract', async function (req, res) {
+    try {
+        let contractTemp = {};
+        contractTemp.id = req.body.id;
+        let contract = await baseDAO.getById('contract', contractTemp.id);
+        contract = contract[0];
+        contractTemp.student_id = req.body.student_id;
+        contractTemp.contract_no = req.body.contract_no;
+        contractTemp.attribute_id = req.body.attribute_id;
+        contractTemp.contract_type_id = req.body.contract_type_id;
+        contractTemp.grade_id = req.body.grade_id;
+        contractTemp.total_money = req.body.total_money;
+        contractTemp.prepay = req.body.prepay;
+        contractTemp.left_money = req.body.left_money;
+        contractTemp.total_lesson_period = req.body.total_lesson_period;
+        contractTemp.start_date = req.body.start_date;
+        contractTemp.is_recommend = req.body.is_recommend;
+        contractTemp.recommend_type = (req.body.recommend_type && req.body.recommend_type != '')?req.body.recommend_type:null;
+        contractTemp.recommender_id = (req.body.recommender_id && req.body.recommender_id != '')?req.body.recommender_id:null;
+        contractTemp.signer_id = req.body.signer_id;
+        contractTemp.possibility_id = contract.possibility_id;
+        contractTemp.create_at = contract.create_at;
+        contractTemp.note = (req.body.note && req.body.note != '')?req.body.note:null;
+        await contractDAO.saveContractTemp(contractTemp);
+        res.redirect('/contract/my_contract_list');
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }
