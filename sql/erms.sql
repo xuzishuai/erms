@@ -4,30 +4,6 @@
 /*==============================================================*/
 
 
-drop table if exists menu;
-
-drop table if exists role;
-
-drop table if exists user;
-
-drop table if exists grade;
-
-drop table if exists source;
-
-drop table if exists how_know;
-
-drop table if exists student;
-
-drop table if exists student_tracking;
-
-drop table if exists visit_record;
-
-drop table if exists subject;
-
-drop table if exists contract;
-
-drop table if exists contract_detail;
-
 /*==============================================================*/
 /* Table: menu                                                  */
 /*==============================================================*/
@@ -321,6 +297,36 @@ create table contract
 alter table contract comment '合同表';
 
 /*==============================================================*/
+/* Table: contract_temp                                         */
+/*==============================================================*/
+create table contract_temp
+(
+   id                   varchar(36) not null,
+   student_id           varchar(36) not null comment '学生id',
+   contract_no          varchar(100) not null comment '合同编号',
+   attribute_id         varchar(36) not null comment '合同属性id',
+   contract_type_id     varchar(36) not null comment '合同类型id',
+   grade_id             varchar(36) not null comment '年级id',
+   total_money          double not null comment '合同金额',
+   prepay               double not null comment '已付款',
+   left_money           double not null comment '未付款',
+   total_lesson_period  int not null comment '总课时数',
+   start_date           date not null comment '合同开始日期',
+   is_recommend         tinyint(2) not null comment '是否被推荐，0否，1是',
+   recommend_type       varchar(50) comment '推荐方式',
+   recommender_id       varchar(36) comment '推荐人id',
+   signer_id            varchar(36) not null comment '签约人id',
+   possibility_id       varchar(36) not null comment '续费可能性id',
+   status_id            varchar(36) not null comment '合同状态id',
+   create_at            datetime not null comment '签约时间',
+   update_at            datetime not null comment '更新时间',
+   note                 varchar(500) comment '备注',
+   primary key (id)
+);
+
+alter table contract_temp comment '合同临时表，修改合同用';
+
+/*==============================================================*/
 /* Table: contract_detail_status                                */
 /*==============================================================*/
 create table contract_detail_status
@@ -424,6 +430,18 @@ alter table contract add constraint FK_Reference_12 foreign key (recommender_id)
 alter table contract add constraint FK_Reference_13 foreign key (signer_id)
       references user (id) on delete restrict on update restrict;
 
+alter table contract add constraint FK_Reference_21 foreign key (attribute_id)
+      references contract_attribute (id) on delete restrict on update restrict;
+
+alter table contract add constraint FK_Reference_22 foreign key (contract_type_id)
+      references contract_type (id) on delete restrict on update restrict;
+
+alter table contract add constraint FK_Reference_23 foreign key (possibility_id)
+      references possibility (id) on delete restrict on update restrict;
+
+alter table contract add constraint FK_Reference_26 foreign key (status_id)
+      references contract_status (id) on delete restrict on update restrict;
+
 alter table contract_detail add constraint FK_Reference_14 foreign key (contract_id)
       references contract (id) on delete restrict on update restrict;
 
@@ -442,23 +460,11 @@ alter table contract_detail_log add constraint FK_Reference_18 foreign key (subj
 alter table contract_detail_log add constraint FK_Reference_19 foreign key (grade_id)
       references grade (id) on delete restrict on update restrict;
 
-alter table contract add constraint FK_Reference_21 foreign key (attribute_id)
-      references contract_attribute (id) on delete restrict on update restrict;
-
-alter table contract add constraint FK_Reference_22 foreign key (contract_type_id)
-      references contract_type (id) on delete restrict on update restrict;
-
-alter table contract add constraint FK_Reference_23 foreign key (possibility_id)
-      references possibility (id) on delete restrict on update restrict;
-
 alter table student_tracking add constraint FK_Reference_24 foreign key (possibility_id)
       references possibility (id) on delete restrict on update restrict;
 
 alter table visit_record add constraint FK_Reference_25 foreign key (possibility_id)
       references possibility (id) on delete restrict on update restrict;
-
-alter table contract add constraint FK_Reference_26 foreign key (status_id)
-      references contract_status (id) on delete restrict on update restrict;
 
 alter table contract_detail add constraint FK_Reference_27 foreign key (status_id)
       references contract_detail_status (id) on delete restrict on update restrict;
@@ -483,3 +489,27 @@ alter table student add constraint FK_Reference_33 foreign key (audit_status_id)
 
 alter table student add constraint FK_Reference_20 foreign key (status_id)
       references student_status (id) on delete restrict on update restrict;
+
+alter table contract_temp add constraint FK_Reference_34 foreign key (student_id)
+      references student (id) on delete restrict on update restrict;
+
+alter table contract_temp add constraint FK_Reference_35 foreign key (grade_id)
+      references grade (id) on delete restrict on update restrict;
+
+alter table contract_temp add constraint FK_Reference_36 foreign key (recommender_id)
+      references user (id) on delete restrict on update restrict;
+
+alter table contract_temp add constraint FK_Reference_37 foreign key (signer_id)
+      references user (id) on delete restrict on update restrict;
+
+alter table contract_temp add constraint FK_Reference_38 foreign key (attribute_id)
+      references contract_attribute (id) on delete restrict on update restrict;
+
+alter table contract_temp add constraint FK_Reference_39 foreign key (contract_type_id)
+      references contract_type (id) on delete restrict on update restrict;
+
+alter table contract_temp add constraint FK_Reference_40 foreign key (possibility_id)
+      references possibility (id) on delete restrict on update restrict;
+
+alter table contract_temp add constraint FK_Reference_41 foreign key (status_id)
+      references contract_status (id) on delete restrict on update restrict;

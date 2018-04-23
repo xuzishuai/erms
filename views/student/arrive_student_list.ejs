@@ -119,7 +119,7 @@
                     <tr>
                         <td><%= students[i].student_no%></td>
                         <td><%= students[i].name%></td>
-                        <td><%if (students[i].gender == 0){%>男<%} else {%>女<%}%></td>
+                        <td><% if (students[i].gender == 0){%>男<%} else {%>女<%}%></td>
                         <td><%= gradeMap[students[i].grade_id].name%></td>
                         <td><%= students[i].contact%></td>
                         <td><%= dateUtil.dateTimeFormat(students[i].appointment_time)%></td>

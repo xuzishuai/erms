@@ -29,7 +29,7 @@ exports.saveContract = function (contract) {
             for (let i = 0; i < contractDetail.length; i++) {
                 sqls[sqls.length] = 'insert into contract_detail(id, contract_id, subject_id, grade_id, lesson_period, finished_lesson, type_id, price, ' +
                     'status_id, create_at, update_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-                params[params.length] = [uuid.v1(), contractId, contractDetail[i].subject_id, contract.grade_id, contractDetail[i].lesson_period, '01',
+                params[params.length] = [uuid.v1(), contractId, contractDetail[i].subject_id, contract.grade_id, contractDetail[i].lesson_period, 0,
                     contractDetail[i].type_id, contractDetail[i].price, '01', now, now];
             }
             await dataPool.batchQuery(sqls, params);
@@ -40,10 +40,10 @@ exports.saveContract = function (contract) {
     })
 };
 
-exports.getContractByCondition = function (condition) {
+exports.getContractByCondition = function (table, condition) {
     return new Promise(async function (resolve, reject) {
         try {
-            let sql = 'select * from contract where 1=1';
+            let sql = 'select * from ' + table + ' where 1=1';
             let params = [];
             if (condition) {
                 if (condition.student_id && condition.student_id != '') {
@@ -110,7 +110,7 @@ exports.auditContract = function (id, audit_status) {
         try {
             let contract = await baseDAO.getById('contract', id);
             contract = contract[0];
-            let student  = await baseDAO.getById('student', contract.status_id);
+            let student  = await baseDAO.getById('student', contract.student_id);
             student = student[0];
             let details = await getDetailsByContractId(contract.id);
             let now = new Date();
@@ -133,15 +133,14 @@ exports.auditContract = function (id, audit_status) {
             let sqls = ['update contract set student_id=?, contract_no=?, attribute_id=?, contract_type_id=?, grade_id=?, total_money=?, ' +
                 'prepay=?, left_money=?, total_lesson_period=?, start_date=?, is_recommend=?, recommend_type=?, recommender_id=?, signer_id=?, possibility_id=?, ' +
                 'status_id=?, create_at=?, update_at=?, note=? where id=?',
-                'update student set status_id=?, update_at=? where id=?',
-                'delete from '];//todo:删除合同临时表里面此合同的数据（提出修改合同的申请，储存在临时表中一条数据，无论是否通过，都要删除临时数据）
+                'update student set status_id=?, update_at=? where id=?'];//todo:删除合同临时表里面此合同的数据（提出修改合同的申请，储存在临时表中一条数据，无论是否通过，都要删除临时数据）
             let params = [[contract.student_id, contract.contract_no, contract.attribute_id, contract.contract_type_id, contract.grade_id, contract.total_money, contract.prepay,
                 contract.left_money, contract.total_lesson_period, contract.start_date, contract.is_recommend, contract.recommend_type, contract.recommender_id,
                 contract.signer_id, contract.possibility_id, contract.status_id, contract.create_at, contract.update_at, contract.note, contract.id],
-                [student.status_id, student.update_at]];
+                [student.status_id, student.update_at, student.id]];
             for (let i = 0; i < details.length; i++) {
                 sqls[sqls.length] = 'update contract_detail set status_id=?, update_at=? where id=?';
-                params[params.length] = [details[i].status_id, details[i].update_at];
+                params[params.length] = [details[i].status_id, details[i].update_at, details[i].id];
             }
             for (let i = 0; i < detailLogs.length; i++) {
                 sqls[sqls.length] = 'insert into contract_detail_log(id, contract_id, subject_id, grade_id, lesson_period, finished_lesson, type_id, price, status_id, update_at)' +
