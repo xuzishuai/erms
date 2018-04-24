@@ -134,7 +134,7 @@
                         <td><%= contractStatusMap[contracts[i].status_id].name%></td>
                         <td>
                             <% if (contracts[i].status_id == '02' || contracts[i].status_id == '03') {%>
-                            <a href="/contract/edit_contract?id=<%= contracts[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
+                            <a href="/contract/edit_contract?id=<%= contracts[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 修改</a>
                             <a href="/contract/edit_contract_detail?id=<%= contracts[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 变更</a>
                             <%}%>
                         </td>

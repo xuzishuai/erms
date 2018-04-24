@@ -161,8 +161,14 @@ router.get('/audit_contract_list', async function (req, res) {
 router.get('/audit_contract', async function (req, res) {
     try {
         let id = req.query.id;
-        let contract = await baseDAO.getById('contract', id);
-        contract = contract[0];
+        let contractTemp = await baseDAO.getById('contract_temp', id);
+        let contract = {};
+        if (contractTemp && contractTemp.length > 0) {
+            contract = contractTemp[0];
+        } else {
+            contract = await baseDAO.getById('contract', id);
+            contract = contract[0];
+        }
         let student = await baseDAO.getById('student', contract.student_id);
         let contractDetails = await contractDAO.getDetailsByContractId(id);
         let grades = await baseDAO.getAll('grade');
@@ -309,8 +315,8 @@ router.post('/do_update_contract', async function (req, res) {
         contractTemp.is_recommend = req.body.is_recommend;
         contractTemp.recommend_type = (req.body.recommend_type && req.body.recommend_type != '')?req.body.recommend_type:null;
         contractTemp.recommender_id = (req.body.recommender_id && req.body.recommender_id != '')?req.body.recommender_id:null;
-        contractTemp.signer_id = req.body.signer_id;
-        contractTemp.possibility_id = contract.possibility_id;
+        contractTemp.signer_id = contract.signer_id;
+        contractTemp.possibility_id = req.body.possibility_id;
         contractTemp.create_at = contract.create_at;
         contractTemp.note = (req.body.note && req.body.note != '')?req.body.note:null;
         await contractDAO.saveContractTemp(contractTemp);

@@ -152,6 +152,13 @@ exports.auditContract = function (id, audit_status) {
                     contract.status_id = '03';
                 }
                 contract.update_at = now;
+            } else if (contract.status_id == '04') {//合同修改的审核
+                if (audit_status == '1') {//审核通过
+                    let contractTemp = await baseDAO.getById('contract_temp', contract.id);
+                    contract = contractTemp[0];
+                    contract.update_at = now;
+                }
+                contract.status_id = '02';//无论审核是否通过，都变回执行中
             }
             let sqls = ['update contract set student_id=?, contract_no=?, attribute_id=?, contract_type_id=?, grade_id=?, total_money=?, ' +
                 'prepay=?, left_money=?, total_lesson_period=?, start_date=?, is_recommend=?, recommend_type=?, recommender_id=?, signer_id=?, possibility_id=?, ' +
