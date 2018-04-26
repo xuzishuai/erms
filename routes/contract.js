@@ -326,4 +326,90 @@ router.post('/do_update_contract', async function (req, res) {
     }
 });
 
+router.get('/edit_contract_detail', async function (req, res) {
+    try {
+        let id = req.query.id;
+        let contractTemp = await baseDAO.getById('contract_temp', id);
+        let contract = {};
+        if (contractTemp && contractTemp.length > 0) {
+            contract = contractTemp[0];
+        } else {
+            contract = await baseDAO.getById('contract', id);
+            contract = contract[0];
+        }
+        let student = await baseDAO.getById('student', contract.student_id);
+        let contractDetails = await contractDAO.getDetailsByContractId(id);
+        let grades = await baseDAO.getAll('grade');
+        let users = await baseDAO.getAll('user');
+        let attributes = await baseDAO.getAll('contract_attribute');
+        let types = await baseDAO.getAll('contract_type');
+        let possibilities = await baseDAO.getAll('possibility');
+        let status = await baseDAO.getAll('contract_status');
+        let subjects = await baseDAO.getAll('subject');
+        let detailTypes = await baseDAO.getAll('contract_detail_type');
+        res.render('contract/edit_contract_detail', {
+            gradeMap: commonUtil.toMap(grades),
+            userMap: commonUtil.toMap(users),
+            attributeMap: commonUtil.toMap(attributes),
+            typeMap: commonUtil.toMap(types),
+            possibilityMap: commonUtil.toMap(possibilities),
+            statusMap: commonUtil.toMap(status),
+            contract: contract,
+            student: student[0],
+            contractDetails: contractDetails,
+            subjects: subjects,
+            detailTypes: detailTypes,
+            dateUtil: dateUtil
+        })
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_update_contract_detail', async function (req, res) {
+    try {
+        let oldContractDetail = await contractDAO.getDetailsByContractId(req.body.id);
+        let contractDetail = [];
+        for (let key in req.body) {
+            let pattSubject = new RegExp('^subject_id_');
+            if (pattSubject.test(key)) {
+                let detail = {};
+                detail.subject_id = req.body[key];
+                contractDetail[contractDetail.length] = detail;
+            }
+            let pattLessonPeriod = new RegExp('^lesson_period_');
+            if (pattLessonPeriod.test(key)) {
+                contractDetail[contractDetail.length - 1].lesson_period = req.body[key];
+            }
+            let pattType = new RegExp('^type_id_');
+            if (pattType.test(key)) {
+                contractDetail[contractDetail.length - 1].type_id = req.body[key];
+            }
+            let pattPrice = new RegExp('^price_');
+            if (pattPrice.test(key)) {
+                contractDetail[contractDetail.length - 1].price = req.body[key];
+            }
+            let pattId = new RegExp('^id_');
+            if (pattId.test(key)) {
+                contractDetail[contractDetail.length - 1].id = req.body[key];
+            }
+        }
+        for (let i = 0; i < contractDetail.length; i++) {
+            for (let j = 0; j < oldContractDetail.length; j++) {
+                if (contractDetail[i].id == oldContractDetail[j].id) {
+                    contractDetail[i].contract_id = oldContractDetail[j].contract_id;
+                    contractDetail[i].grade_id = oldContractDetail[j].grade_id;
+                    contractDetail[i].finished_lesson = oldContractDetail[j].finished_lesson;
+                    contractDetail[i].status_id = oldContractDetail[j].status_id;
+                    contractDetail[i].create_at = oldContractDetail[j].create_at;
+                    contractDetail[i].update_at = oldContractDetail[j].update_at;
+                }
+            }
+        }
+        res.redirect('/contract/my_contract_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
 module.exports = router;

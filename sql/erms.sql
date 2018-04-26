@@ -167,7 +167,7 @@ create table student_tracking_result
 alter table student_tracking_result comment '学生追踪结果表';
 
 /*==============================================================*/
-/* Table: student_tracking                                     */
+/* Table: student_tracking                                      */
 /*==============================================================*/
 create table student_tracking
 (
@@ -372,6 +372,27 @@ create table contract_detail
 alter table contract_detail comment '合同明细表';
 
 /*==============================================================*/
+/* Table: contract_detail_temp                                  */
+/*==============================================================*/
+create table contract_detail_temp
+(
+   id                   varchar(36) not null,
+   contract_id          varchar(36) not null comment '合同id',
+   subject_id           varchar(36) not null comment '科目id',
+   grade_id             varchar(36) not null comment '年级id',
+   lesson_period        int not null comment '课时数',
+   finished_lesson      int not null comment '已完成课时数',
+   type_id              varchar(36) not null comment '类型id',
+   price                double not null comment '单价',
+   status_id            varchar(36) not null comment '状态id',
+   create_at            datetime not null comment '创建时间',
+   update_at            datetime not null comment '更新时间，变更申请提交后，审核通过的时间',
+   primary key (id)
+);
+
+alter table contract_detail_temp comment '合同明细临时表，变更合同用';
+
+/*==============================================================*/
 /* Table: contract_detail_log                                   */
 /*==============================================================*/
 create table contract_detail_log
@@ -451,6 +472,12 @@ alter table contract_detail add constraint FK_Reference_15 foreign key (subject_
 alter table contract_detail add constraint FK_Reference_16 foreign key (grade_id)
       references grade (id) on delete restrict on update restrict;
 
+alter table contract_detail add constraint FK_Reference_29 foreign key (type_id)
+      references contract_detail_type (id) on delete restrict on update restrict;
+
+alter table contract_detail add constraint FK_Reference_27 foreign key (status_id)
+      references contract_detail_status (id) on delete restrict on update restrict;
+
 alter table contract_detail_log add constraint FK_Reference_17 foreign key (contract_id)
       references contract (id) on delete restrict on update restrict;
 
@@ -466,14 +493,8 @@ alter table student_tracking add constraint FK_Reference_24 foreign key (possibi
 alter table visit_record add constraint FK_Reference_25 foreign key (possibility_id)
       references possibility (id) on delete restrict on update restrict;
 
-alter table contract_detail add constraint FK_Reference_27 foreign key (status_id)
-      references contract_detail_status (id) on delete restrict on update restrict;
-
 alter table contract_detail_log add constraint FK_Reference_28 foreign key (status_id)
       references contract_detail_status (id) on delete restrict on update restrict;
-
-alter table contract_detail add constraint FK_Reference_29 foreign key (type_id)
-      references contract_detail_type (id) on delete restrict on update restrict;
 
 alter table contract_detail_log add constraint FK_Reference_30 foreign key (type_id)
       references contract_detail_type (id) on delete restrict on update restrict;
@@ -513,3 +534,18 @@ alter table contract_temp add constraint FK_Reference_40 foreign key (possibilit
 
 alter table contract_temp add constraint FK_Reference_41 foreign key (status_id)
       references contract_status (id) on delete restrict on update restrict;
+
+alter table contract_detail_temp add constraint FK_Reference_42 foreign key (contract_id)
+      references contract (id) on delete restrict on update restrict;
+
+alter table contract_detail_temp add constraint FK_Reference_43 foreign key (subject_id)
+      references subject (id) on delete restrict on update restrict;
+
+alter table contract_detail_temp add constraint FK_Reference_44 foreign key (grade_id)
+      references grade (id) on delete restrict on update restrict;
+
+alter table contract_detail_temp add constraint FK_Reference_45 foreign key (type_id)
+      references contract_detail_type (id) on delete restrict on update restrict;
+
+alter table contract_detail_temp add constraint FK_Reference_46 foreign key (status_id)
+      references contract_detail_status (id) on delete restrict on update restrict;
