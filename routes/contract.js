@@ -170,7 +170,12 @@ router.get('/audit_contract', async function (req, res) {
             contract = contract[0];
         }
         let student = await baseDAO.getById('student', contract.student_id);
-        let contractDetails = await contractDAO.getDetailsByContractId(id);
+        let contractDetails = [];
+        if (contract.status_id == '05') {//若是变更合同，则从contract_detail_temp表取详情
+            contractDetails = await contractDAO.getDetailTempsByContractId(id);
+        } else {
+            contractDetails = await contractDAO.getDetailsByContractId(id);
+        }
         let grades = await baseDAO.getAll('grade');
         let users = await baseDAO.getAll('user');
         let attributes = await baseDAO.getAll('contract_attribute');
@@ -368,7 +373,8 @@ router.get('/edit_contract_detail', async function (req, res) {
 
 router.post('/do_update_contract_detail', async function (req, res) {
     try {
-        let oldContractDetail = await contractDAO.getDetailsByContractId(req.body.id);
+        let contract_id = req.body.id;
+        let oldContractDetail = await contractDAO.getDetailsByContractId(contract_id);
         let contractDetail = [];
         for (let key in req.body) {
             let pattSubject = new RegExp('^subject_id_');
@@ -406,6 +412,7 @@ router.post('/do_update_contract_detail', async function (req, res) {
                 }
             }
         }
+        await contractDAO.saveContractDetailTemp(contractDetail, contract_id);
         res.redirect('/contract/my_contract_list');
     } catch (error) {
         exceptionHelper.renderException(res, error);
