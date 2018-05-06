@@ -40,10 +40,10 @@ exports.isUserExist = function (id, user_no) {
     })
 };
 
-exports.saveUser = function (user_no, name, password, role_id) {
+exports.saveUser = function (user) {
     return new Promise(async function (resolve, reject) {
         try {
-            await dataPool.query('insert into user values (?, ?, ?, ?, ?)', [uuid.v1(), user_no, name, password, role_id]);
+            await dataPool.query('insert into user values (?, ?, ?, ?, ?)', [uuid.v1(), user.user_no, user.name, '123456', user.role_id]);
             resolve();
         } catch (error) {
             reject(error);
@@ -51,10 +51,10 @@ exports.saveUser = function (user_no, name, password, role_id) {
     })
 };
 
-exports.updateUser = function (id, user_no, name, password, role_id) {
+exports.updateUser = function (user) {
     return new Promise(async function (resolve, reject) {
         try {
-            await dataPool.query('update user set user_no=?, name=?, password=?, role_id=? where id=?', [user_no, name, password, role_id, id]);
+            await dataPool.query('update user set user_no=?, name=?, password=?, role_id=? where id=?', [user.user_no, user.name, user.password, user.role_id, user.id]);
             resolve();
         } catch (error) {
             reject(error);

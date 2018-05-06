@@ -1,0 +1,150 @@
+<div class="row-fluid">
+    <div class="span12">
+        <div class="span3">
+            <ul class="ver-inline-menu tabbable margin-bottom-10">
+                <li class="active"><a data-toggle="tab" href="#personal_info"><i class="icon-cog"></i> 个人信息</a><span class="after"></span></li>
+                <li><a data-toggle="tab" href="#change_password"><i class="icon-lock"></i> 更改密码</a></li>
+            </ul>
+        </div>
+        <div class="span9">
+            <div class="tab-content">
+                <div id="personal_info" class="tab-pane profile-classic row-fluid active">
+                    <ul class="unstyled span10">
+                        <li><span>姓名:</span> <%= user.name%></li>
+                        <li><span>工号:</span> <%= user.user_no%></li>
+                        <li><span>角色:</span> <% if (user.role_id) {%><%= roleMap[user.role_id].name%><%}%></li>
+                    </ul>
+                </div>
+                <div id="change_password" class="tab-pane">
+                    <div style="height: auto;" id="accordion3-3" class="accordion collapse">
+                        <form action="/user/do_change_password" method="post">
+                            <div id="alert_error" class="alert alert-error" hidden>
+                                <button class="close" onclick="hideAlert(this)"></button>
+                                <span>修改密码失败！</span>
+                            </div>
+                            <input name="id" value="<%= user.id%>" type="hidden">
+                            <div class="control-group">
+                                <label class="control-label">原密码<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input type="password" class="m-wrap span6" name="old_password" id="old_password">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">新密码<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input type="password" class="m-wrap span6" name="new_password" id="new_password">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">确认新密码<span class="required">*</span></label>
+                                <div class="controls">
+                                    <input type="password" class="m-wrap span6" name="repeat_password" id="repeat_password">
+                                </div>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn green"><i class="icon-ok"></i> 提交</button>
+                                <button type="button" class="btn" onclick="javascript:history.back(-1);"><i class="icon-remove"></i> 取消</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="alert_success_modal" class="modal hide fade" tabindex="-1" data-backdrop="static">
+    <div class="modal-body">
+        <p>修改成功，请使用新密码重新登录</p>
+    </div>
+    <div class="modal-footer">
+        <a href="/user/logout" class="btn green">确认</a>
+    </div>
+</div>
+<%- contentFor('title') %>
+个人资料
+<%- contentFor('breadcrumb') %>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/user/personal_profile">个人资料</a>
+</li>
+<%- contentFor('script') %>
+<script>
+    jQuery(document).ready(function() {
+        $('form').validate({
+            errorClass: 'help-inline', // default input error message class
+            rules: {
+                old_password: {
+                    required: true,
+                    remote: {
+                        url: "/user/validate_old_password",     //后台处理程序
+                        type: "post",               //数据发送方式
+                        dataType: "json",           //接受数据格式
+                        data: {                     //要传递的数据
+                            id: function() {
+                                return '<%= user.id%>';
+                            },
+                            old_password: function() {
+                                return $("#old_password").val();
+                            }
+                        }
+                    }
+                },
+                new_password: {
+                    minlength: 6,
+                    required: true
+                },
+                repeat_password: {
+                    equalTo: '#new_password',
+                    required: true
+                }
+            },
+            messages: {
+                old_password: {
+                    required: "请输入原密码",
+                    remote: "原密码错误"
+                },
+                new_password: {
+                    minlength: "密码长度不能小于6位",
+                    required: "请输入新密码"
+                },
+                repeat_password: {
+                    equalTo: "两次输入密码不同",
+                    required: "请再次输入新密码"
+                }
+            },
+            errorPlacement: function(error, element) {
+                error.appendTo( element.parent() );
+            },
+            highlight: function (element) { // hightlight error inputs
+                $(element)
+                    .closest('.help-inline').removeClass('ok'); // display OK icon
+                $(element)
+                    .closest('.control-group').removeClass('success').addClass('error'); // set error class to the control group
+            },
+            unhighlight: function (element) { // revert the change dony by hightlight
+                $(element)
+                    .closest('.control-group').removeClass('error'); // set error class to the control group
+            },
+            success: function (label) {
+                label
+                    .addClass('valid').addClass('help-inline ok') // mark the current input as valid and display OK icon
+                    .closest('.control-group').removeClass('error').addClass('success'); // set success class to the control group
+            },
+            submitHandler:function(form){
+                $.ajax({
+                    type: "POST",
+                    url: "/user/do_change_password",
+                    data: $('form').serialize(),
+                    success: function(result){
+                        if (result.status) {
+                            $('#alert_success_modal').modal('show');
+                        } else {
+                            $('#alert_error').show();
+                        }
+                    }
+                });
+                return false;
+            }
+        });
+    });
+</script>

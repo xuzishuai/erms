@@ -9,7 +9,7 @@
             <div class="portlet-body form">
                 <form action="/student/do_create_student" method="post" class="form-horizontal">
                     <div id="alert_error" class="alert alert-error" hidden>
-                        <button class="close" data-dismiss="alert"></button>
+                        <button class="close" onclick="hideAlert(this)"></button>
                         <span>登记失败！</span>
                     </div>
                     <div class="control-group">
@@ -93,7 +93,6 @@
         </div>
     </div>
 </div>
-<button id="alert_success" data-toggle="modal" data-target="#alert_success_modal" hidden></button>
 <div id="alert_success_modal" class="modal hide fade" tabindex="-1" data-backdrop="static">
     <div class="modal-body">
         <p>登记成功！</p>
@@ -179,7 +178,7 @@
                     data: $('form').serialize(),
                     success: function(result){
                         if (result.status) {
-                            $('#alert_success').click();
+                            $('#alert_success_modal').modal('show');
                         } else {
                             $('#alert_error').show();
                         }

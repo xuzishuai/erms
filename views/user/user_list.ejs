@@ -10,14 +10,21 @@
                 </div>
             </div>
             <div class="portlet-body">
+                <div id="alert_success" class="alert alert-success" hidden>
+                    <button class="close" onclick="hideAlert(this)"></button>
+                    <span>密码已重置为123456</span>
+                </div>
+                <div id="alert_error" class="alert alert-error" hidden>
+                    <button class="close" onclick="hideAlert(this)"></button>
+                    <span id="errorSpan"></span>
+                </div>
                 <table class="table table-list table-striped table-bordered table-hover">
                     <thead>
                         <tr>
                             <th>工号</th>
                             <th>姓名</th>
-                            <th>密码</th>
                             <th>角色</th>
-                            <th class="table_action" data-colNum=4>操作</th>
+                            <th class="table_action" data-colNum=3>操作</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -25,9 +32,11 @@
                         <tr>
                             <td><%= users[i].user_no%></td>
                             <td><%= users[i].name%></td>
-                            <td><%= users[i].password%></td>
                             <td><%= roleMap[users[i].role_id].name%></td>
                             <td>
+                                <% if (users[i].id != currentUser.id){%>
+                                <a href="javascript:void(0)" onclick="resetPassword('<%= users[i].id%>')" class="btn yellow mini"><i class="icon-lock"></i> 重置密码</a>
+                                <%}%>
                                 <a href="/user/edit_user?id=<%= users[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
                                 <a data-toggle="modal" data-target="#confirm" data-id="<%= users[i].id%>" class="btn red mini"><i class="icon-minus"></i> 删除</a>
                             </td>
@@ -47,7 +56,7 @@
         <form action="/user/delete_user">
             <input id="id" name="id" hidden>
             <button type="button" data-dismiss="modal" class="btn">取消</button>
-            <button type="submit" class="btn green">确认</button>
+            <a onclick="deleteUser()" class="btn green">确认</a>
         </form>
     </div>
 </div>
@@ -73,4 +82,37 @@
             $('#id').val('');
         })
     });
+
+    function resetPassword(id) {
+        $.ajax({
+            type: "POST",
+            url: "/user/reset_password",
+            data: {id: id},
+            success: function(result){
+                if (result.status) {
+                    $('#alert_success').show();
+                } else {
+                    $('#errorSpan').html('密码重置失败！');
+                    $('#alert_error').show();
+                }
+            }
+        });
+    }
+
+    function deleteUser() {
+        $.ajax({
+            type: "GET",
+            url: "/user/delete_user",
+            data: $('form').serialize(),
+            success: function(result){
+                if (result.status) {
+                    location.reload();
+                } else {
+                    $('#confirm').modal('hide');
+                    $('#errorSpan').html('该用户正在使用中，请先删除或修改相关数据！');
+                    $('#alert_error').show();
+                }
+            }
+        });
+    }
 </script>

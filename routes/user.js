@@ -34,21 +34,28 @@ router.post('/do_login', async function (req, res) {
             req.session.menuMap = menuMap;
         } else {
             let role = await baseDAO.getById('role', user[0].role_id);
-            let childrenIds = role[0].menu_ids.split('#');
-            let parentMenus = await menuDAO.getParentMenuByCIds(childrenIds);
-            let subMenuMap = {};
-            for (let i = 0; i < parentMenus.length; i++) {
-                subMenuMap[parentMenus[i].id] = await menuDAO.getSubMenuByPIdCId(parentMenus[i].id, childrenIds);
+            if (role[0].menu_ids) {//若该角色配置了菜单
+                let childrenIds = role[0].menu_ids.split('#');
+                let parentMenus = await menuDAO.getParentMenuByCIds(childrenIds);
+                let subMenuMap = {};
+                for (let i = 0; i < parentMenus.length; i++) {
+                    subMenuMap[parentMenus[i].id] = await menuDAO.getSubMenuByPIdCId(parentMenus[i].id, childrenIds);
+                }
+                let subMenus = await menuDAO.getSubMenuByCid(childrenIds);
+                let menuMap = {};
+                for (let i = 0; i < subMenus.length; i++) {
+                    menuMap[subMenus[i].id] = await menuDAO.getChildrenMenuByIds(subMenus[i].children_ids.split('#'), childrenIds);
+                }
+                req.session.parentMenus = parentMenus;
+                req.session.subMenuMap = subMenuMap;
+                req.session.menuMap = menuMap;
+                req.session.childrenMenus = await menuDAO.getChildrenMenu(childrenIds);
+            } else {//若该角色一个菜单都没有
+                req.session.parentMenus = [];
+                req.session.subMenuMap = [];
+                req.session.menuMap = {};
+                req.session.childrenMenus = [];
             }
-            let subMenus = await menuDAO.getSubMenuByCid(childrenIds);
-            let menuMap = {};
-            for (let i = 0; i < subMenus.length; i++) {
-                menuMap[subMenus[i].id] = await menuDAO.getChildrenMenuByIds(subMenus[i].children_ids.split('#'), childrenIds);
-            }
-            req.session.parentMenus = parentMenus;
-            req.session.subMenuMap = subMenuMap;
-            req.session.menuMap = menuMap;
-            req.session.childrenMenus = await menuDAO.getChildrenMenu(childrenIds);
         }
         res.redirect('/');
     } catch (errorMessage) {
@@ -70,6 +77,7 @@ router.get('/user_list', async function (req, res) {
         let users = await userDAO.getAllUser();
         let roles = await baseDAO.getAll('role');
         res.render('user/user_list', {
+            currentUser: req.session.user[0],
             users: users,
             roleMap: commonUtil.toMap(roles)
         });
@@ -102,7 +110,11 @@ router.post('/validate_user_no', async function (req, res) {
 
 router.post('/do_create_user', async function (req, res) {
     try {
-        await userDAO.saveUser(req.body.user_no, req.body.name, req.body.password, req.body.role_id);
+        let user = {};
+        user.user_no = req.body.user_no;
+        user.name = req.body.name;
+        user.role_id = req.body.role_id;
+        await userDAO.saveUser(user);
         res.redirect('/user/user_list');
     } catch (error) {
         exceptionHelper.renderException(res, error);
@@ -124,7 +136,12 @@ router.get('/edit_user', async function (req, res) {
 
 router.post('/do_update_user', async function (req, res) {
     try {
-        await userDAO.updateUser(req.body.id, req.body.user_no, req.body.name, req.body.password, req.body.role_id);
+        let user = await baseDAO.getById('user', req.body.id);
+        user = user[0];
+        user.user_no = req.body.user_no;
+        user.name = req.body.name;
+        user.role_id = req.body.role_id;
+        await userDAO.updateUser(user);
         res.redirect('/user/user_list');
     } catch (error) {
         exceptionHelper.renderException(res, error);
@@ -134,9 +151,9 @@ router.post('/do_update_user', async function (req, res) {
 router.get('/delete_user', async function (req, res) {
     try {
         await baseDAO.deleteById('user', req.query.id);
-        res.redirect('/user/user_list');
+        res.send({status: true});
     } catch (error) {
-        exceptionHelper.renderException(res, error);
+        exceptionHelper.sendException(res, error);
     }
 });
 
@@ -244,6 +261,56 @@ router.get('/delete_role', async function (req, res) {
         res.redirect('/user/role_list');
     } catch (error) {
         exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/personal_profile', async function (req, res) {
+    try {
+        let roles = await baseDAO.getAll('role');
+        res.render('user/personal_profile', {
+            user: req.session.user[0],
+            roleMap: commonUtil.toMap(roles)
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/validate_old_password', async function (req, res) {
+    try {
+        let user = await baseDAO.getById('user', req.body.id);
+        if (user[0].password != req.body.old_password) {
+            res.send(false);
+        } else {
+            res.send(true);
+        }
+    } catch (error) {
+        res.send(false);
+    }
+});
+
+router.post('/do_change_password', async function (req, res) {
+    try {
+        let user = await baseDAO.getById('user', req.body.id);
+        user = user[0];
+        user.password = req.body.new_password;
+        req.session.user = false;
+        await userDAO.updateUser(user);
+        res.send({status: true});
+    } catch (error) {
+        exceptionHelper.sendException(res, error);
+    }
+});
+
+router.post('/reset_password', async function (req, res) {
+    try {
+        let user = await baseDAO.getById('user', req.body.id);
+        user = user[0];
+        user.password = '123456';
+        await userDAO.updateUser(user);
+        res.send({status: true});
+    } catch (error) {
+        exceptionHelper.sendException(res, error);
     }
 });
 

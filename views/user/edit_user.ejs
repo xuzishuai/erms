@@ -25,12 +25,6 @@
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label">密码<span class="required">*</span></label>
-                        <div class="controls">
-                            <input type="password" class="m-wrap span6" name="password" id="password" value="<%= user.password%>">
-                        </div>
-                    </div>
-                    <div class="control-group">
                         <label class="control-label">角色<span class="required">*</span></label>
                         <div class="controls">
                             <select class="span6 select2"  data-placeholder="请选择角色" tabindex="1" name="role_id" id="role_id">
@@ -89,10 +83,6 @@
                 name: {
                     required: true
                 },
-                password: {
-                    minlength: 6,
-                    required: true
-                },
                 role_id: {
                     required: true
                 }
@@ -104,10 +94,6 @@
                 },
                 name: {
                     required: "请输入姓名"
-                },
-                password: {
-                    minlength: "密码长度不能小于6位",
-                    required: "请输入密码"
                 },
                 role_id: {
                     required: "请选择角色"

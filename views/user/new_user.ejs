@@ -10,6 +10,9 @@
                 </div>
             </div>
             <div class="portlet-body form">
+                <div class="alert">
+                    <strong>提醒:</strong> 初始密码为123456
+                </div>
                 <form action="/user/do_create_user" class="form-horizontal" method="post">
                     <div class="control-group">
                         <label class="control-label">工号<span class="required">*</span></label>
@@ -21,12 +24,6 @@
                         <label class="control-label">姓名<span class="required">*</span></label>
                         <div class="controls">
                             <input type="text" class="m-wrap span6" name="name" id="name">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">密码<span class="required">*</span></label>
-                        <div class="controls">
-                            <input type="password" class="m-wrap span6" name="password" id="password">
                         </div>
                     </div>
                     <div class="control-group">
@@ -85,10 +82,6 @@
                 name: {
                     required: true
                 },
-                password: {
-                    minlength: 6,
-                    required: true
-                },
                 role_id: {
                     required: true
                 }
@@ -100,10 +93,6 @@
                 },
                 name: {
                     required: "请输入姓名"
-                },
-                password: {
-                    minlength: "密码长度不能小于6位",
-                    required: "请输入密码"
                 },
                 role_id: {
                     required: "请选择角色"

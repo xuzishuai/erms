@@ -50,7 +50,8 @@ app.all('/*', async function(req, res, next){
         res.locals.localsMenu = menu[0];
 
         let access = false;
-        if (user[0].id == '1cbb1360-d57d-11e7-9634-4d058774421e' || url == '/') {
+        //登陆后若为超级管理员或者链接为首页、退出登录、个人资料及更改密码相关的都允许访问
+        if (user[0].id == '1cbb1360-d57d-11e7-9634-4d058774421e' || url == '/' || url == '/user/logout' || url == '/user/personal_profile' || url == '/user/validate_old_password' || url == '/user/do_change_password') {
             access = true;
         } else {
             let childrenMenus = req.session.childrenMenus;

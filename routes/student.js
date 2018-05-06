@@ -38,7 +38,7 @@ router.post('/do_create_student', async function (req, res) {
         await studentDAO.saveStudent(student);
         res.send({status: true});
     } catch (error) {
-        exceptionHelper.renderException(res, error);
+        exceptionHelper.sendException(res, error);
     }
 });
 
