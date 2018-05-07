@@ -8,7 +8,7 @@
             </div>
             <div class="portlet-body">
                 <div class="booking-search">
-                    <form action="/student/assign_adviser_student_list">
+                    <form action="/student/assign_headmaster_student_list">
                         <div class="clearfix">
                             <div class="control-group span3">
                                 <label class="control-label">姓名:</label>
@@ -34,12 +34,12 @@
                                 </div>
                             </div>
                             <div class="control-group span3">
-                                <label class="control-label">状态:</label>
+                                <label class="control-label">顾问:</label>
                                 <div class="controls">
-                                    <select class="span12 select2" tabindex="1" name="status_id" id="status_id">
+                                    <select class="span12 select2" tabindex="1" name="adviser_id" id="adviser_id">
                                         <option value=""></option>
-                                        <%for (let i = 0; i < status.length; i++){%>
-                                        <option value="<%= status[i].id%>"><%= status[i].name%></option>
+                                        <%for (let i = 0; i < advisers.length; i++){%>
+                                        <option value="<%= advisers[i].id%>"><%= advisers[i].name%></option>
                                         <%}%>
                                     </select>
                                 </div>
@@ -69,12 +69,12 @@
                                 </div>
                             </div>
                             <div class="control-group span3">
-                                <label class="control-label">顾问:</label>
+                                <label class="control-label">班主任:</label>
                                 <div class="controls">
-                                    <select class="span12 select2" tabindex="1" name="adviser_id" id="adviser_id">
+                                    <select class="span12 select2" tabindex="1" name="headmaster_id" id="headmaster_id">
                                         <option value=""></option>
-                                        <%for (let i = 0; i < advisers.length; i++){%>
-                                        <option value="<%= advisers[i].id%>"><%= advisers[i].name%></option>
+                                        <%for (let i = 0; i < headmasters.length; i++){%>
+                                        <option value="<%= headmasters[i].id%>"><%= headmasters[i].name%></option>
                                         <%}%>
                                     </select>
                                 </div>
@@ -108,6 +108,7 @@
                         <th>联系电话</th>
                         <th>预约上门时间</th>
                         <th>顾问</th>
+                        <th>班主任</th>
                         <th>途径</th>
                         <th>状态</th>
                         <th>备注</th>
@@ -124,12 +125,13 @@
                         <td><%= students[i].contact%></td>
                         <td><%= dateUtil.dateTimeFormat(students[i].appointment_time)%></td>
                         <td><% if (students[i].adviser_id) {%><%= adviserMap[students[i].adviser_id].name%><%}%></td>
+                        <td><% if (students[i].headmaster_id) {%><%= headmasterMap[students[i].headmaster_id].name%><%}%></td>
                         <td><%= sourceMap[students[i].source_id].name%></td>
                         <td><%= statusMap[students[i].status_id].name%></td>
                         <td><% if (students[i].note){%><%= students[i].note%><%}%></td>
                         <td>
                             <%if (students[i].status_id != '01'){%>
-                            <a href="/student/assign_adviser?id=<%= students[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 分配顾问</a>
+                            <a href="/student/assign_headmaster?id=<%= students[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 分配班主任</a>
                             <%}%>
                         </td>
                     </tr>
@@ -141,20 +143,20 @@
     </div>
 </div>
 <%- contentFor('title')%>
-分配顾问
+分配班主任
 <%- contentFor('breadcrumb')%>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="javascript:void(0);">客户</a>
+    <a href="javascript:void(0);">学员</a>
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/student/assign_adviser_student_list">分配顾问</a>
+    <a href="/student/assign_headmaster_student_list">分配班主任</a>
 </li>
 <%- contentFor('script')%>
 <script>
     $('#grade_id').val('<%= condition.grade_id%>');
-    $('#status_id').val('<%= condition.status_id%>');
     $('#adviser_id').val('<%= condition.adviser_id%>');
+    $('#headmaster_id').val('<%= condition.headmaster_id%>');
     $('#source_id').val('<%= condition.source_id%>');
 </script>

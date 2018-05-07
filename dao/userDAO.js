@@ -73,6 +73,17 @@ exports.getAllAdviser = function () {
     })
 };
 
+exports.getAllHeadmaster = function () {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let user = await dataPool.query('select * from user where role_id=04');
+            resolve(user);
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
+
 exports.getUserByRole = function (roles) {
     return new Promise(async function (resolve, reject) {
         try {

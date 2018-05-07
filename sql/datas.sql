@@ -1,19 +1,22 @@
 -- ----------------------------
 -- Records of menu,插入菜单数据
 -- ----------------------------
-INSERT INTO menu VALUES ('1', '用户', null, null, '#2#3#', 'icon-user', null, 3);
+INSERT INTO menu VALUES ('1', '用户', null, null, '#2#3#', 'icon-user', null, 4);
 INSERT INTO menu VALUES ('2', '账号管理', '1', '/user/user_list', null, null,'#/user/user_list#/user/new_user#/user/validate_user_no#/user/do_create_user#/user/edit_user#/user/do_update_user#/user/delete_user#/user/reset_password#', null);
 INSERT INTO menu VALUES ('3', '角色管理', '1', '/user/role_list', null, null, '#/user/role_list#/user/new_role#/user/validate_role_name#/user/do_create_role#/user/edit_role#/user/do_update_role#/user/delete_role#', null);
 INSERT INTO menu VALUES ('4', '客户', null, null, '#5#6#7#8#9#10#', 'icon-briefcase', null, 1);
 INSERT INTO menu VALUES ('5', '客户登记', '4', '/student/new_student', null, null, '#/student/new_student#/student/do_create_student#', null);
 INSERT INTO menu VALUES ('6', '上门确认', '4', '/student/arrive_student_list', null, null, '#/student/arrive_student_list#/student/student_arrive#/student/do_student_arrive#', null);
-INSERT INTO menu VALUES ('7', '客户分配', '4', '/student/assign_adviser_student_list', null, null, '#/student/assign_adviser_student_list#/student/assign_adviser#/student/do_assign_adviser#', null);
+INSERT INTO menu VALUES ('7', '分配顾问', '4', '/student/assign_adviser_student_list', null, null, '#/student/assign_adviser_student_list#/student/assign_adviser#/student/do_assign_adviser#', null);
 INSERT INTO menu VALUES ('8', '客户审核', '4', '/student/audit_student_list', null, null, '#/student/audit_student_list#', null);
 INSERT INTO menu VALUES ('9', '客户追踪', '4', '/student/follow_student_list', null, null, '#/student/follow_student_list#/student/student_tracking_list#/student/new_student_tracking#/student/edit_student_tracking#/student/delete_student_tracking#/student/do_create_student_tracking#/student/do_update_student_tracking#/student/visit_record_list#/student/new_visit_record#/student/edit_visit_record#/student/delete_visit_record#/student/do_create_visit_record#/student/do_update_visit_record#', null);
 INSERT INTO menu VALUES ('10', '客户管理', '4', '/student/student_list', null, null, '#/student/student_list#/student/edit_student#/student/do_update_student#/contract/new_contract#/contract/validate_contract_no#/contract/do_create_contract#/contract/add_contract_detail_tr#', null);
 INSERT INTO menu VALUES ('11', '合同', null, null, '#12#13#', 'icon-file-text', null, 2);
 INSERT INTO menu VALUES ('12', '待审核合同', '11', '/contract/audit_contract_list', null, null, '#/contract/audit_contract_list#/contract/audit_contract#/contract/do_audit_contract#', null);
 INSERT INTO menu VALUES ('13', '合同管理', '11', '/contract/my_contract_list', null, null, '#/contract/my_contract_list#/contract/edit_contract#/contract/validate_edit_contract_no#/contract/do_update_contract#/contract/edit_contract_detail#/contract/add_contract_detail_tr#', null);
+INSERT INTO menu VALUES ('14', '学员', null, null, '#15#16#', 'icon-group', null, 3);
+INSERT INTO menu VALUES ('15', '学员管理', '14', '/', null, null, '##', null);
+INSERT INTO menu VALUES ('16', '分配班主任', '14', '/student/assign_headmaster_student_list', null, null, '#/student/assign_headmaster_student_list#/student/assign_headmaster#/student/do_assign_headmaster#', null);
 
 -- ----------------------------
 -- Records of user,插入超级管理员用户

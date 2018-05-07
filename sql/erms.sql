@@ -14,7 +14,7 @@ create table menu
    parent_id            varchar(36) comment '上级菜单id',
    path                 varchar(200) comment '菜单路径',
    children_ids         varchar(200) comment '子菜单id，用#隔开，并用#开头和结束，只包含最底层有链接的子菜单',
-   icon                 varchar(20) comment '图标',
+   icon                 varchar(100) comment '图标',
    auth_path            varchar(500) comment '授权路径',
    priority             int(20) comment '优先级，菜单排序用',
    primary key (id)
@@ -128,6 +128,7 @@ create table student
    relationship         varchar(50) comment '家长关系',
    appointment_time     datetime not null comment '预约上门时间',
    adviser_id           varchar(36) comment '顾问id，来源于user表',
+   headmaster_id        varchar(36) comment '班主任id，来源于user表',
    source_id            varchar(36) not null comment '途径id',
    how_know_id          varchar(36) comment '从何得知id',
    status_id            varchar(36) not null comment '客户状态id',
@@ -549,3 +550,6 @@ alter table contract_detail_temp add constraint FK_Reference_45 foreign key (typ
 
 alter table contract_detail_temp add constraint FK_Reference_46 foreign key (status_id)
       references contract_detail_status (id) on delete restrict on update restrict;
+
+alter table student add constraint FK_Reference_47 foreign key (headmaster_id)
+      references user (id) on delete restrict on update restrict;

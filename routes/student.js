@@ -90,7 +90,6 @@ router.get('/do_student_arrive', async function (req, res) {
     }
 });
 
-
 router.get('/assign_adviser_student_list', async function (req, res) {
     try {
         let condition = {};
@@ -507,6 +506,74 @@ router.post('/do_update_student', async function (req, res) {
         student.note = (req.body.note&&req.body.note!='')?req.body.note:null;
         await studentDAO.doUpdateStudent(student);
         res.redirect('/student/student_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/assign_headmaster_student_list', async function (req, res) {
+    try {
+        let condition = {};
+        condition.name = req.query.name;
+        condition.contact = req.query.contact;
+        condition.grade_id = req.query.grade_id;
+        condition.appointment_start_time = req.query.appointment_start_time;
+        condition.appointment_end_time = req.query.appointment_end_time;
+        condition.headmaster_id = req.query.headmaster_id;
+        condition.source_id = req.query.source_id;
+        condition.adviser_id = req.query.adviser_id;
+        condition.status_id = '03';//只显示已签约的学员
+        let students = await studentDAO.getStudentByCondition(condition);
+        let grades = await baseDAO.getAll('grade');
+        let headmasters = await userDAO.getAllHeadmaster();
+        let sources = await baseDAO.getAll('source');
+        let advisers = await userDAO.getAllAdviser();
+        let status = await baseDAO.getAll('student_status');
+        res.render('student/assign_headmaster_student_list', {
+            students: students,
+            grades: grades,
+            sources: sources,
+            headmasters: headmasters,
+            advisers: advisers,
+            gradeMap: commonUtil.toMap(grades),
+            headmasterMap: commonUtil.toMap(headmasters),
+            sourceMap: commonUtil.toMap(sources),
+            adviserMap: commonUtil.toMap(advisers),
+            statusMap: commonUtil.toMap(status),
+            condition: condition,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/assign_headmaster', async function (req, res) {
+    try {
+        let student = await baseDAO.getById('student', req.query.id);
+        let grades = await baseDAO.getAll('grade');
+        let headmasters = await userDAO.getAllHeadmaster();
+        let sources = await baseDAO.getAll('source');
+        res.render('student/assign_headmaster', {
+            student: student[0],
+            headmasters: headmasters,
+            gradeMap: commonUtil.toMap(grades),
+            sourceMap: commonUtil.toMap(sources),
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_assign_headmaster', async function (req, res) {
+    try {
+        let student = await baseDAO.getById('student', req.body.id);
+        student = student[0];
+        student.id = req.body.id;
+        student.headmaster_id = req.body.headmaster_id;
+        await studentDAO.doUpdateStudent(student);
+        res.redirect('/student/assign_headmaster_student_list');
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }

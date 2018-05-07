@@ -1,0 +1,151 @@
+<div class="row-fluid">
+    <div class="span12">
+        <div class="portlet box blue">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-reorder"></i>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <div class="form-horizontal form-view">
+                    <h3 class="form-section">客户信息</h3>
+                    <div class="row-fluid">
+                        <div class="span6 ">
+                            <div class="control-group">
+                                <label class="control-label">客户姓名:</label>
+                                <div class="controls">
+                                    <span class="text bold"><%= student.name%></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="span6 ">
+                            <div class="control-group">
+                                <label class="control-label">年级:</label>
+                                <div class="controls">
+                                    <span class="text bold"><%= gradeMap[student.grade_id].name%></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6 ">
+                            <div class="control-group">
+                                <label class="control-label" >性别:</label>
+                                <div class="controls">
+                                    <span class="text bold"><%if (student.gender == 0){%>男<%} else {%>女<%}%></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="span6 ">
+                            <div class="control-group">
+                                <label class="control-label" >预约上门时间:</label>
+                                <div class="controls">
+                                    <span class="text bold"><%= dateUtil.dateTimeFormat(student.appointment_time)%></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6 ">
+                            <div class="control-group">
+                                <label class="control-label" >联系电话:</label>
+                                <div class="controls">
+                                    <span class="text bold"><%= student.contact%></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="span6 ">
+                            <div class="control-group">
+                                <label class="control-label" >途径:</label>
+                                <div class="controls">
+                                    <span class="text bold"><%= sourceMap[student.source_id].name%></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span12 ">
+                            <div class="control-group">
+                                <label class="control-label" >备注:</label>
+                                <div class="controls">
+                                    <span class="text bold"><%= student.note%></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form action="/student/do_assign_headmaster" method="post" class="form-horizontal">
+                    <input name="id" value="<%= student.id%>" type="hidden">
+                    <h3 class="form-section">分配班主任</h3>
+                    <div class="control-group">
+                        <label class="control-label">班主任<span class="required">*</span></label>
+                        <div class="controls">
+                            <select class="span6 select2" tabindex="1" name="headmaster_id" id="headmaster_id">
+                                <option value="">请选择班主任</option>
+                                <%for (let i = 0; i < headmasters.length; i++){%>
+                                <option value="<%= headmasters[i].id%>"><%= headmasters[i].name%></option>
+                                <%}%>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn green"><i class="icon-ok"></i> 提交</button>
+                        <button type="button" class="btn" onclick="javascript:history.back(-1);"><i class="icon-remove"></i> 取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%- contentFor('title')%>
+分配顾问
+<%- contentFor('breadcrumb')%>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="javascript:void(0);">客户</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/student/assign_adviser_student_list">客户分配</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/student/assign_adviser?id=<%= student.id%>">分配顾问</a>
+</li>
+<%- contentFor('script')%>
+<script>
+    $('#headmaster_id').val('<%= student.headmaster_id%>');
+    jQuery(document).ready(function() {
+        $('form').validate({
+            errorClass: 'help-inline', // default input error message class
+            rules: {
+                headmaster_id: {
+                    required: true
+                }
+            },
+            messages: {
+                headmaster_id: {
+                    required: "请选择班主任"
+                }
+            },
+            errorPlacement: function(error, element) {
+                error.appendTo( element.parent() );
+            },
+            highlight: function (element) { // hightlight error inputs
+                $(element)
+                    .closest('.help-inline').removeClass('ok'); // display OK icon
+                $(element)
+                    .closest('.control-group').removeClass('success').addClass('error'); // set error class to the control group
+            },
+            unhighlight: function (element) { // revert the change dony by hightlight
+                $(element)
+                    .closest('.control-group').removeClass('error'); // set error class to the control group
+            },
+            success: function (label) {
+                label
+                    .addClass('valid').addClass('help-inline ok') // mark the current input as valid and display OK icon
+                    .closest('.control-group').removeClass('error').addClass('success'); // set success class to the control group
+            }
+        });
+    });
+</script>

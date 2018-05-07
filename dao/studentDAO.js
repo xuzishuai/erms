@@ -65,6 +65,10 @@ exports.getStudentByCondition = function (condition) {
                     sql += ' and adviser_id=?';
                     params[params.length] = condition.adviser_id;
                 }
+                if (condition.headmaster_id && condition.headmaster_id != '') {
+                    sql += ' and headmaster_id=?';
+                    params[params.length] = condition.headmaster_id;
+                }
                 if (condition.source_id && condition.source_id != '') {
                     sql += ' and source_id=?';
                     params[params.length] = condition.source_id;
@@ -86,10 +90,10 @@ exports.doUpdateStudent = function (student) {
     return new Promise(async function (resolve, reject) {
         try {
             await dataPool.query('update student set name=?, gender=?, grade_id=?, school=?, birthday=?, contact=?, email=?, parent_name=?, relationship=?, appointment_time=?, ' +
-                'adviser_id=?, source_id=?, how_know_id=?, status_id=?, home_address=?, note=?, arrive_time=?, audit_status_id=?, update_at=? where id=?',
+                'adviser_id=?, headmaster_id=?, source_id=?, how_know_id=?, status_id=?, home_address=?, note=?, arrive_time=?, audit_status_id=?, update_at=? where id=?',
                 [student.name, student.gender, student.grade_id, student.school, student.birthday, student.contact, student.email, student.parent_name, student.relationship,
-                    student.appointment_time, student.adviser_id, student.source_id, student.how_know_id, student.status_id, student.home_address, student.note, student.arrive_time,
-                    student.audit_status_id, new Date(), student.id]);
+                    student.appointment_time, student.adviser_id, student.headmaster_id, student.source_id, student.how_know_id, student.status_id, student.home_address,
+                    student.note, student.arrive_time, student.audit_status_id, new Date(), student.id]);
             resolve();
         } catch (error) {
             reject(error);
