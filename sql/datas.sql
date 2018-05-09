@@ -15,7 +15,7 @@ INSERT INTO menu VALUES ('11', '合同', null, null, '#12#13#', 'icon-file-text'
 INSERT INTO menu VALUES ('12', '待审核合同', '11', '/contract/audit_contract_list', null, null, '#/contract/audit_contract_list#/contract/audit_contract#/contract/do_audit_contract#', null);
 INSERT INTO menu VALUES ('13', '合同管理', '11', '/contract/my_contract_list', null, null, '#/contract/my_contract_list#/contract/edit_contract#/contract/validate_edit_contract_no#/contract/do_update_contract#/contract/edit_contract_detail#/contract/add_contract_detail_tr#', null);
 INSERT INTO menu VALUES ('14', '学员', null, null, '#15#16#', 'icon-group', null, 3);
-INSERT INTO menu VALUES ('15', '学员管理', '14', '/', null, null, '##', null);
+INSERT INTO menu VALUES ('15', '学员管理', '14', '/student/signed_student_list', null, null, '#/student/signed_student_list#/student/student_details#', null);
 INSERT INTO menu VALUES ('16', '分配班主任', '14', '/student/assign_headmaster_student_list', null, null, '#/student/assign_headmaster_student_list#/student/assign_headmaster#/student/do_assign_headmaster#', null);
 
 -- ----------------------------

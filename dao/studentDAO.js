@@ -41,6 +41,14 @@ exports.getStudentByCondition = function (condition) {
                     sql += ' and name like ?';
                     params[params.length] = '%' + condition.name + '%';
                 }
+                if (condition.student_no && condition.student_no != '') {
+                    sql += ' and student_no like ?';
+                    params[params.length] = '%' + condition.student_no + '%';
+                }
+                if (condition.school && condition.school != '') {
+                    sql += ' and school like ?';
+                    params[params.length] = '%' + condition.school + '%';
+                }
                 if (condition.contact && condition.contact != '') {
                     sql += ' and contact like ?';
                     params[params.length] = '%' + condition.contact + '%';

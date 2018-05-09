@@ -14,14 +14,6 @@ Profile Page
   color:#169ef4;
 }
 
-.profile label {
-  margin-top:10px;
-}
-
-.profile label:first-child {
-  margin-top:0;
-}
-
 /*profile info*/
 .profile-classic .span2 {
   position:relative;

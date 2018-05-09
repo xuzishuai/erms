@@ -579,4 +579,60 @@ router.post('/do_assign_headmaster', async function (req, res) {
     }
 });
 
+router.get('/signed_student_list', async function (req, res) {
+    try {
+        let condition = {};
+        condition.name = req.query.name;
+        condition.student_no = req.query.student_no;
+        condition.school = req.query.school;
+        condition.contact = req.query.contact;
+        condition.grade_id = req.query.grade_id;
+        condition.headmaster_id = req.query.headmaster_id;
+        condition.source_id = req.query.source_id;
+        condition.adviser_id = req.query.adviser_id;
+        condition.status_id = '03';//只显示已签约的学员
+        let students = await studentDAO.getStudentByCondition(condition);
+        let grades = await baseDAO.getAll('grade');
+        let headmasters = await userDAO.getAllHeadmaster();
+        let sources = await baseDAO.getAll('source');
+        let advisers = await userDAO.getAllAdviser();
+        let status = await baseDAO.getAll('student_status');
+        res.render('student/signed_student_list', {
+            students: students,
+            grades: grades,
+            sources: sources,
+            headmasters: headmasters,
+            advisers: advisers,
+            gradeMap: commonUtil.toMap(grades),
+            headmasterMap: commonUtil.toMap(headmasters),
+            sourceMap: commonUtil.toMap(sources),
+            adviserMap: commonUtil.toMap(advisers),
+            statusMap: commonUtil.toMap(status),
+            condition: condition,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/student_details', async function (req, res) {
+    try {
+        let student = await baseDAO.getById('student', req.query.id);
+        student = student[0];
+        let howKnows = await baseDAO.getAll('how_know');
+        let sources = await baseDAO.getAll('source');
+        let users = await baseDAO.getAll('user');
+        res.render('student/student_details', {
+            student: student,
+            howKnowMap: commonUtil.toMap(howKnows),
+            sourceMap: commonUtil.toMap(sources),
+            userMap: commonUtil.toMap(users),
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
 module.exports = router;
