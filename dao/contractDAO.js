@@ -155,7 +155,7 @@ exports.saveContractDetailTemp = function (contractDetailTemp, contract_id) {
                     ' values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
                 let isOld = contractDetailTemp[i].id && contractDetailTemp[i].id != '';
                 params[params.length] = [isOld?contractDetailTemp[i].id:uuid.v1(), contractTemp.id, contractDetailTemp[i].subject_id, contractTemp.grade_id, contractDetailTemp[i].lesson_period,
-                    isOld?contractDetailTemp[i].finished_lesson:0, contractDetailTemp[i].type_id, contractDetailTemp[i].price, '02', now, now];
+                    isOld?contractDetailTemp[i].finished_lesson:0, contractDetailTemp[i].type_id, contractDetailTemp[i].price, contractDetailTemp[i].status_id, now, now];
                 total_money += parseFloat(contractDetailTemp[i].price);
                 total_lesson_period += parseInt(contractDetailTemp[i].lesson_period);
             }
@@ -204,17 +204,34 @@ exports.auditContract = function (id, audit_status) {
                     let contractTemp = await baseDAO.getById('contract_temp', contract.id);
                     contract = contractTemp[0];
                     contract.update_at = now;
+                    if (details[0].status_id == '01') {//如果此时合同明细还待确认
+                        for (let i = 0; i < details.length; i++) {//更新合同明细状态
+                            details[i].status_id = '02';
+                        }
+                        detailLogs = details;
+                    }
                 }
-                contract.status_id = '02';//无论审核是否通过，都变回执行中
+                if (details[0].status_id == '01') {//如果此时合同明细还待确认，合同变成已驳回
+                    contract.status_id = '03';
+                } else {
+                    contract.status_id = '02';//变回执行中
+                }
             } else if (contract.status_id = '05') {//合同变更的审核
                 if (audit_status == '1') {//审核通过
                     let contractTemp = await baseDAO.getById('contract_temp', contract.id);
                     contract = contractTemp[0];
                     contract.update_at = now;
                     details = await getDetailTempsByContractId(contract.id);
+                    for (let i = 0; i < details.length; i++) {//更新合同明细状态
+                        details[i].status_id = '02';
+                    }
                     detailLogs = details;
                 }
-                contract.status_id = '02';//无论审核是否通过，都变回执行中
+                if (details[0].status_id == '01') {//如果此时合同明细还待确认，合同变成已驳回
+                    contract.status_id = '03';
+                } else {
+                    contract.status_id = '02';//变回执行中
+                }
             }
             let sqls = ['update contract set student_id=?, contract_no=?, attribute_id=?, contract_type_id=?, grade_id=?, total_money=?, ' +
                 'prepay=?, left_money=?, total_lesson_period=?, start_date=?, is_recommend=?, recommend_type=?, recommender_id=?, signer_id=?, possibility_id=?, ' +
@@ -244,6 +261,17 @@ exports.auditContract = function (id, audit_status) {
             }
             await dataPool.batchQuery(sqls, params);
             resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
+
+exports.getDetailLogsByContractId = function (contract_id) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let contractDetailLogs = await dataPool.query('select * from contract_detail_log where contract_id=? order by update_at desc', [contract_id]);
+            resolve(contractDetailLogs);
         } catch (error) {
             reject(error);
         }

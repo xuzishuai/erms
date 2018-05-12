@@ -1,0 +1,72 @@
+<div class="row-fluid">
+    <div class="span12">
+        <ul class="timeline">
+            <%let i = 0, color = ''; for (let key in detailVOs) {
+                switch ((count - i) % 6) {
+                    case 1: color = 'blue';break;
+                    case 2: color = 'grey';break;
+                    case 3: color = 'red';break;
+                    case 4: color = 'purple';break;
+                    case 5: color = 'green';break;
+                    case 6: color = 'yellow';break;
+                }
+                i += 1;
+            %>
+            <li class="timeline-<%= color%>">
+                <div class="timeline-time">
+                    <span class="time"><%= key%></span>
+                </div>
+                <div class="timeline-icon"><i class="icon-time"></i></div>
+                <div class="timeline-body">
+                    <div class="timeline-content">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>科目</th>
+                                <th>课时</th>
+                                <th>已完成课时</th>
+                                <th>类型</th>
+                                <th>单价</th>
+                                <th>状态</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <%for (let i = 0; i < detailVOs[key].length; i++) {%>
+                            <tr>
+                                <td><%= subjectMap[detailVOs[key][i].subject_id].name%></td>
+                                <td><%= detailVOs[key][i].lesson_period%></td>
+                                <td><%= detailVOs[key][i].finished_lesson%></td>
+                                <td><%= detailTypeMap[detailVOs[key][i].type_id].name%></td>
+                                <td><%= detailVOs[key][i].price%></td>
+                                <td><%= detailStatusMap[detailVOs[key][i].status_id].name%></td>
+                            </tr>
+                            <%}%>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </li>
+            <%}%>
+        </ul>
+    </div>
+</div>
+<%- contentFor('title')%>
+合同变更记录
+<%- contentFor('breadcrumb')%>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="javascript:void(0);">学员</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/student/signed_student_list">学员管理</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/student/student_details?id=<%= contract.student_id%>">学员详情</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/contract/contract_detail_log?id=<%= contract.id%>">合同变更记录</a>
+</li>
+<%- contentFor('script')%>

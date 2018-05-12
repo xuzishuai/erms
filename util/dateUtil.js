@@ -7,3 +7,7 @@ exports.dateFormat = function (date) {
 exports.dateTimeFormat = function (date) {
     return moment(date).format("YYYY-MM-DD HH:mm:ss");
 };
+
+exports.dateTimeMinuteFormat = function (date) {
+    return moment(date).format("YYYY-MM-DD HH:mm");
+};

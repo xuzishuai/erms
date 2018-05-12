@@ -4,6 +4,7 @@ const exceptionHelper = require("../helper/exceptionHelper");
 const baseDAO = require('../dao/baseDAO');
 const userDAO = require('../dao/userDAO');
 const studentDAO = require('../dao/studentDAO');
+const contractDAO = require('../dao/contractDAO');
 const visitRecordDAO = require('../dao/visitRecordDAO');
 const studentTrackingDAO = require('../dao/studentTrackingDAO');
 const commonUtil = require('../util/commonUtil');
@@ -618,17 +619,37 @@ router.get('/signed_student_list', async function (req, res) {
 
 router.get('/student_details', async function (req, res) {
     try {
+        //基本信息
         let student = await baseDAO.getById('student', req.query.id);
         student = student[0];
         let howKnows = await baseDAO.getAll('how_know');
         let sources = await baseDAO.getAll('source');
         let users = await baseDAO.getAll('user');
+
+        //排课记录
+
+        //合同
+        let contractCondition = {};
+        contractCondition.student_id = student.id;
+        let contracts = await contractDAO.getContractByCondition('contract', contractCondition);
+        let students = await baseDAO.getAll('student');
+        let grades = await baseDAO.getAll('grade');
+        let contractAttributes = await baseDAO.getAll('contract_attribute');
+        let contractTypes = await baseDAO.getAll('contract_type');
+        let contractStatus = await baseDAO.getAll('contract_status');
+
         res.render('student/student_details', {
             student: student,
             howKnowMap: commonUtil.toMap(howKnows),
             sourceMap: commonUtil.toMap(sources),
             userMap: commonUtil.toMap(users),
-            dateUtil: dateUtil
+            dateUtil: dateUtil,
+            contracts: contracts,
+            studentMap: commonUtil.toMap(students),
+            gradeMap: commonUtil.toMap(grades),
+            contractAttributeMap: commonUtil.toMap(contractAttributes),
+            contractTypeMap: commonUtil.toMap(contractTypes),
+            contractStatusMap: commonUtil.toMap(contractStatus),
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);

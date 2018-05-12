@@ -47,14 +47,13 @@ Timeline UI Base
 
 .timeline > li .timeline-time span.time {
 	font-weight: 300;
-	font-size: 36px;
+	font-size: 30px;
 }
 
 /* Right content */
 
 .timeline > li .timeline-body {
 	margin: 0 0 15px 25%;
-	color: #fff;
 	padding: 10px;
 	font-weight: 300;
 	position: relative;
@@ -70,6 +69,8 @@ Timeline UI Base
 
 .timeline > li .timeline-content { 
 	font-size: 14px;
+	background: white;
+	margin: -5px;
 }
 
 .ie8 .timeline > li .timeline-body h2 { 
@@ -181,7 +182,8 @@ Timeline UI Base
 }
 
 .timeline li.timeline-red .timeline-time span.time {
-	 color: #e02222; 
+	 color: #e02222;
+	 margin-top: 18px;
 }
 
 /* Yellow */
@@ -194,7 +196,8 @@ Timeline UI Base
 }
 
 .timeline li.timeline-yellow .timeline-time span.time {
-	 color: #ffb848; 
+	 color: #ffb848;
+	 margin-top: 18px;
 }
 
 /* Green */
@@ -207,7 +210,8 @@ Timeline UI Base
 }
 
 .timeline li.timeline-green .timeline-time span.time {
-	 color: #35aa47; 
+	 color: #35aa47;
+	 margin-top: 18px;
 }
 
 /* Blue */
@@ -220,7 +224,8 @@ Timeline UI Base
 }
 
 .timeline li.timeline-blue .timeline-time span.time {
-	 color: #4b8df8; 
+	 color: #4b8df8;
+	 margin-top: 18px;
 }
 
 /* Purple */
@@ -233,7 +238,8 @@ Timeline UI Base
 }
 
 .timeline li.timeline-purple .timeline-time span.time {
-	 color: #852b99; 
+	 color: #852b99;
+	 margin-top: 18px;
 }
 
 /* Grey */
@@ -246,7 +252,8 @@ Timeline UI Base
 }
 
 .timeline li.timeline-grey .timeline-time span.time {
-	 color: #555555; 
+	 color: #555555;
+	 margin-top: 18px;
 }
 
 @media (max-width: 767px) {  
