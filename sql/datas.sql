@@ -14,9 +14,10 @@ INSERT INTO menu VALUES ('10', '客户管理', '4', '/student/student_list', nul
 INSERT INTO menu VALUES ('11', '合同', null, null, '#12#13#', 'icon-file-text', null, 2);
 INSERT INTO menu VALUES ('12', '待审核合同', '11', '/contract/audit_contract_list', null, null, '#/contract/audit_contract_list#/contract/audit_contract#/contract/do_audit_contract#', null);
 INSERT INTO menu VALUES ('13', '合同管理', '11', '/contract/my_contract_list', null, null, '#/contract/my_contract_list#/contract/edit_contract#/contract/validate_edit_contract_no#/contract/do_update_contract#/contract/edit_contract_detail#/contract/add_contract_detail_tr#', null);
-INSERT INTO menu VALUES ('14', '学员', null, null, '#15#16#', 'icon-group', null, 3);
+INSERT INTO menu VALUES ('14', '学员', null, null, '#15#16#17#', 'icon-group', null, 3);
 INSERT INTO menu VALUES ('15', '学员管理', '14', '/student/signed_student_list', null, null, '#/student/signed_student_list#/student/student_details#/contract/contract_view#/contract/contract_detail_log#', null);
 INSERT INTO menu VALUES ('16', '分配班主任', '14', '/student/assign_headmaster_student_list', null, null, '#/student/assign_headmaster_student_list#/student/assign_headmaster#/student/do_assign_headmaster#', null);
+INSERT INTO menu VALUES ('17', '回访记录', '14', '/student/revisit_record_list', null, null, '#/student/revisit_record_list#', null);
 
 -- ----------------------------
 -- Records of user,插入超级管理员用户
@@ -162,3 +163,22 @@ INSERT INTO student_audit_status VALUES ('03', '未通过');
 INSERT INTO student_status VALUES ('01', '未上门');
 INSERT INTO student_status VALUES ('02', '已上门');
 INSERT INTO student_status VALUES ('03', '已签约');
+
+-- ----------------------------
+-- Records of revisit_record_mode
+-- ----------------------------
+INSERT INTO revisit_record_mode VALUES ('01', '电话');
+INSERT INTO revisit_record_mode VALUES ('02', '家访');
+INSERT INTO revisit_record_mode VALUES ('03', '上门');
+INSERT INTO revisit_record_mode VALUES ('04', '其他');
+
+-- ----------------------------
+-- Records of revisit_record_type
+-- ----------------------------
+INSERT INTO revisit_record_type VALUES ('01', '班主任回访');
+INSERT INTO revisit_record_type VALUES ('02', '学科教师回访');
+INSERT INTO revisit_record_type VALUES ('03', '学科组长回访');
+INSERT INTO revisit_record_type VALUES ('04', '教学副校长回访');
+INSERT INTO revisit_record_type VALUES ('05', '教育顾问回访');
+INSERT INTO revisit_record_type VALUES ('06', '兼职教师回访');
+INSERT INTO revisit_record_type VALUES ('07', '其他回访');

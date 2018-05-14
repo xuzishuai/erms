@@ -413,6 +413,51 @@ create table contract_detail_log
 
 alter table contract_detail_log comment '合同明细更新记录表';
 
+/*==============================================================*/
+/* Table: revisit_record                                        */
+/*==============================================================*/
+create table revisit_record
+(
+   id                   varchar(36) not null,
+   student_id           varchar(36) not null comment '学员id',
+   mode_id              varchar(36) not null comment '回访方式id',
+   visit_date           date not null comment '回访日期',
+   target               varchar(50) not null comment '回访对象',
+   type_id              varchar(36) not null comment '回访类型id',
+   content              varchar(500) not null comment '回访内容',
+   suggestion           varchar(500) not null comment '问题和建议',
+   operator             varchar(50) not null comment '操作人，直接输入',
+   create_at            datetime not null comment '创建时间',
+   update_at            datetime not null comment '更新时间',
+   primary key (id)
+);
+
+alter table revisit_record comment '回访记录表';
+
+/*==============================================================*/
+/* Table: revisit_record_mode                                   */
+/*==============================================================*/
+create table revisit_record_mode
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '回访方式',
+   primary key (id)
+);
+
+alter table revisit_record_mode comment '回访方式表';
+
+/*==============================================================*/
+/* Table: revisit_record_type                                   */
+/*==============================================================*/
+create table revisit_record_type
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '回访类型',
+   primary key (id)
+);
+
+alter table revisit_record_type comment '回访类型表';
+
 alter table menu add constraint FK_Reference_2 foreign key (parent_id)
       references menu (id) on delete restrict on update restrict;
 
@@ -553,3 +598,12 @@ alter table contract_detail_temp add constraint FK_Reference_46 foreign key (sta
 
 alter table student add constraint FK_Reference_47 foreign key (headmaster_id)
       references user (id) on delete restrict on update restrict;
+
+alter table revisit_record add constraint FK_Reference_48 foreign key (student_id)
+      references student (id) on delete restrict on update restrict;
+
+alter table revisit_record add constraint FK_Reference_49 foreign key (mode_id)
+      references revisit_record_mode (id) on delete restrict on update restrict;
+
+alter table revisit_record add constraint FK_Reference_50 foreign key (type_id)
+      references revisit_record_type (id) on delete restrict on update restrict;
