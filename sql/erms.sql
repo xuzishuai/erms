@@ -425,7 +425,7 @@ create table revisit_record
    target               varchar(50) not null comment '回访对象',
    type_id              varchar(36) not null comment '回访类型id',
    content              varchar(500) not null comment '回访内容',
-   suggestion           varchar(500) not null comment '问题和建议',
+   suggestion           varchar(500) comment '问题和建议',
    operator             varchar(50) not null comment '操作人，直接输入',
    create_at            datetime not null comment '创建时间',
    update_at            datetime not null comment '更新时间',

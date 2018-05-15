@@ -7,6 +7,7 @@ const studentDAO = require('../dao/studentDAO');
 const contractDAO = require('../dao/contractDAO');
 const visitRecordDAO = require('../dao/visitRecordDAO');
 const studentTrackingDAO = require('../dao/studentTrackingDAO');
+const revisitRecordDAO = require('../dao/revisitRecordDAO');
 const commonUtil = require('../util/commonUtil');
 const dateUtil = require('../util/dateUtil');
 
@@ -660,41 +661,30 @@ router.get('/revisit_record_list', async function (req, res) {
     try {
         let condition = {};
         condition.student_id = req.query.student_id;
-        /*condition.contract_no = req.query.contract_no;
-        condition.attribute_id = req.query.attribute_id;
-        condition.contract_type_id = req.query.contract_type_id;
         condition.grade_id = req.query.grade_id;
-        condition.start_date_from = req.query.start_date_from;
-        condition.start_date_to = req.query.start_date_to;
-        condition.signer_id = req.query.signer_id;
-        condition.status_id = ['01'];
-        let contracts0 = await contractDAO.getContractByCondition('contract', condition);//查询待确认的合同
-        condition.status_id = ['04', '05'];
-        let contracts1 = await contractDAO.getContractByCondition('contract_temp', condition);//查询修改中和变更中的合同
-        let contracts = contracts0.concat(contracts1);
-        let students = await baseDAO.getAll('student');
+        condition.visit_start_date = req.query.visit_start_date;
+        condition.visit_end_date = req.query.visit_end_date;
+        condition.type_id = req.query.type_id;
+        condition.mode_id = req.query.mode_id;
+        condition.operator = req.query.operator;
+        let revisitRecords = await revisitRecordDAO.getRevisitRecordByCondition(condition);
+        let sCondition = {};
+        sCondition.status_id = '03';//只显示已签约的学员
+        let students = await studentDAO.getStudentByCondition(sCondition);
         let grades = await baseDAO.getAll('grade');
-        let signers = await userDAO.getUserByRole(['03', '04']);//角色为顾问和班主任
-        let contractAttributes = await baseDAO.getAll('contract_attribute');
-        let contractTypes = await baseDAO.getAll('contract_type');
-        let possibilities = await baseDAO.getAll('possibility');
-        let contractStatus = await baseDAO.getAll('contract_status');*/
+        let modes = await baseDAO.getAll('revisit_record_mode');
+        let types = await baseDAO.getAll('revisit_record_type');
         res.render('student/revisit_record_list', {
-            /*contracts: contracts,
+            revisitRecords: revisitRecords,
             students: students,
             grades: grades,
-            signers: signers,
-            contractAttributes: contractAttributes,
-            contractTypes: contractTypes,
-            possibilities: possibilities,
+            modes: modes,
+            types: types,
             studentMap: commonUtil.toMap(students),
-            gradeMap: commonUtil.toMap(grades),
-            signerMap: commonUtil.toMap(signers),
-            contractAttributeMap: commonUtil.toMap(contractAttributes),
-            contractTypeMap: commonUtil.toMap(contractTypes),
-            contractStatusMap: commonUtil.toMap(contractStatus),
+            modeMap: commonUtil.toMap(modes),
+            typeMap: commonUtil.toMap(types),
             condition: condition,
-            dateUtil: dateUtil*/
+            dateUtil: dateUtil
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);
