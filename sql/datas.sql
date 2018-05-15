@@ -17,7 +17,7 @@ INSERT INTO menu VALUES ('13', '合同管理', '11', '/contract/my_contract_list
 INSERT INTO menu VALUES ('14', '学员', null, null, '#15#16#17#', 'icon-group', null, 3);
 INSERT INTO menu VALUES ('15', '学员管理', '14', '/student/signed_student_list', null, null, '#/student/signed_student_list#/student/student_details#/contract/contract_view#/contract/contract_detail_log#', null);
 INSERT INTO menu VALUES ('16', '分配班主任', '14', '/student/assign_headmaster_student_list', null, null, '#/student/assign_headmaster_student_list#/student/assign_headmaster#/student/do_assign_headmaster#', null);
-INSERT INTO menu VALUES ('17', '回访记录', '14', '/student/revisit_record_list', null, null, '#/student/revisit_record_list#', null);
+INSERT INTO menu VALUES ('17', '回访记录', '14', '/student/revisit_record_list', null, null, '#/student/revisit_record_list#/student/new_revisit_record#', null);
 
 -- ----------------------------
 -- Records of user,插入超级管理员用户

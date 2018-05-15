@@ -29,7 +29,8 @@
                     <div class="control-group">
                         <label class="control-label">角色<span class="required">*</span></label>
                         <div class="controls">
-                            <select class="span6 select2"  data-placeholder="请选择角色" tabindex="1" name="role_id" id="role_id">
+                            <select class="span6 select2" tabindex="1" name="role_id" id="role_id">
+                                <option value="">请选择角色</option>
                                 <%for (let i = 0; i < roles.length; i++){%>
                                 <option value="<%= roles[i].id%>"><%= roles[i].name%></option>
                                 <%}%>

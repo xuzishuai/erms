@@ -44,3 +44,28 @@ exports.getRevisitRecordByCondition = function (condition) {
         }
     })
 };
+
+exports.saveRevisitRecord = function (revisitRecord) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let now = new Date();
+            await dataPool.query('insert into revisit_record(id, student_id, mode_id, visit_date, target, type_id, content, suggestion, operator, create_at, update_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                [uuid.v1(), revisitRecord.student_id, revisitRecord.mode_id, revisitRecord.visit_date, revisitRecord.target, revisitRecord.type_id, revisitRecord.content, revisitRecord.suggestion, revisitRecord.operator, now, now]);
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
+
+exports.updateRevisitRecord = function (revisitRecord) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            await dataPool.query('update revisit_record set mode_id=?, visit_date=?, target=?, type_id=?, content=?, suggestion=?, operator=?, update_at=? where id=?',
+                [revisitRecord.mode_id, revisitRecord.visit_date, revisitRecord.target, revisitRecord.type_id, revisitRecord.content, revisitRecord.suggestion, revisitRecord.operator, new Date(), revisitRecord.id]);
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+};

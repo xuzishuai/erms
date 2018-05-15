@@ -55,6 +55,7 @@ router.get('/arrive_student_list', async function (req, res) {
         condition.appointment_end_time = req.query.appointment_end_time;
         condition.adviser_id = req.query.adviser_id;
         condition.source_id = req.query.source_id;
+        condition.audit_status_id = '02';//审核通过的客户
         let students = await studentDAO.getStudentByCondition(condition);
         let grades = await baseDAO.getAll('grade');
         let advisers = await userDAO.getAllAdviser();
@@ -103,6 +104,7 @@ router.get('/assign_adviser_student_list', async function (req, res) {
         condition.appointment_end_time = req.query.appointment_end_time;
         condition.adviser_id = req.query.adviser_id;
         condition.source_id = req.query.source_id;
+        condition.audit_status_id = '02';//审核通过的客户
         let students = await studentDAO.getStudentByCondition(condition);
         let grades = await baseDAO.getAll('grade');
         let advisers = await userDAO.getAllAdviser();
@@ -213,7 +215,7 @@ router.get('/follow_student_list', async function (req, res) {
         condition.grade_id = req.query.grade_id;
         condition.adviser_id = req.query.adviser_id;
         condition.source_id = req.query.source_id;
-        condition.audit_status_id = '02';
+        condition.audit_status_id = '02';//审核通过的客户
         let students = await studentDAO.getStudentByCondition(condition);
         let grades = await baseDAO.getAll('grade');
         let advisers = await userDAO.getAllAdviser();
@@ -633,7 +635,6 @@ router.get('/student_details', async function (req, res) {
         let contractCondition = {};
         contractCondition.student_id = student.id;
         let contracts = await contractDAO.getContractByCondition('contract', contractCondition);
-        let students = await baseDAO.getAll('student');
         let grades = await baseDAO.getAll('grade');
         let contractAttributes = await baseDAO.getAll('contract_attribute');
         let contractTypes = await baseDAO.getAll('contract_type');
@@ -646,7 +647,6 @@ router.get('/student_details', async function (req, res) {
             userMap: commonUtil.toMap(users),
             dateUtil: dateUtil,
             contracts: contracts,
-            studentMap: commonUtil.toMap(students),
             gradeMap: commonUtil.toMap(grades),
             contractAttributeMap: commonUtil.toMap(contractAttributes),
             contractTypeMap: commonUtil.toMap(contractTypes),
@@ -688,6 +688,88 @@ router.get('/revisit_record_list', async function (req, res) {
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/new_revisit_record', async function (req, res) {
+    try {
+        let sCondition = {};
+        sCondition.status_id = '03';//只显示已签约的学员
+        let students = await studentDAO.getStudentByCondition(sCondition);
+        let modes = await baseDAO.getAll('revisit_record_mode');
+        let types = await baseDAO.getAll('revisit_record_type');
+        res.render('student/new_revisit_record', {
+            students: students,
+            modes: modes,
+            types: types,
+            user: req.session.user[0]
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_create_revisit_record', async function (req, res) {
+    try {
+        let revisitRecord = {};
+        revisitRecord.student_id = req.body.student_id;
+        revisitRecord.mode_id = req.body.mode_id;
+        revisitRecord.visit_date = req.body.visit_date;
+        revisitRecord.target = req.body.target;
+        revisitRecord.type_id = req.body.type_id;
+        revisitRecord.content = req.body.content;
+        revisitRecord.suggestion = req.body.suggestion;
+        revisitRecord.operator = req.body.operator;
+        await revisitRecordDAO.saveRevisitRecord(revisitRecord);
+        res.redirect('/student/revisit_record_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/edit_revisit_record', async function (req, res) {
+    try {
+        let revisitRecord = await baseDAO.getById('revisit_record', req.query.id);
+        revisitRecord = revisitRecord[0];
+        let student = await baseDAO.getById('student', revisitRecord.student_id);
+        let modes = await baseDAO.getAll('revisit_record_mode');
+        let types = await baseDAO.getAll('revisit_record_type');
+        res.render('student/edit_revisit_record', {
+            revisitRecord: revisitRecord,
+            student: student[0],
+            modes: modes,
+            types: types,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_update_revisit_record', async function (req, res) {
+    try {
+        let revisitRecord = await baseDAO.getById('revisit_record', req.body.id);
+        revisitRecord = revisitRecord[0];
+        revisitRecord.mode_id = req.body.mode_id;
+        revisitRecord.visit_date = req.body.visit_date;
+        revisitRecord.target = req.body.target;
+        revisitRecord.type_id = req.body.type_id;
+        revisitRecord.content = req.body.content;
+        revisitRecord.suggestion = req.body.suggestion;
+        revisitRecord.operator = req.body.operator;
+        await revisitRecordDAO.updateRevisitRecord(revisitRecord);
+        res.redirect('/student/revisit_record_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/delete_revisit_record', async function (req, res) {
+    try {
+        await baseDAO.deleteById('revisit_record', req.query.id);
+        res.redirect('/student/revisit_record_list');
+    } catch (error) {
+        exceptionHelper.sendException(res, error);
     }
 });
 

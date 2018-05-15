@@ -165,7 +165,7 @@
                                 <%for (let i = 0; i < contracts.length; i++){%>
                                 <tr>
                                     <td><%= contracts[i].contract_no%></td>
-                                    <td><%= studentMap[contracts[i].student_id].name%>(<%= studentMap[contracts[i].student_id].student_no%>)</td>
+                                    <td><%= student.name%>(<%= student.student_no%>)</td>
                                     <td><%= contractAttributeMap[contracts[i].attribute_id].name%></td>
                                     <td><%= contractTypeMap[contracts[i].contract_type_id].name%></td>
                                     <td><%= gradeMap[contracts[i].grade_id].name%></td>
