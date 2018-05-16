@@ -115,7 +115,7 @@
 <%- contentFor('script')%>
 <script>
     $('#headmaster_id').val('<%= student.headmaster_id%>');
-    jQuery(document).ready(function() {
+    $(function() {
         $('form').validate({
             errorClass: 'help-inline', // default input error message class
             rules: {

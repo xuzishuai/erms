@@ -115,8 +115,8 @@
                         <td><%= dateUtil.dateTimeFormat(revisitRecords[i].create_at)%></td>
                         <td><%= revisitRecords[i].operator%></td>
                         <td>
-                            <a href="/student/edit_revisit_record?id=<%= roles[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
-                            <a data-toggle="modal" data-target="#confirm" data-id="<%= roles[i].id%>" class="btn red mini"><i class="icon-minus"></i> 删除</a>
+                            <a href="/student/edit_revisit_record?id=<%= revisitRecords[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
+                            <a data-toggle="modal" data-target="#confirm" data-id="<%= revisitRecords[i].id%>" class="btn red mini"><i class="icon-minus"></i> 删除</a>
                         </td>
                     </tr>
                     <%}%>
@@ -155,4 +155,14 @@
     $('#grade_id').val('<%= condition.grade_id%>');
     $('#type_id').val('<%= condition.type_id%>');
     $('#mode_id').val('<%= condition.mode_id%>');
+
+    $(function() {
+        $('#confirm').on('show.bs.modal', function (event) {
+            let button = $(event.relatedTarget);
+            $('#id').val(button.data('id'));
+        })
+        $('#confirm').on('hidden.bs.modal', function () {
+            $('#id').val('');
+        })
+    });
 </script>

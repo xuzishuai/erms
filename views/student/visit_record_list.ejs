@@ -140,7 +140,7 @@
 </li>
 <%- contentFor('script')%>
 <script>
-    jQuery(document).ready(function() {
+    $(function() {
         $('#confirm').on('show.bs.modal', function (event) {
             let button = $(event.relatedTarget);
             $('#id').val(button.data('id'));
