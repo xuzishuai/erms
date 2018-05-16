@@ -458,6 +458,26 @@ create table revisit_record_type
 
 alter table revisit_record_type comment '回访类型表';
 
+/*==============================================================*/
+/* Table: parents_meeting                                        */
+/*==============================================================*/
+create table parents_meeting
+(
+   id                   varchar(36) not null,
+   student_id           varchar(36) not null comment '学员id',
+   start_time           datetime not null comment '家长会召开时间',
+   attendee             varchar(100) not null comment '与会人员，直接输入',
+   situation            varchar(500) not null comment '学员目前学习情况',
+   suggestion           varchar(500) comment '家长问题反馈和意见',
+   solution             varchar(500) comment '解决建议与行动方案',
+   operator             varchar(50) not null comment '操作人，直接输入',
+   create_at            datetime not null comment '创建时间',
+   update_at            datetime not null comment '更新时间',
+   primary key (id)
+);
+
+alter table parents_meeting comment '家长会表';
+
 alter table menu add constraint FK_Reference_2 foreign key (parent_id)
       references menu (id) on delete restrict on update restrict;
 
