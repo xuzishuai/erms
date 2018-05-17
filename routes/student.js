@@ -773,4 +773,125 @@ router.get('/delete_revisit_record', async function (req, res) {
     }
 });
 
+router.get('/parents_meeting_list', async function (req, res) {
+    try {
+        let condition = {};
+        condition.student_id = req.query.student_id;
+        condition.grade_id = req.query.grade_id;
+        condition.create_start_date = req.query.create_start_date;
+        condition.create_end_date = req.query.create_end_date;
+        condition.adviser_id = req.query.adviser_id;
+        condition.start_date = req.query.start_date;//查询条件为date，实际表中字段datetime
+        //todo:写到了这里
+
+
+
+        
+        let revisitRecords = await revisitRecordDAO.getRevisitRecordByCondition(condition);
+        let sCondition = {};
+        sCondition.status_id = '03';//只显示已签约的学员
+        sCondition.headmaster_id = req.session.user[0].id;//班主任为当前用户的学员
+        let students = await studentDAO.getStudentByCondition(sCondition);
+        let grades = await baseDAO.getAll('grade');
+        let modes = await baseDAO.getAll('revisit_record_mode');
+        let types = await baseDAO.getAll('revisit_record_type');
+        res.render('student/parents_meeting_list', {
+            revisitRecords: revisitRecords,
+            students: students,
+            grades: grades,
+            modes: modes,
+            types: types,
+            studentMap: commonUtil.toMap(students),
+            modeMap: commonUtil.toMap(modes),
+            typeMap: commonUtil.toMap(types),
+            condition: condition,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/new_revisit_record', async function (req, res) {
+    try {
+        let sCondition = {};
+        sCondition.status_id = '03';//只显示已签约的学员
+        let students = await studentDAO.getStudentByCondition(sCondition);
+        let modes = await baseDAO.getAll('revisit_record_mode');
+        let types = await baseDAO.getAll('revisit_record_type');
+        res.render('student/new_revisit_record', {
+            students: students,
+            modes: modes,
+            types: types,
+            user: req.session.user[0]
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_create_revisit_record', async function (req, res) {
+    try {
+        let revisitRecord = {};
+        revisitRecord.student_id = req.body.student_id;
+        revisitRecord.mode_id = req.body.mode_id;
+        revisitRecord.visit_date = req.body.visit_date;
+        revisitRecord.target = req.body.target;
+        revisitRecord.type_id = req.body.type_id;
+        revisitRecord.content = req.body.content;
+        revisitRecord.suggestion = req.body.suggestion;
+        revisitRecord.operator = req.body.operator;
+        await revisitRecordDAO.saveRevisitRecord(revisitRecord);
+        res.redirect('/student/revisit_record_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/edit_revisit_record', async function (req, res) {
+    try {
+        let revisitRecord = await baseDAO.getById('revisit_record', req.query.id);
+        revisitRecord = revisitRecord[0];
+        let student = await baseDAO.getById('student', revisitRecord.student_id);
+        let modes = await baseDAO.getAll('revisit_record_mode');
+        let types = await baseDAO.getAll('revisit_record_type');
+        res.render('student/edit_revisit_record', {
+            revisitRecord: revisitRecord,
+            student: student[0],
+            modes: modes,
+            types: types,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_update_revisit_record', async function (req, res) {
+    try {
+        let revisitRecord = await baseDAO.getById('revisit_record', req.body.id);
+        revisitRecord = revisitRecord[0];
+        revisitRecord.mode_id = req.body.mode_id;
+        revisitRecord.visit_date = req.body.visit_date;
+        revisitRecord.target = req.body.target;
+        revisitRecord.type_id = req.body.type_id;
+        revisitRecord.content = req.body.content;
+        revisitRecord.suggestion = req.body.suggestion;
+        revisitRecord.operator = req.body.operator;
+        await revisitRecordDAO.updateRevisitRecord(revisitRecord);
+        res.redirect('/student/revisit_record_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/delete_revisit_record', async function (req, res) {
+    try {
+        await baseDAO.deleteById('revisit_record', req.query.id);
+        res.redirect('/student/revisit_record_list');
+    } catch (error) {
+        exceptionHelper.sendException(res, error);
+    }
+});
+
 module.exports = router;
