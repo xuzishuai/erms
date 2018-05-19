@@ -627,3 +627,6 @@ alter table revisit_record add constraint FK_Reference_49 foreign key (mode_id)
 
 alter table revisit_record add constraint FK_Reference_50 foreign key (type_id)
       references revisit_record_type (id) on delete restrict on update restrict;
+
+alter table parents_meeting add constraint FK_Reference_51 foreign key (student_id)
+      references student (id) on delete restrict on update restrict;

@@ -1,0 +1,138 @@
+<div class="row-fluid">
+    <div class="span12">
+        <div class="portlet box green">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-reorder"></i>
+                </div>
+                <div class="actions">
+                    <a href="/student/parents_meeting_list" class="btn yellow"><i class="icon-chevron-left"></i> 返回</a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <form action="/student/do_update_parents_meeting" class="form-horizontal" method="post">
+                    <input id="id" name="id" value="<%= parentsMeeting.id%>" type="hidden">
+                    <div class="control-group">
+                        <label class="control-label" >学员</label>
+                        <div class="controls">
+                            <span class="text bold"><%= student.name%>(<%= student.student_no%>)</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">召开时间<span class="required">*</span></label>
+                        <div class="controls">
+                            <div class="input-append date form_datetime">
+                                <input id="start_time" name="start_time" size="16" type="text" readonly class="m-wrap" value="<%= dateUtil.dateTimeMinuteFormat(parentsMeeting.start_time)%>"/>
+                                <span class="add-on"><i class="icon-remove"></i></span>
+                                <span class="add-on"><i class="icon-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">与会人<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" class="m-wrap span6" name="attendee" id="attendee" value="<%= parentsMeeting.attendee%>">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">学员目前学习情况<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" class="m-wrap span6" name="situation" id="situation" value="<%= parentsMeeting.situation%>">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">家长问题反馈与意见<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" class="m-wrap span6" name="suggestion" id="suggestion" value="<%= parentsMeeting.suggestion%>">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">解决建议与行动方案<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" class="m-wrap span6" name="solution" id="solution" value="<%= parentsMeeting.solution%>">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">操作人<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" class="m-wrap span6" name="operator" id="operator" value="<%= parentsMeeting.operator%>">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn green"><i class="icon-ok"></i> 提交</button>
+                        <button type="button" class="btn" onclick="javascript:history.back(-1);"><i class="icon-remove"></i> 取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%- contentFor('title')%>
+编辑家长会
+<%- contentFor('breadcrumb')%>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="javascript:void(0);">学员</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/student/parents_meeting_list">家长会</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/student/edit_parents_meeting?id=<%= parentsMeeting.id%>">编辑家长会</a>
+</li>
+<%- contentFor('script')%>
+<script>
+    $(function() {
+        $('form').validate({
+            errorClass: 'help-inline', // default input error message class
+            rules: {
+                start_time: {
+                    required: true
+                },
+                attendee: {
+                    required: true
+                },
+                situation: {
+                    required: true
+                },
+                operator: {
+                    required: true
+                }
+            },
+            messages: {
+                start_time: {
+                    required: "请选择召开时间"
+                },
+                attendee: {
+                    required: "请输入与会人"
+                },
+                situation: {
+                    required: "请输入学员目前学习情况"
+                },
+                operator: {
+                    required: "请输入操作人"
+                }
+            },
+            errorPlacement: function(error, element) {
+                error.appendTo( element.parent() );
+            },
+            highlight: function (element) { // hightlight error inputs
+                $(element)
+                    .closest('.help-inline').removeClass('ok'); // display OK icon
+                $(element)
+                    .closest('.control-group').removeClass('success').addClass('error'); // set error class to the control group
+            },
+            unhighlight: function (element) { // revert the change dony by hightlight
+                $(element)
+                    .closest('.control-group').removeClass('error'); // set error class to the control group
+            },
+            success: function (label) {
+                label
+                    .addClass('valid').addClass('help-inline ok') // mark the current input as valid and display OK icon
+                    .closest('.control-group').removeClass('error').addClass('success'); // set success class to the control group
+            }
+        });
+    });
+</script>
