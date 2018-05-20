@@ -99,19 +99,23 @@
                     <thead>
                     <tr>
                         <th>学员(编号)</th>
-                        <th>回访对象</th>
+                        <th>回访方式</th>
                         <th>回访日期</th>
+                        <th>回访对象</th>
+                        <th>回访类型</th>
                         <th>创建时间</th>
                         <th>操作人</th>
-                        <th class="table_action" data-colNum=5>操作</th>
+                        <th class="table_action" data-colNum=7>操作</th>
                     </tr>
                     </thead>
                     <tbody>
                     <%for (let i = 0; i < revisitRecords.length; i++){%>
                     <tr>
                         <td><%= studentMap[revisitRecords[i].student_id].name%>(<%= studentMap[revisitRecords[i].student_id].student_no%>)</td>
-                        <td><%= revisitRecords[i].target%></td>
+                        <td><%= modeMap[revisitRecords[i].mode_id].name%></td>
                         <td><%= dateUtil.dateFormat(revisitRecords[i].visit_date)%></td>
+                        <td><%= revisitRecords[i].target%></td>
+                        <td><%= typeMap[revisitRecords[i].type_id].name%></td>
                         <td><%= dateUtil.dateTimeFormat(revisitRecords[i].create_at)%></td>
                         <td><%= revisitRecords[i].operator%></td>
                         <td>

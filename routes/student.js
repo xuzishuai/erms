@@ -623,9 +623,12 @@ router.get('/signed_student_list', async function (req, res) {
 
 router.get('/student_details', async function (req, res) {
     try {
-        //基本信息
         let student = await baseDAO.getById('student', req.query.id);
         student = student[0];
+        let condition = {};
+        condition.student_id = student.id;
+
+        //基本信息
         let howKnows = await baseDAO.getAll('how_know');
         let sources = await baseDAO.getAll('source');
         let users = await baseDAO.getAll('user');
@@ -633,13 +636,19 @@ router.get('/student_details', async function (req, res) {
         //排课记录
 
         //合同
-        let contractCondition = {};
-        contractCondition.student_id = student.id;
-        let contracts = await contractDAO.getContractByCondition('contract', contractCondition);
+        let contracts = await contractDAO.getContractByCondition('contract', condition);
         let grades = await baseDAO.getAll('grade');
         let contractAttributes = await baseDAO.getAll('contract_attribute');
         let contractTypes = await baseDAO.getAll('contract_type');
         let contractStatus = await baseDAO.getAll('contract_status');
+
+        //回访记录
+        let revisitRecords = await revisitRecordDAO.getRevisitRecordByCondition(condition);
+        let modes = await baseDAO.getAll('revisit_record_mode');
+        let rrTypes = await baseDAO.getAll('revisit_record_type');
+
+        //家长会
+        let parentsMeetings = await parentsMeetingDAO.getParentMeetingByCondition(condition);
 
         res.render('student/student_details', {
             student: student,
@@ -652,6 +661,10 @@ router.get('/student_details', async function (req, res) {
             contractAttributeMap: commonUtil.toMap(contractAttributes),
             contractTypeMap: commonUtil.toMap(contractTypes),
             contractStatusMap: commonUtil.toMap(contractStatus),
+            parentsMeetings: parentsMeetings,
+            revisitRecords: revisitRecords,
+            modeMap: commonUtil.toMap(modes),
+            rrTypeMap: commonUtil.toMap(rrTypes)
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);
@@ -771,6 +784,29 @@ router.get('/delete_revisit_record', async function (req, res) {
         res.redirect('/student/revisit_record_list');
     } catch (error) {
         exceptionHelper.sendException(res, error);
+    }
+});
+
+router.get('/revisit_record_detail', async function (req, res) {
+    try {
+        let revisitRecord = await baseDAO.getById('revisit_record', req.query.id);
+        revisitRecord = revisitRecord[0];
+        let student = await baseDAO.getById('student', revisitRecord.student_id);
+        let grades = await baseDAO.getAll('grade');
+        let users = await baseDAO.getAll('user');
+        let modes = await baseDAO.getAll('revisit_record_mode');
+        let types = await baseDAO.getAll('revisit_record_type');
+        res.render('student/revisit_record_detail', {
+            gradeMap: commonUtil.toMap(grades),
+            userMap: commonUtil.toMap(users),
+            modeMap: commonUtil.toMap(modes),
+            typeMap: commonUtil.toMap(types),
+            revisitRecord: revisitRecord,
+            student: student[0],
+            dateUtil: dateUtil
+        })
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
     }
 });
 
@@ -914,8 +950,7 @@ router.get('/parents_meeting_search_list', async function (req, res) {
 
 router.get('/parents_meeting_detail', async function (req, res) {
     try {
-        let id = req.query.id;
-        let parentsMeeting = await baseDAO.getById('parents_meeting', id);
+        let parentsMeeting = await baseDAO.getById('parents_meeting', req.query.id);
         parentsMeeting = parentsMeeting[0];
         let student = await baseDAO.getById('student', parentsMeeting.student_id);
         let grades = await baseDAO.getAll('grade');
@@ -925,7 +960,8 @@ router.get('/parents_meeting_detail', async function (req, res) {
             userMap: commonUtil.toMap(users),
             parentsMeeting: parentsMeeting,
             student: student[0],
-            dateUtil: dateUtil
+            dateUtil: dateUtil,
+            whereFrom: req.query.where_from
         })
     } catch (error) {
         exceptionHelper.renderException(res, error);

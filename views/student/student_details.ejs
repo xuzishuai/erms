@@ -6,8 +6,10 @@
                 <li class="active"><a href="#base_info" data-toggle="tab">基本信息</a></li>
                 <li><a href="#course_schedule_log" data-toggle="tab">排课记录</a></li>
                 <li><a href="#contract" data-toggle="tab">合同列表</a></li>
-                <li><a href="#tab_1_5" data-toggle="tab">tab_1_5</a></li>
-                <li><a href="#tab_1_6" data-toggle="tab">Help</a></li>
+                <li><a href="#refund_log" data-toggle="tab">退费记录</a></li>
+                <li><a href="#revisit_record" data-toggle="tab">回访记录</a></li>
+                <li><a href="#parents_meeting" data-toggle="tab">家长会</a></li>
+                <li><a href="#test_score" data-toggle="tab">校考成绩</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane row-fluid active" id="base_info">
@@ -188,12 +190,82 @@
                     </div>
                 </div>
 
-                <div class="tab-pane" id="tab_1_5">
-
+                <div class="tab-pane" id="refund_log">
                 </div>
                 
-                <div class="tab-pane row-fluid" id="tab_1_6">
+                <div class="tab-pane row-fluid" id="revisit_record">
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <table class="table table-list table-striped table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>学员(编号)</th>
+                                    <th>回访方式</th>
+                                    <th>回访日期</th>
+                                    <th>回访对象</th>
+                                    <th>回访类型</th>
+                                    <th>创建时间</th>
+                                    <th>操作人</th>
+                                    <th class="table_action" data-colNum=7>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <%for (let i = 0; i < revisitRecords.length; i++){%>
+                                <tr>
+                                    <td><%= student.name%>(<%= student.student_no%>)</td>
+                                    <td><%= modeMap[revisitRecords[i].mode_id].name%></td>
+                                    <td><%= dateUtil.dateFormat(revisitRecords[i].visit_date)%></td>
+                                    <td><%= revisitRecords[i].target%></td>
+                                    <td><%= rrTypeMap[revisitRecords[i].type_id].name%></td>
+                                    <td><%= dateUtil.dateTimeFormat(revisitRecords[i].create_at)%></td>
+                                    <td><%= revisitRecords[i].operator%></td>
+                                    <td>
+                                        <a href="/student/revisit_record_detail?id=<%= revisitRecords[i].id%>" class="btn yellow mini"><i class="icon-info-sign"></i> 查看详情</a>
+                                    </td>
+                                </tr>
+                                <%}%>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="tab-pane row-fluid" id="parents_meeting">
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <table class="table table-list table-striped table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>学员(编号)</th>
+                                    <th>召开时间</th>
+                                    <th>学员目前学习情况</th>
+                                    <th>家长问题反馈与意见</th>
+                                    <th>解决建议与行动方案</th>
+                                    <th>操作人</th>
+                                    <th class="table_action" data-colNum=6>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <%for (let i = 0; i < parentsMeetings.length; i++){%>
+                                <tr>
+                                    <td><%= student.name%>(<%= student.student_no%>)</td>
+                                    <td><%= dateUtil.dateTimeMinuteFormat(parentsMeetings[i].start_time)%></td>
+                                    <td><%= parentsMeetings[i].situation%></td>
+                                    <td><%= parentsMeetings[i].suggestion%></td>
+                                    <td><%= parentsMeetings[i].solution%></td>
+                                    <td><%= parentsMeetings[i].operator%></td>
+                                    <td>
+                                        <a href="/student/parents_meeting_detail?id=<%= parentsMeetings[i].id%>&where_from=student_detail" class="btn yellow mini"><i class="icon-info-sign"></i> 查看详情</a>
+                                    </td>
+                                </tr>
+                                <%}%>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane row-fluid" id="test_score">
                 </div>
             </div>
         </div>
