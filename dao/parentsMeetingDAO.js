@@ -2,7 +2,7 @@ const dataPool = require('../util/dataPool');
 const Promise = require('promise');
 const uuid = require('node-uuid');
 
-exports.getParentMeetingByCondition = function (condition) {
+exports.getParentsMeetingByCondition = function (condition) {
     return new Promise(async function (resolve, reject) {
         try {
             let sql = 'select * from parents_meeting where 1=1';
@@ -42,8 +42,8 @@ exports.getParentMeetingByCondition = function (condition) {
                     params[params.length] = '%' + condition.operator + '%';
                 }
             }
-            let revisitRecords = await dataPool.query(sql, params);
-            resolve(revisitRecords);
+            let parentsMeetings = await dataPool.query(sql, params);
+            resolve(parentsMeetings);
         } catch (error) {
             reject(error);
         }

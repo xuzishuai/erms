@@ -459,7 +459,7 @@ create table revisit_record_type
 alter table revisit_record_type comment '回访类型表';
 
 /*==============================================================*/
-/* Table: parents_meeting                                        */
+/* Table: parents_meeting                                       */
 /*==============================================================*/
 create table parents_meeting
 (
@@ -477,6 +477,45 @@ create table parents_meeting
 );
 
 alter table parents_meeting comment '家长会表';
+
+/*==============================================================*/
+/* Table: test_score                                            */
+/*==============================================================*/
+create table test_score
+(
+   id                   varchar(36) not null,
+   student_id           varchar(36) not null comment '学员id',
+   school_year          varchar(50) not null comment '学年，如2017-2018',
+   grade_id             varchar(36) not null comment '年级id',
+   test_date            date not null comment '考试日期',
+   type_id              varchar(36) not null comment '校考类型id',
+   class_size           int comment '班级人数',
+   enroll_school        varchar(100) comment '中/高考录取学校',
+   subject_id           varchar(36) not null comment '科目id',
+   score                double not null comment '卷面分',
+   total_score          double not null comment '总分',
+   class_rank           int comment '班级排名',
+   situation            varchar(500) not null comment '辅导老师评价',
+   suggestion           varchar(500) comment '家长评价',
+   solution             varchar(500) comment '班主任评价',
+   create_at            datetime not null comment '创建时间',
+   update_at            datetime not null comment '更新时间',
+   primary key (id)
+);
+
+alter table test_score comment '校考反馈表';
+
+/*==============================================================*/
+/* Table: test_score_type                                       */
+/*==============================================================*/
+create table test_score_type
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '校考类型',
+   primary key (id)
+);
+
+alter table test_score_type comment '校考类型表';
 
 alter table menu add constraint FK_Reference_2 foreign key (parent_id)
       references menu (id) on delete restrict on update restrict;
@@ -630,3 +669,12 @@ alter table revisit_record add constraint FK_Reference_50 foreign key (type_id)
 
 alter table parents_meeting add constraint FK_Reference_51 foreign key (student_id)
       references student (id) on delete restrict on update restrict;
+
+alter table test_score add constraint FK_Reference_52 foreign key (grade_id)
+      references grade (id) on delete restrict on update restrict;
+
+alter table test_score add constraint FK_Reference_53 foreign key (type_id)
+      references test_score_type (id) on delete restrict on update restrict;
+
+alter table test_score add constraint FK_Reference_54 foreign key (subject_id)
+      references subject (id) on delete restrict on update restrict;

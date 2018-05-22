@@ -14,12 +14,13 @@ INSERT INTO menu VALUES ('10', '客户管理', '4', '/student/student_list', nul
 INSERT INTO menu VALUES ('11', '合同', null, null, '#12#13#', 'icon-file-text', null, 2);
 INSERT INTO menu VALUES ('12', '待审核合同', '11', '/contract/audit_contract_list', null, null, '#/contract/audit_contract_list#/contract/audit_contract#/contract/do_audit_contract#', null);
 INSERT INTO menu VALUES ('13', '合同管理', '11', '/contract/my_contract_list', null, null, '#/contract/my_contract_list#/contract/edit_contract#/contract/validate_edit_contract_no#/contract/do_update_contract#/contract/edit_contract_detail#/contract/add_contract_detail_tr#', null);
-INSERT INTO menu VALUES ('14', '学员', null, null, '#15#16#17#18#19#', 'icon-group', null, 3);
+INSERT INTO menu VALUES ('14', '学员', null, null, '#15#16#17#18#19#20#', 'icon-group', null, 3);
 INSERT INTO menu VALUES ('15', '学员管理', '14', '/student/signed_student_list', null, null, '#/student/signed_student_list#/student/student_details#/contract/contract_view#/contract/contract_detail_log#/student/revisit_record_detail#/student/parents_meeting_detail#', null);
 INSERT INTO menu VALUES ('16', '分配班主任', '14', '/student/assign_headmaster_student_list', null, null, '#/student/assign_headmaster_student_list#/student/assign_headmaster#/student/do_assign_headmaster#', null);
 INSERT INTO menu VALUES ('17', '回访记录', '14', '/student/revisit_record_list', null, null, '#/student/revisit_record_list#/student/new_revisit_record#/student/do_create_revisit_record#/student/edit_revisit_record#/student/do_update_revisit_record#/student/delete_revisit_record#', null);
 INSERT INTO menu VALUES ('18', '家长会', '14', '/student/parents_meeting_list', null, null, '#/student/parents_meeting_list#/student/new_parents_meeting#/student/do_create_parents_meeting#/student/edit_parents_meeting#/student/do_update_parents_meeting#/student/delete_parents_meeting#', null);
 INSERT INTO menu VALUES ('19', '家长会查询', '14', '/student/parents_meeting_search_list', null, null, '#/student/parents_meeting_search_list#/student/parents_meeting_detail#', null);
+INSERT INTO menu VALUES ('20', '校考反馈', '14', '/student/test_score_list', null, null, '#/student/test_score_list#', null);
 
 -- ----------------------------
 -- Records of user,插入超级管理员用户
@@ -184,3 +185,11 @@ INSERT INTO revisit_record_type VALUES ('04', '教学副校长回访');
 INSERT INTO revisit_record_type VALUES ('05', '教育顾问回访');
 INSERT INTO revisit_record_type VALUES ('06', '兼职教师回访');
 INSERT INTO revisit_record_type VALUES ('07', '其他回访');
+
+-- ----------------------------
+-- Records of test_score_type
+-- ----------------------------
+INSERT INTO test_score_type VALUES ('01', '上学期期中');
+INSERT INTO test_score_type VALUES ('02', '上学期期末');
+INSERT INTO test_score_type VALUES ('03', '下学期期中');
+INSERT INTO test_score_type VALUES ('04', '下学期期末');

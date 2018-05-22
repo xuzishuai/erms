@@ -9,6 +9,7 @@ const visitRecordDAO = require('../dao/visitRecordDAO');
 const studentTrackingDAO = require('../dao/studentTrackingDAO');
 const revisitRecordDAO = require('../dao/revisitRecordDAO');
 const parentsMeetingDAO = require('../dao/parentsMeetingDAO');
+const testScoreDAO = require('../dao/testScoreDAO');
 const commonUtil = require('../util/commonUtil');
 const dateUtil = require('../util/dateUtil');
 
@@ -648,7 +649,7 @@ router.get('/student_details', async function (req, res) {
         let rrTypes = await baseDAO.getAll('revisit_record_type');
 
         //家长会
-        let parentsMeetings = await parentsMeetingDAO.getParentMeetingByCondition(condition);
+        let parentsMeetings = await parentsMeetingDAO.getParentsMeetingByCondition(condition);
 
         res.render('student/student_details', {
             student: student,
@@ -821,7 +822,7 @@ router.get('/parents_meeting_list', async function (req, res) {
         condition.start_date = req.query.start_date;//查询条件为date，实际表中字段datetime
         condition.operator = req.query.operator;
         condition.headmaster_id = req.session.user[0].id;//班主任为当前用户的学员的家长会
-        let parentsMeetings = await parentsMeetingDAO.getParentMeetingByCondition(condition);
+        let parentsMeetings = await parentsMeetingDAO.getParentsMeetingByCondition(condition);
         let sCondition = {};
         sCondition.status_id = '03';//只显示已签约的学员
         sCondition.headmaster_id = req.session.user[0].id;//班主任为当前用户的学员
@@ -926,7 +927,7 @@ router.get('/parents_meeting_search_list', async function (req, res) {
         condition.headmaster_id = req.query.headmaster_id;
         condition.start_date = req.query.start_date;//查询条件为date，实际表中字段datetime
         condition.operator = req.query.operator;
-        let parentsMeetings = await parentsMeetingDAO.getParentMeetingByCondition(condition);
+        let parentsMeetings = await parentsMeetingDAO.getParentsMeetingByCondition(condition);
         let sCondition = {};
         sCondition.status_id = '03';//只显示已签约的学员
         let students = await studentDAO.getStudentByCondition(sCondition);
@@ -967,5 +968,111 @@ router.get('/parents_meeting_detail', async function (req, res) {
         exceptionHelper.renderException(res, error);
     }
 });
+
+router.get('/test_score_list', async function (req, res) {
+    try {
+        let condition = {};
+        condition.student_id = req.query.student_id;
+        condition.grade_id = req.query.grade_id;
+        condition.type_id = req.query.type_id;
+        condition.score = req.query.score;
+        condition.test_start_date = req.query.test_start_date;
+        condition.test_end_date = req.query.test_end_date;
+        let testScores = await testScoreDAO.getTestScoreByCondition(condition);
+        let sCondition = {};
+        sCondition.status_id = '03';//只显示已签约的学员
+        let students = await studentDAO.getStudentByCondition(sCondition);
+        let grades = await baseDAO.getAll('grade');
+        let types = await baseDAO.getAll('test_score_type');
+        let subjects = await baseDAO.getAll('subject');
+        res.render('student/test_score_list', {
+            testScores: testScores,
+            students: students,
+            grades: grades,
+            types: types,
+            studentMap: commonUtil.toMap(students),
+            gradeMap: commonUtil.toMap(grades),
+            subjectMap: commonUtil.toMap(subjects),
+            typeMap: commonUtil.toMap(types),
+            condition: condition,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+/*router.get('/new_parents_meeting', async function (req, res) {
+    try {
+        let sCondition = {};
+        sCondition.status_id = '03';//只显示已签约的学员
+        sCondition.headmaster_id = req.session.user[0].id;//班主任为当前用户的学员
+        let students = await studentDAO.getStudentByCondition(sCondition);
+        res.render('student/new_parents_meeting', {
+            students: students,
+            user: req.session.user[0]
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_create_parents_meeting', async function (req, res) {
+    try {
+        let parentsMeeting = {};
+        parentsMeeting.student_id = req.body.student_id;
+        parentsMeeting.start_time = req.body.start_time;
+        parentsMeeting.attendee = req.body.attendee;
+        parentsMeeting.situation = req.body.situation;
+        parentsMeeting.suggestion = req.body.suggestion;
+        parentsMeeting.solution = req.body.solution;
+        parentsMeeting.operator = req.body.operator;
+        await parentsMeetingDAO.saveParentsMeeting(parentsMeeting);
+        res.redirect('/student/parents_meeting_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/edit_parents_meeting', async function (req, res) {
+    try {
+        let parentsMeeting = await baseDAO.getById('parents_meeting', req.query.id);
+        parentsMeeting = parentsMeeting[0];
+        let student = await baseDAO.getById('student', parentsMeeting.student_id);
+        res.render('student/edit_parents_meeting', {
+            parentsMeeting: parentsMeeting,
+            student: student[0],
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_update_parents_meeting', async function (req, res) {
+    try {
+        let parentsMeeting = await baseDAO.getById('parents_meeting', req.body.id);
+        parentsMeeting = parentsMeeting[0];
+        parentsMeeting.start_time = req.body.start_time;
+        parentsMeeting.attendee = req.body.attendee;
+        parentsMeeting.situation = req.body.situation;
+        parentsMeeting.suggestion = req.body.suggestion;
+        parentsMeeting.solution = req.body.solution;
+        parentsMeeting.operator = req.body.operator;
+        await parentsMeetingDAO.updateParentsMeeting(parentsMeeting);
+        res.redirect('/student/parents_meeting_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/delete_parents_meeting', async function (req, res) {
+    try {
+        await baseDAO.deleteById('parents_meeting', req.query.id);
+        res.redirect('/student/parents_meeting_list');
+    } catch (error) {
+        exceptionHelper.sendException(res, error);
+    }
+});*/
 
 module.exports = router;
