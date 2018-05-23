@@ -98,7 +98,7 @@
     </div>
 </div>
 <%- contentFor('title')%>
-分配顾问
+为<%= student.name%>分配班主任
 <%- contentFor('breadcrumb')%>
 <li>
     <i class="icon-angle-right"></i>
@@ -106,11 +106,11 @@
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/student/assign_adviser_student_list">客户分配</a>
+    <a href="/student/assign_headmaster_student_list">分配班主任</a>
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/student/assign_adviser?id=<%= student.id%>">分配顾问</a>
+    <a href="/student/assign_headmaster?id=<%= student.id%>">为<%= student.name%>分配班主任</a>
 </li>
 <%- contentFor('script')%>
 <script>

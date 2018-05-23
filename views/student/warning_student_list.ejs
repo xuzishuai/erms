@@ -8,7 +8,7 @@
             </div>
             <div class="portlet-body">
                 <div class="booking-search">
-                    <form action="/student/assign_adviser_student_list">
+                    <form action="/student/warning_student_list">
                         <div class="clearfix">
                             <div class="control-group span3">
                                 <label class="control-label">姓名:</label>
@@ -17,9 +17,9 @@
                                 </div>
                             </div>
                             <div class="control-group span3">
-                                <label class="control-label">联系电话:</label>
+                                <label class="control-label">学员编号:</label>
                                 <div class="controls">
-                                    <input name="contact" class="m-wrap span12" type="text" value="<%= condition.contact%>">
+                                    <input name="student_no" class="m-wrap span12" type="text" value="<%= condition.student_no%>">
                                 </div>
                             </div>
                             <div class="control-group span3">
@@ -34,40 +34,18 @@
                                 </div>
                             </div>
                             <div class="control-group span3">
-                                <label class="control-label">状态:</label>
+                                <label class="control-label">预警级别:</label>
                                 <div class="controls">
-                                    <select class="span12 select2" tabindex="1" name="status_id" id="status_id">
+                                    <select class="span12 select2" tabindex="1" name="warning_id" id="warning_id">
                                         <option value=""></option>
-                                        <%for (let i = 0; i < status.length; i++){%>
-                                        <option value="<%= status[i].id%>"><%= status[i].name%></option>
+                                        <%for (let i = 0; i < warnings.length; i++){%>
+                                        <option value="<%= warnings[i].id%>"><%= warnings[i].name%></option>
                                         <%}%>
                                     </select>
                                 </div>
                             </div>
                         </div>
                         <div class="clearfix">
-                            <div class="control-group span3">
-                                <label class="control-label">预约上门起始时间:</label>
-                                <div class="controls">
-                                    <div class="input-append date form_datetime span12" style="padding-right: 56px;">
-                                        <input id="appointment_start_time" name="appointment_start_time" type="text"
-                                               <%if (condition.appointment_start_time){%>value="<%= dateUtil.dateTimeFormat(condition.appointment_start_time)%>"<%}%> readonly class="m-wrap span12"/>
-                                        <span class="add-on"><i class="icon-remove"></i></span>
-                                        <span class="add-on"><i class="icon-calendar"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="control-group span3">
-                                <label class="control-label">预约上门截止时间:</label>
-                                <div class="controls">
-                                    <div class="input-append date form_datetime span12" style="padding-right: 56px;">
-                                        <input id="appointment_end_time" name="appointment_end_time" type="text"
-                                               <%if (condition.appointment_end_time){%>value="<%= dateUtil.dateTimeFormat(condition.appointment_end_time)%>"<%}%> readonly class="m-wrap span12"/>
-                                        <span class="add-on"><i class="icon-remove"></i></span>
-                                        <span class="add-on"><i class="icon-calendar"></i></span>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="control-group span3">
                                 <label class="control-label">教育顾问:</label>
                                 <div class="controls">
@@ -80,12 +58,12 @@
                                 </div>
                             </div>
                             <div class="control-group span3">
-                                <label class="control-label">途径:</label>
+                                <label class="control-label">班主任:</label>
                                 <div class="controls">
-                                    <select class="span12 select2" tabindex="1" name="source_id" id="source_id">
+                                    <select class="span12 select2" tabindex="1" name="headmaster_id" id="headmaster_id">
                                         <option value=""></option>
-                                        <%for (let i = 0; i < sources.length; i++){%>
-                                        <option value="<%= sources[i].id%>"><%= sources[i].name%></option>
+                                        <%for (let i = 0; i < headmasters.length; i++){%>
+                                        <option value="<%= headmasters[i].id%>"><%= headmasters[i].name%></option>
                                         <%}%>
                                     </select>
                                 </div>
@@ -101,17 +79,14 @@
                 <table class="table table-list table-striped table-bordered table-hover">
                     <thead>
                     <tr>
-                        <th>客户编号</th>
+                        <th>学员编号</th>
                         <th>姓名</th>
-                        <th>性别</th>
                         <th>年级</th>
-                        <th>联系电话</th>
-                        <th>预约上门时间</th>
                         <th>教育顾问</th>
-                        <th>途径</th>
-                        <th>状态</th>
-                        <th>备注</th>
-                        <th class="table_action" data-colNum=10>操作</th>
+                        <th>班主任</th>
+                        <th>预警级别</th>
+                        <th>预警原因</th>
+                        <th class="table_action" data-colNum=7>操作</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -119,18 +94,13 @@
                     <tr>
                         <td><%= students[i].student_no%></td>
                         <td><%= students[i].name%></td>
-                        <td><%if (students[i].gender == 0){%>男<%} else {%>女<%}%></td>
                         <td><%= gradeMap[students[i].grade_id].name%></td>
-                        <td><%= students[i].contact%></td>
-                        <td><%= dateUtil.dateTimeFormat(students[i].appointment_time)%></td>
                         <td><% if (students[i].adviser_id) {%><%= adviserMap[students[i].adviser_id].name%><%}%></td>
-                        <td><%= sourceMap[students[i].source_id].name%></td>
-                        <td><%= statusMap[students[i].status_id].name%></td>
-                        <td><% if (students[i].note){%><%= students[i].note%><%}%></td>
+                        <td><% if (students[i].headmaster_id) {%><%= headmasterMap[students[i].headmaster_id].name%><%}%></td>
+                        <td><% if (students[i].warning_id) {%><%= warningMap[students[i].warning_id].name%><%}%></td>
+                        <td><%= students[i].warning_reason%></td>
                         <td>
-                            <%if (students[i].status_id != '01'){%>
-                            <a href="/student/assign_adviser?id=<%= students[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 分配顾问</a>
-                            <%}%>
+                            <a href="/student/warning_student?id=<%= students[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 预警处理</a>
                         </td>
                     </tr>
                     <%}%>
@@ -141,20 +111,20 @@
     </div>
 </div>
 <%- contentFor('title')%>
-分配顾问
+学员预警
 <%- contentFor('breadcrumb')%>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="javascript:void(0);">客户</a>
+    <a href="javascript:void(0);">学员</a>
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/student/assign_adviser_student_list">分配顾问</a>
+    <a href="/student/warning_student_list">学员预警</a>
 </li>
 <%- contentFor('script')%>
 <script>
     $('#grade_id').val('<%= condition.grade_id%>');
-    $('#status_id').val('<%= condition.status_id%>');
+    $('#warning_id').val('<%= condition.warning_id%>');
     $('#adviser_id').val('<%= condition.adviser_id%>');
-    $('#source_id').val('<%= condition.source_id%>');
+    $('#headmaster_id').val('<%= condition.headmaster_id%>');
 </script>

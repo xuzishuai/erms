@@ -933,13 +933,13 @@ router.get('/parents_meeting_search_list', async function (req, res) {
         let students = await studentDAO.getStudentByCondition(sCondition);
         let grades = await baseDAO.getAll('grade');
         let advisers = await userDAO.getAllAdviser();
-        let headMasters = await userDAO.getAllHeadmaster();
+        let headmasters = await userDAO.getAllHeadmaster();
         res.render('student/parents_meeting_search_list', {
             parentsMeetings: parentsMeetings,
             students: students,
             grades: grades,
             advisers: advisers,
-            headMasters: headMasters,
+            headmasters: headmasters,
             studentMap: commonUtil.toMap(students),
             condition: condition,
             dateUtil: dateUtil
@@ -1018,10 +1018,12 @@ router.get('/new_test_score', async function (req, res) {
         }
         let types = await baseDAO.getAll('test_score_type');
         let subjects = await baseDAO.getAll('subject');
+        let grades = await baseDAO.getAll('grade');
         res.render('student/new_test_score', {
             students: students,
             types: types,
             subjects: subjects,
+            grades: grades,
             school_year_placeholder: school_year_placeholder
         });
     } catch (error) {
@@ -1060,11 +1062,13 @@ router.get('/edit_test_score', async function (req, res) {
         let student = await baseDAO.getById('student', testScore.student_id);
         let types = await baseDAO.getAll('test_score_type');
         let subjects = await baseDAO.getAll('subject');
+        let grades = await baseDAO.getAll('grade');
         res.render('student/edit_test_score', {
             testScore: testScore,
             student: student[0],
             types: types,
             subjects: subjects,
+            grades: grades,
             dateUtil: dateUtil
         });
     } catch (error) {
@@ -1104,5 +1108,68 @@ router.get('/delete_test_score', async function (req, res) {
         exceptionHelper.sendException(res, error);
     }
 });
+
+router.get('/warning_student_list', async function (req, res) {
+    try {
+        let condition = {};
+        condition.name = req.query.name;
+        condition.student_no = req.query.student_no;
+        condition.grade_id = req.query.grade_id;
+        condition.warning_id = req.query.warning_id;
+        condition.adviser_id = req.query.adviser_id;
+        condition.headmaster_id = req.query.headmaster_id;
+        condition.status_id = '03';//只显示已签约的学员
+        let students = await studentDAO.getStudentByCondition(condition);
+        let grades = await baseDAO.getAll('grade');
+        let advisers = await userDAO.getAllAdviser();
+        let headmasters = await userDAO.getAllHeadmaster();
+        let warnings = await baseDAO.getAll('student_warning');
+        res.render('student/warning_student_list', {
+            students: students,
+            grades: grades,
+            warnings: warnings,
+            advisers: advisers,
+            headmasters: headmasters,
+            gradeMap: commonUtil.toMap(grades),
+            adviserMap: commonUtil.toMap(advisers),
+            warningMap: commonUtil.toMap(warnings),
+            headmasterMap: commonUtil.toMap(headmasters),
+            condition: condition
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+/*
+router.get('/assign_adviser', async function (req, res) {
+    try {
+        let student = await baseDAO.getById('student', req.query.id);
+        let grades = await baseDAO.getAll('grade');
+        let advisers = await userDAO.getAllAdviser();
+        let sources = await baseDAO.getAll('source');
+        res.render('student/assign_adviser', {
+            student: student[0],
+            advisers: advisers,
+            gradeMap: commonUtil.toMap(grades),
+            sourceMap: commonUtil.toMap(sources),
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_assign_adviser', async function (req, res) {
+    try {
+        let student = await baseDAO.getById('student', req.body.id);
+        student = student[0];
+        student.id = req.body.id;
+        student.adviser_id = req.body.adviser_id;
+        await studentDAO.doUpdateStudent(student);
+        res.redirect('/student/assign_adviser_student_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});*/
 
 module.exports = router;

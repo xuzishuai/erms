@@ -111,6 +111,18 @@ create table student_status
 alter table student_status comment '客户状态表';
 
 /*==============================================================*/
+/* Table: student_warning                                       */
+/*==============================================================*/
+create table student_warning
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '预警级别',
+   primary key (id)
+);
+
+alter table student_warning comment '学员预警级别表';
+
+/*==============================================================*/
 /* Table: student                                               */
 /*==============================================================*/
 create table student
@@ -136,6 +148,8 @@ create table student
    note                 varchar(500) comment '备注',
    arrive_time          datetime comment '上门时间',
    audit_status_id      varchar(36) not null comment '客户审核状态id',
+   warning_id           varchar(36) comment '学员预警id',
+   warning_reason       varchar(500) comment '预警原因',
    create_at            datetime not null comment '登记时间',
    update_at            datetime not null comment '更新时间',
    primary key (id)
@@ -678,3 +692,6 @@ alter table test_score add constraint FK_Reference_53 foreign key (type_id)
 
 alter table test_score add constraint FK_Reference_54 foreign key (subject_id)
       references subject (id) on delete restrict on update restrict;
+
+alter table student add constraint FK_Reference_55 foreign key (warning_id)
+      references student_warning (id) on delete restrict on update restrict;

@@ -20,7 +20,7 @@ INSERT INTO menu VALUES ('16', '分配班主任', '14', '/student/assign_headmas
 INSERT INTO menu VALUES ('17', '回访记录', '14', '/student/revisit_record_list', null, null, '#/student/revisit_record_list#/student/new_revisit_record#/student/do_create_revisit_record#/student/edit_revisit_record#/student/do_update_revisit_record#/student/delete_revisit_record#', null);
 INSERT INTO menu VALUES ('18', '家长会', '14', '/student/parents_meeting_list', null, null, '#/student/parents_meeting_list#/student/new_parents_meeting#/student/do_create_parents_meeting#/student/edit_parents_meeting#/student/do_update_parents_meeting#/student/delete_parents_meeting#', null);
 INSERT INTO menu VALUES ('19', '家长会查询', '14', '/student/parents_meeting_search_list', null, null, '#/student/parents_meeting_search_list#/student/parents_meeting_detail#', null);
-INSERT INTO menu VALUES ('20', '校考反馈', '14', '/student/test_score_list', null, null, '#/student/test_score_list#', null);
+INSERT INTO menu VALUES ('20', '校考反馈', '14', '/student/test_score_list', null, null, '#/student/test_score_list#/student/new_test_score#/student/do_create_test_score#/student/edit_test_score#/student/do_update_test_score#/student/delete_test_score#', null);
 
 -- ----------------------------
 -- Records of user,插入超级管理员用户
@@ -193,3 +193,11 @@ INSERT INTO test_score_type VALUES ('01', '上学期期中');
 INSERT INTO test_score_type VALUES ('02', '上学期期末');
 INSERT INTO test_score_type VALUES ('03', '下学期期中');
 INSERT INTO test_score_type VALUES ('04', '下学期期末');
+
+-- ----------------------------
+-- Records of student_warning
+-- ----------------------------
+INSERT INTO student_warning VALUES ('01', '0');
+INSERT INTO student_warning VALUES ('02', '1');
+INSERT INTO student_warning VALUES ('03', '2');
+INSERT INTO student_warning VALUES ('04', '3');

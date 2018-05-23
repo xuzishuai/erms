@@ -78,7 +78,7 @@
                     <input name="id" value="<%= student.id%>" type="hidden">
                     <h3 class="form-section">分配顾问</h3>
                     <div class="control-group">
-                        <label class="control-label">顾问<span class="required">*</span></label>
+                        <label class="control-label">教育顾问<span class="required">*</span></label>
                         <div class="controls">
                             <select class="span6 select2" tabindex="1" name="adviser_id" id="adviser_id">
                                 <option value="">请选择顾问</option>
@@ -98,7 +98,7 @@
     </div>
 </div>
 <%- contentFor('title')%>
-分配顾问
+为<%= student.name%>分配顾问
 <%- contentFor('breadcrumb')%>
 <li>
     <i class="icon-angle-right"></i>
@@ -106,11 +106,11 @@
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/student/assign_adviser_student_list">客户分配</a>
+    <a href="/student/assign_adviser_student_list">分配顾问</a>
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/student/assign_adviser?id=<%= student.id%>">分配顾问</a>
+    <a href="/student/assign_adviser?id=<%= student.id%>">为<%= student.name%>分配顾问</a>
 </li>
 <%- contentFor('script')%>
 <script>
