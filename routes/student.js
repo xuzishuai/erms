@@ -1002,46 +1002,69 @@ router.get('/test_score_list', async function (req, res) {
     }
 });
 
-/*router.get('/new_parents_meeting', async function (req, res) {
+router.get('/new_test_score', async function (req, res) {
     try {
         let sCondition = {};
         sCondition.status_id = '03';//只显示已签约的学员
-        sCondition.headmaster_id = req.session.user[0].id;//班主任为当前用户的学员
         let students = await studentDAO.getStudentByCondition(sCondition);
-        res.render('student/new_parents_meeting', {
+        let now = new Date();
+        let year = parseInt(now.getFullYear());
+        let month = parseInt(now.getMonth());
+        let school_year_placeholder = "";
+        if (month < 8) {
+            school_year_placeholder = (year - 1) + '-' + year;
+        } else {
+            school_year_placeholder = year + '-' + (year + 1);
+        }
+        let types = await baseDAO.getAll('test_score_type');
+        let subjects = await baseDAO.getAll('subject');
+        res.render('student/new_test_score', {
             students: students,
-            user: req.session.user[0]
+            types: types,
+            subjects: subjects,
+            school_year_placeholder: school_year_placeholder
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }
 });
 
-router.post('/do_create_parents_meeting', async function (req, res) {
+router.post('/do_create_test_score', async function (req, res) {
     try {
-        let parentsMeeting = {};
-        parentsMeeting.student_id = req.body.student_id;
-        parentsMeeting.start_time = req.body.start_time;
-        parentsMeeting.attendee = req.body.attendee;
-        parentsMeeting.situation = req.body.situation;
-        parentsMeeting.suggestion = req.body.suggestion;
-        parentsMeeting.solution = req.body.solution;
-        parentsMeeting.operator = req.body.operator;
-        await parentsMeetingDAO.saveParentsMeeting(parentsMeeting);
-        res.redirect('/student/parents_meeting_list');
+        let testScore = {};
+        testScore.student_id = req.body.student_id;
+        testScore.school_year = req.body.school_year;
+        testScore.grade_id = req.body.grade_id;
+        testScore.test_date = req.body.test_date;
+        testScore.type_id = req.body.type_id;
+        testScore.class_size = req.body.class_size;
+        testScore.enroll_school = req.body.enroll_school;
+        testScore.subject_id = req.body.subject_id;
+        testScore.score = req.body.score;
+        testScore.total_score = req.body.total_score;
+        testScore.class_rank = req.body.class_rank;
+        testScore.teacher_assess = req.body.teacher_assess;
+        testScore.parents_assess = req.body.parents_assess;
+        testScore.headmaster_assess = req.body.headmaster_assess;
+        await testScoreDAO.saveTestScore(testScore);
+        res.redirect('/student/test_score_list');
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }
 });
 
-router.get('/edit_parents_meeting', async function (req, res) {
+router.get('/edit_test_score', async function (req, res) {
     try {
-        let parentsMeeting = await baseDAO.getById('parents_meeting', req.query.id);
-        parentsMeeting = parentsMeeting[0];
-        let student = await baseDAO.getById('student', parentsMeeting.student_id);
-        res.render('student/edit_parents_meeting', {
-            parentsMeeting: parentsMeeting,
+        let testScore = await baseDAO.getById('test_score', req.query.id);
+        testScore = testScore[0];
+        let student = await baseDAO.getById('student', testScore.student_id);
+        let types = await baseDAO.getAll('test_score_type');
+        let subjects = await baseDAO.getAll('subject');
+        res.render('student/edit_test_score', {
+            testScore: testScore,
             student: student[0],
+            types: types,
+            subjects: subjects,
             dateUtil: dateUtil
         });
     } catch (error) {
@@ -1049,30 +1072,37 @@ router.get('/edit_parents_meeting', async function (req, res) {
     }
 });
 
-router.post('/do_update_parents_meeting', async function (req, res) {
+router.post('/do_update_test_score', async function (req, res) {
     try {
-        let parentsMeeting = await baseDAO.getById('parents_meeting', req.body.id);
-        parentsMeeting = parentsMeeting[0];
-        parentsMeeting.start_time = req.body.start_time;
-        parentsMeeting.attendee = req.body.attendee;
-        parentsMeeting.situation = req.body.situation;
-        parentsMeeting.suggestion = req.body.suggestion;
-        parentsMeeting.solution = req.body.solution;
-        parentsMeeting.operator = req.body.operator;
-        await parentsMeetingDAO.updateParentsMeeting(parentsMeeting);
-        res.redirect('/student/parents_meeting_list');
+        let testScore = await baseDAO.getById('test_score', req.body.id);
+        testScore = testScore[0];
+        testScore.school_year = req.body.school_year;
+        testScore.grade_id = req.body.grade_id;
+        testScore.test_date = req.body.test_date;
+        testScore.type_id = req.body.type_id;
+        testScore.class_size = req.body.class_size;
+        testScore.enroll_school = req.body.enroll_school;
+        testScore.subject_id = req.body.subject_id;
+        testScore.score = req.body.score;
+        testScore.total_score = req.body.total_score;
+        testScore.class_rank = req.body.class_rank;
+        testScore.teacher_assess = req.body.teacher_assess;
+        testScore.parents_assess = req.body.parents_assess;
+        testScore.headmaster_assess = req.body.headmaster_assess;
+        await testScoreDAO.updateTestScore(testScore);
+        res.redirect('/student/test_score_list');
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }
 });
 
-router.get('/delete_parents_meeting', async function (req, res) {
+router.get('/delete_test_score', async function (req, res) {
     try {
-        await baseDAO.deleteById('parents_meeting', req.query.id);
-        res.redirect('/student/parents_meeting_list');
+        await baseDAO.deleteById('test_score', req.query.id);
+        res.redirect('/student/test_score_list');
     } catch (error) {
         exceptionHelper.sendException(res, error);
     }
-});*/
+});
 
 module.exports = router;

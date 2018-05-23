@@ -495,9 +495,9 @@ create table test_score
    score                double not null comment '卷面分',
    total_score          double not null comment '总分',
    class_rank           int comment '班级排名',
-   situation            varchar(500) not null comment '辅导老师评价',
-   suggestion           varchar(500) comment '家长评价',
-   solution             varchar(500) comment '班主任评价',
+   teacher_assess       varchar(500) not null comment '辅导老师评价',
+   parents_assess       varchar(500) comment '家长评价',
+   headmaster_assess    varchar(500) comment '班主任评价',
    create_at            datetime not null comment '创建时间',
    update_at            datetime not null comment '更新时间',
    primary key (id)

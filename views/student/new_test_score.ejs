@@ -1,0 +1,239 @@
+<div class="row-fluid">
+    <div class="span12">
+        <div class="portlet box green">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-reorder"></i>
+                </div>
+                <div class="actions">
+                    <a href="/student/test_score_list" class="btn yellow"><i class="icon-chevron-left"></i> 返回</a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <form action="/student/do_create_test_score" class="form-horizontal" method="post">
+                    <div class="control-group">
+                        <label class="control-label">学员<span class="required">*</span></label>
+                        <div class="controls">
+                            <select class="span6 select2" tabindex="1" name="student_id" id="student_id">
+                                <option value="">请选择学员</option>
+                                <%for (let i = 0; i < students.length; i++){%>
+                                <option value="<%= students[i].id%>"><%= students[i].name%>(<%= students[i].student_no%>)</option>
+                                <%}%>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">学年<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" class="m-wrap span6" name="school_year" id="school_year" placeholder="如<%= school_year_placeholder%>">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">年级<span class="required">*</span></label>
+                        <div class="controls">
+                            <select class="span6 select2" tabindex="1" name="grade_id" id="grade_id">
+                                <option value="">请选择年级</option>
+                                <%for (let i = 0; i < grades.length; i++){%>
+                                <option value="<%= grades[i].id%>"><%= grades[i].name%></option>
+                                <%}%>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">考试日期<span class="required">*</span></label>
+                        <div class="controls">
+                            <div class="input-append date date-picker">
+                                <input id="test_date" name="test_date" size="16" type="text" readonly class="m-wrap"/>
+                                <span class="add-on"><i class="icon-remove"></i></span>
+                                <span class="add-on"><i class="icon-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">校考类型<span class="required">*</span></label>
+                        <div class="controls">
+                            <select class="span6 select2" tabindex="1" name="type_id" id="type_id">
+                                <option value="">请选择校考类型</option>
+                                <%for (let i = 0; i < types.length; i++){%>
+                                <option value="<%= types[i].id%>"><%= types[i].name%></option>
+                                <%}%>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">班级人数</label>
+                        <div class="controls">
+                            <input type="text" class="m-wrap span6" name="class_size" id="class_size">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">中/高考录取学校</label>
+                        <div class="controls">
+                            <input type="text" class="m-wrap span6" name="enroll_school" id="enroll_school">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">科目<span class="required">*</span></label>
+                        <div class="controls">
+                            <select class="span6 select2" tabindex="1" name="subject_id" id="subject_id">
+                                <option value="">请选择科目</option>
+                                <%for (let i = 0; i < subjects.length; i++){%>
+                                <option value="<%= subjects[i].id%>"><%= subjects[i].name%></option>
+                                <%}%>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">卷面分<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="number" class="m-wrap span6" name="score" id="score">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">总分<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="number" class="m-wrap span6" name="total_score" id="total_score">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">班级排名</label>
+                        <div class="controls">
+                            <input type="number" class="m-wrap span6" name="class_rank" id="class_rank">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">辅导老师评价<span class="required">*</span></label>
+                        <div class="controls">
+                            <textarea name="teacher_assess" class="span6 m-wrap" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">家长评价</label>
+                        <div class="controls">
+                            <textarea name="parents_assess" class="span6 m-wrap" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">班主任评价</label>
+                        <div class="controls">
+                            <textarea name="headmaster_assess" class="span6 m-wrap" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn green"><i class="icon-ok"></i> 提交</button>
+                        <button type="button" class="btn" onclick="javascript:history.back(-1);"><i class="icon-remove"></i> 取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%- contentFor('title')%>
+新增校考反馈
+<%- contentFor('breadcrumb')%>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="javascript:void(0);">学员</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/student/test_score_list">校考反馈</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/student/new_test_score">新增校考反馈</a>
+</li>
+<%- contentFor('script')%>
+<script>
+    $(function() {
+        $('form').validate({
+            errorClass: 'help-inline', // default input error message class
+            rules: {
+                student_id: {
+                    required: true
+                },
+                school_year: {
+                    required: true
+                },
+                grade_id: {
+                    required: true
+                },
+                test_date: {
+                    required: true
+                },
+                type_id: {
+                    required: true
+                },
+                subject_id: {
+                    required: true
+                },
+                score: {
+                    digits: true,
+                    required: true
+                },
+                total_score: {
+                    digits: true,
+                    required: true
+                },
+                class_rank: {
+                    digits: true
+                },
+                teacher_assess: {
+                    required: true
+                }
+            },
+            messages: {
+                student_id: {
+                    required: "请选择学员"
+                },
+                school_year: {
+                    required: "请选输入学年"
+                },
+                grade_id: {
+                    required: "请选择年级"
+                },
+                test_date: {
+                    required: "请选择考试日期"
+                },
+                type_id: {
+                    required: "请选择校考类型"
+                },
+                subject_id: {
+                    required: "请选择科目"
+                },
+                score: {
+                    digits: "请输入数字",
+                    required: "请选输入卷面分"
+                },
+                total_score: {
+                    digits: "请输入数字",
+                    required: "请选输入总分"
+                },
+                class_rank: {
+                    digits: "请输入数字"
+                },
+                teacher_assess: {
+                    required: "请输入辅导老师评价"
+                }
+            },
+            errorPlacement: function(error, element) {
+                error.appendTo( element.parent() );
+            },
+            highlight: function (element) { // hightlight error inputs
+                $(element)
+                    .closest('.help-inline').removeClass('ok'); // display OK icon
+                $(element)
+                    .closest('.control-group').removeClass('success').addClass('error'); // set error class to the control group
+            },
+            unhighlight: function (element) { // revert the change dony by hightlight
+                $(element)
+                    .closest('.control-group').removeClass('error'); // set error class to the control group
+            },
+            success: function (label) {
+                label
+                    .addClass('valid').addClass('help-inline ok') // mark the current input as valid and display OK icon
+                    .closest('.control-group').removeClass('error').addClass('success'); // set success class to the control group
+            }
+        });
+    });
+</script>
