@@ -6,16 +6,16 @@
                     <i class="icon-reorder"></i>
                 </div>
                 <div class="actions">
-                    <a href="/student/assign_adviser_student_list" class="btn yellow"><i class="icon-chevron-left"></i> 返回</a>
+                    <a href="/student/warning_student_list" class="btn yellow"><i class="icon-chevron-left"></i> 返回</a>
                 </div>
             </div>
             <div class="portlet-body form">
                 <div class="form-horizontal form-view">
-                    <h3 class="form-section">客户信息</h3>
+                    <h3 class="form-section">学员信息</h3>
                     <div class="row-fluid">
                         <div class="span6 ">
                             <div class="control-group">
-                                <label class="control-label">客户姓名:</label>
+                                <label class="control-label">学员姓名:</label>
                                 <div class="controls">
                                     <span class="text bold"><%= student.name%></span>
                                 </div>
@@ -59,9 +59,9 @@
                         </div>
                         <div class="span6 ">
                             <div class="control-group">
-                                <label class="control-label" >途径:</label>
+                                <label class="control-label" >班主任:</label>
                                 <div class="controls">
-                                    <span class="text bold"><%= sourceMap[student.source_id].name%></span>
+                                    <span class="text bold"><% if (student.headmaster_id) {%><%= headmasterMap[student.headmaster_id].name%><%}%></span>
                                 </div>
                             </div>
                         </div>
@@ -77,18 +77,24 @@
                         </div>
                     </div>
                 </div>
-                <form action="/student/do_assign_adviser" method="post" class="form-horizontal">
+                <form action="/student/do_warning_student" method="post" class="form-horizontal">
                     <input name="id" value="<%= student.id%>" type="hidden">
-                    <h3 class="form-section">分配顾问</h3>
+                    <h3 class="form-section">预警处理</h3>
                     <div class="control-group">
-                        <label class="control-label">教育顾问<span class="required">*</span></label>
+                        <label class="control-label">预警级别<span class="required">*</span></label>
                         <div class="controls">
-                            <select class="span6 select2" tabindex="1" name="adviser_id" id="adviser_id">
-                                <option value="">请选择顾问</option>
-                                <%for (let i = 0; i < advisers.length; i++){%>
-                                <option value="<%= advisers[i].id%>"><%= advisers[i].name%></option>
+                            <select class="span6 select2" tabindex="1" name="warning_id" id="warning_id">
+                                <option value="">请选择预警级别</option>
+                                <%for (let i = 0; i < warnings.length; i++){%>
+                                <option value="<%= warnings[i].id%>"><%= warnings[i].name%></option>
                                 <%}%>
                             </select>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">预警原因<span class="required">*</span></label>
+                        <div class="controls">
+                            <textarea name="warning_reason" class="span6 m-wrap" rows="3"><%= student.warning_reason%></textarea>
                         </div>
                     </div>
                     <div class="form-actions">
@@ -101,34 +107,40 @@
     </div>
 </div>
 <%- contentFor('title')%>
-为<%= student.name%>分配顾问
+预警处理
 <%- contentFor('breadcrumb')%>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="javascript:void(0);">客户</a>
+    <a href="javascript:void(0);">学员</a>
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/student/assign_adviser_student_list">分配顾问</a>
+    <a href="/student/warning_student_list">学员预警</a>
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/student/assign_adviser?id=<%= student.id%>">为<%= student.name%>分配顾问</a>
+    <a href="/student/warning_student?id=<%= student.id%>">预警处理</a>
 </li>
 <%- contentFor('script')%>
 <script>
-    $('#adviser_id').val('<%= student.adviser_id%>');
+    $('#warning_id').val('<%= student.warning_id%>');
     $(function() {
         $('form').validate({
             errorClass: 'help-inline', // default input error message class
             rules: {
-                adviser_id: {
+                warning_id: {
+                    required: true
+                },
+                warning_reason: {
                     required: true
                 }
             },
             messages: {
-                adviser_id: {
-                    required: "请选择顾问"
+                warning_id: {
+                    required: "请选择预警级别"
+                },
+                warning_reason: {
+                    required: "请输入预警原因"
                 }
             },
             errorPlacement: function(error, element) {

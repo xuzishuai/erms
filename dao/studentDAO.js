@@ -58,6 +58,10 @@ exports.getStudentByCondition = function (condition) {
                     sql += ' and grade_id=?';
                     params[params.length] = condition.grade_id;
                 }
+                if (condition.warning_id && condition.warning_id != '') {
+                    sql += ' and warning_id=?';
+                    params[params.length] = condition.warning_id;
+                }
                 if (condition.status_id && condition.status_id !== '') {
                     sql += ' and status_id=?';
                     params[params.length] = condition.status_id;
@@ -103,7 +107,7 @@ exports.doUpdateStudent = function (student) {
                 ' update_at=? where id=?',
                 [student.name, student.gender, student.grade_id, student.school, student.birthday, student.contact, student.email, student.parent_name, student.relationship,
                     student.appointment_time, student.adviser_id, student.headmaster_id, student.source_id, student.how_know_id, student.status_id, student.home_address,
-                    student.note, student.arrive_time, student.audit_status_id, new Date(), student.warning_id, student.warning_reason, student.id]);
+                    student.note, student.arrive_time, student.audit_status_id, student.warning_id, student.warning_reason, new Date(), student.id]);
             resolve();
         } catch (error) {
             reject(error);

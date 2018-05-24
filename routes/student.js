@@ -1140,18 +1140,20 @@ router.get('/warning_student_list', async function (req, res) {
         exceptionHelper.renderException(res, error);
     }
 });
-/*
-router.get('/assign_adviser', async function (req, res) {
+
+router.get('/warning_student', async function (req, res) {
     try {
         let student = await baseDAO.getById('student', req.query.id);
         let grades = await baseDAO.getAll('grade');
         let advisers = await userDAO.getAllAdviser();
-        let sources = await baseDAO.getAll('source');
-        res.render('student/assign_adviser', {
+        let headmasters = await userDAO.getAllHeadmaster();
+        let warnings = await baseDAO.getAll('student_warning');
+        res.render('student/warning_student', {
             student: student[0],
             advisers: advisers,
+            warnings: warnings,
+            headmasterMap: commonUtil.toMap(headmasters),
             gradeMap: commonUtil.toMap(grades),
-            sourceMap: commonUtil.toMap(sources),
             dateUtil: dateUtil
         });
     } catch (error) {
@@ -1159,17 +1161,18 @@ router.get('/assign_adviser', async function (req, res) {
     }
 });
 
-router.post('/do_assign_adviser', async function (req, res) {
+router.post('/do_warning_student', async function (req, res) {
     try {
         let student = await baseDAO.getById('student', req.body.id);
         student = student[0];
         student.id = req.body.id;
-        student.adviser_id = req.body.adviser_id;
+        student.warning_id = req.body.warning_id;
+        student.warning_reason = req.body.warning_reason;
         await studentDAO.doUpdateStudent(student);
-        res.redirect('/student/assign_adviser_student_list');
+        res.redirect('/student/warning_student_list');
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }
-});*/
+});
 
 module.exports = router;
