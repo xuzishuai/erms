@@ -651,6 +651,11 @@ router.get('/student_details', async function (req, res) {
         //家长会
         let parentsMeetings = await parentsMeetingDAO.getParentsMeetingByCondition(condition);
 
+        //校考成绩
+        let testScores = await testScoreDAO.getTestScoreByCondition(condition);
+        let testScoreTypes = await baseDAO.getAll('test_score_type');
+        let subjects = await baseDAO.getAll('subject');
+
         res.render('student/student_details', {
             student: student,
             howKnowMap: commonUtil.toMap(howKnows),
@@ -665,7 +670,10 @@ router.get('/student_details', async function (req, res) {
             parentsMeetings: parentsMeetings,
             revisitRecords: revisitRecords,
             modeMap: commonUtil.toMap(modes),
-            rrTypeMap: commonUtil.toMap(rrTypes)
+            rrTypeMap: commonUtil.toMap(rrTypes),
+            testScores: testScores,
+            testScoreTypeMap: commonUtil.toMap(testScoreTypes),
+            subjectMap: commonUtil.toMap(subjects)
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);
@@ -1106,6 +1114,29 @@ router.get('/delete_test_score', async function (req, res) {
         res.redirect('/student/test_score_list');
     } catch (error) {
         exceptionHelper.sendException(res, error);
+    }
+});
+
+router.get('/test_score_detail', async function (req, res) {
+    try {
+        let testScore = await baseDAO.getById('test_score', req.query.id);
+        testScore = testScore[0];
+        let student = await baseDAO.getById('student', testScore.student_id);
+        let grades = await baseDAO.getAll('grade');
+        let users = await baseDAO.getAll('user');
+        let types = await baseDAO.getAll('test_score_type');
+        let subjects = await baseDAO.getAll('subject');
+        res.render('student/test_score_detail', {
+            gradeMap: commonUtil.toMap(grades),
+            userMap: commonUtil.toMap(users),
+            subjectMap: commonUtil.toMap(subjects),
+            typeMap: commonUtil.toMap(types),
+            testScore: testScore,
+            student: student[0],
+            dateUtil: dateUtil
+        })
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
     }
 });
 

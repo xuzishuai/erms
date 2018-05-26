@@ -266,6 +266,44 @@
                 </div>
 
                 <div class="tab-pane row-fluid" id="test_score">
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <table class="table table-list table-striped table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>学员(编号)</th>
+                                    <th>考试时间</th>
+                                    <th>学校</th>
+                                    <th>年级</th>
+                                    <th>科目</th>
+                                    <th>学科老师</th>
+                                    <th>学年</th>
+                                    <th>校考类型</th>
+                                    <th>卷面分(总分)</th>
+                                    <th class="table_action" data-colNum=9>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <%for (let i = 0; i < testScores.length; i++){%>
+                                <tr>
+                                    <td><%= student.name%>(<%= student.student_no%>)</td>
+                                    <td><%= dateUtil.dateFormat(testScores[i].test_date)%></td>
+                                    <td><%= student.school%></td>
+                                    <td><%= gradeMap[testScores[i].grade_id].name%></td>
+                                    <td><%= subjectMap[testScores[i].subject_id].name%></td>
+                                    <td></td>
+                                    <td><%= testScores[i].school_year%></td>
+                                    <td><%= testScoreTypeMap[testScores[i].type_id].name%></td>
+                                    <td><%= testScores[i].score%>(<%= testScores[i].total_score%>)</td>
+                                    <td>
+                                        <a href="/student/test_score_detail?id=<%= testScores[i].id%>" class="btn yellow mini"><i class="icon-info-sign"></i> 查看详情</a>
+                                    </td>
+                                </tr>
+                                <%}%>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
