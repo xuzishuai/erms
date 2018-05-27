@@ -112,9 +112,9 @@
                             </div>
                             <div class="span4 ">
                                 <div class="control-group">
-                                    <label class="control-label">续费可能性:</label>
+                                    <label class="control-label">班主任:</label>
                                     <div class="controls">
-                                        <span class="text bold"><% if (student.possibility_id) {%><%= possibilityMap[student.possibility_id].name%><%}%></span>
+                                        <span class="text bold"><% if (student.headmaster_id) {%><%= userMap[student.headmaster_id].name%><%}%></span>
                                     </div>
                                 </div>
                             </div>
@@ -138,9 +138,9 @@
                             </div>
                             <div class="span4 ">
                                 <div class="control-group">
-                                    <label class="control-label">创建时间:</label>
+                                    <label class="control-label">续费可能性:</label>
                                     <div class="controls">
-                                        <span class="text bold"><%= dateUtil.dateTimeFormat(student.create_at)%></span>
+                                        <span class="text bold"><% if (student.possibility_id) {%><%= possibilityMap[student.possibility_id].name%><%}%></span>
                                     </div>
                                 </div>
                             </div>
