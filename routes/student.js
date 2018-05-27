@@ -698,6 +698,7 @@ router.get('/student_details', async function (req, res) {
         let users = await baseDAO.getAll('user');
         let possibilities = await baseDAO.getAll('possibility');
         let subjects = await baseDAO.getAll('subject');
+        let studentStatus = await baseDAO.getAll('student_status');
         let subjectMap = commonUtil.toMap(subjects);
         if (student.subject_ids) {
             let subjectIds = student.subject_ids.split('#');
@@ -754,7 +755,8 @@ router.get('/student_details', async function (req, res) {
             testScoreTypeMap: commonUtil.toMap(testScoreTypes),
             subjectMap: subjectMap,
             warningMap: commonUtil.toMap(warnings),
-            possibilityMap: commonUtil.toMap(possibilities)
+            possibilityMap: commonUtil.toMap(possibilities),
+            studentStatusMap: commonUtil.toMap(studentStatus)
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);

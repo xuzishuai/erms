@@ -44,9 +44,9 @@
                         <div class="row-fluid">
                             <div class="span4 ">
                                 <div class="control-group">
-                                    <label class="control-label">城市:</label>
+                                    <label class="control-label">年级:</label>
                                     <div class="controls">
-                                        <span class="text bold"><%= student.city%></span>
+                                        <span class="text bold"><%= gradeMap[student.grade_id].name%></span>
                                     </div>
                                 </div>
                             </div>
@@ -60,14 +60,22 @@
                             </div>
                             <div class="span4 ">
                                 <div class="control-group">
+                                    <label class="control-label">出生日期:</label>
+                                    <div class="controls">
+                                        <span class="text bold"><% if (student.birthday) {%><%= dateUtil.dateFormat(student.birthday)%><%}%></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span4 ">
+                                <div class="control-group">
                                     <label class="control-label">家长姓名:</label>
                                     <div class="controls">
                                         <span class="text bold"><%= student.parent_name%></span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row-fluid">
                             <div class="span4 ">
                                 <div class="control-group">
                                     <label class="control-label">联系电话:</label>
@@ -84,11 +92,29 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row-fluid">
                             <div class="span4 ">
                                 <div class="control-group">
                                     <label class="control-label">家长关系:</label>
                                     <div class="controls">
                                         <span class="text bold"><%= student.relationship%></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span4 ">
+                                <div class="control-group">
+                                    <label class="control-label">电子邮件:</label>
+                                    <div class="controls">
+                                        <span class="text bold"><% if (student.email) {%><%= student.email%><%}%></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span4 ">
+                                <div class="control-group">
+                                    <label class="control-label">学员状态:</label>
+                                    <div class="controls">
+                                        <span class="text bold"><% if (student.status_id) {%><%= studentStatusMap[student.status_id].name%><%}%></span>
                                     </div>
                                 </div>
                             </div>
@@ -102,24 +128,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="span4 ">
-                                <div class="control-group">
-                                    <label class="control-label">教育顾问:</label>
-                                    <div class="controls">
-                                        <span class="text bold"><% if (student.adviser_id) {%><%= userMap[student.adviser_id].name%><%}%></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="span4 ">
-                                <div class="control-group">
-                                    <label class="control-label">班主任:</label>
-                                    <div class="controls">
-                                        <span class="text bold"><% if (student.headmaster_id) {%><%= userMap[student.headmaster_id].name%><%}%></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row-fluid">
                             <div class="span4 ">
                                 <div class="control-group">
                                     <label class="control-label">从何得知:</label>
@@ -136,11 +144,29 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row-fluid">
                             <div class="span4 ">
                                 <div class="control-group">
                                     <label class="control-label">续费可能性:</label>
                                     <div class="controls">
                                         <span class="text bold"><% if (student.possibility_id) {%><%= possibilityMap[student.possibility_id].name%><%}%></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span4 ">
+                                <div class="control-group">
+                                    <label class="control-label">教育顾问:</label>
+                                    <div class="controls">
+                                        <span class="text bold"><% if (student.adviser_id) {%><%= userMap[student.adviser_id].name%><%}%></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span4 ">
+                                <div class="control-group">
+                                    <label class="control-label">班主任:</label>
+                                    <div class="controls">
+                                        <span class="text bold"><% if (student.headmaster_id) {%><%= userMap[student.headmaster_id].name%><%}%></span>
                                     </div>
                                 </div>
                             </div>
