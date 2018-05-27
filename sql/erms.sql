@@ -150,6 +150,9 @@ create table student
    audit_status_id      varchar(36) not null comment '客户审核状态id',
    warning_id           varchar(36) comment '学员预警id',
    warning_reason       varchar(500) comment '预警原因',
+   subject_ids          varchar(100) comment '需辅导科目id，用#隔开',
+   possibility_id       varchar(36) comment '续费可能性id',
+   contact2             varchar(20) comment '联系电话2',
    create_at            datetime not null comment '登记时间',
    update_at            datetime not null comment '更新时间',
    primary key (id)
@@ -695,3 +698,6 @@ alter table test_score add constraint FK_Reference_54 foreign key (subject_id)
 
 alter table student add constraint FK_Reference_55 foreign key (warning_id)
       references student_warning (id) on delete restrict on update restrict;
+
+alter table student add constraint FK_Reference_56 foreign key (possibility_id)
+      references possibility (id) on delete restrict on update restrict;

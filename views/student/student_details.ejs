@@ -10,6 +10,7 @@
                 <li><a href="#revisit_record" data-toggle="tab">回访记录</a></li>
                 <li><a href="#parents_meeting" data-toggle="tab">家长会</a></li>
                 <li><a href="#test_score" data-toggle="tab">校考成绩</a></li>
+                <li><a href="#warning_record" data-toggle="tab">预警记录</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane row-fluid active" id="base_info">
@@ -77,9 +78,9 @@
                             </div>
                             <div class="span4 ">
                                 <div class="control-group">
-                                    <label class="control-label">途径:</label>
+                                    <label class="control-label">联系电话2:</label>
                                     <div class="controls">
-                                        <span class="text bold"><%= sourceMap[student.source_id].name%></span>
+                                        <span class="text bold"><%= student.contact2%></span>
                                     </div>
                                 </div>
                             </div>
@@ -95,17 +96,9 @@
                         <div class="row-fluid">
                             <div class="span4 ">
                                 <div class="control-group">
-                                    <label class="control-label">从何得知:</label>
+                                    <label class="control-label">需辅导科目:</label>
                                     <div class="controls">
-                                        <span class="text bold"><% if (student.how_know_id) {%><%= howKnowMap[student.how_know_id].name%><%}%></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="span4 ">
-                                <div class="control-group">
-                                    <label class="control-label">创建时间:</label>
-                                    <div class="controls">
-                                        <span class="text bold"><%= dateUtil.dateTimeFormat(student.create_at)%></span>
+                                        <span class="text bold"><% if (student.subjects) {%><%= student.subjects%><%}%></span>
                                     </div>
                                 </div>
                             </div>
@@ -114,6 +107,40 @@
                                     <label class="control-label">教育顾问:</label>
                                     <div class="controls">
                                         <span class="text bold"><% if (student.adviser_id) {%><%= userMap[student.adviser_id].name%><%}%></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span4 ">
+                                <div class="control-group">
+                                    <label class="control-label">续费可能性:</label>
+                                    <div class="controls">
+                                        <span class="text bold"><% if (student.possibility_id) {%><%= possibilityMap[student.possibility_id].name%><%}%></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span4 ">
+                                <div class="control-group">
+                                    <label class="control-label">从何得知:</label>
+                                    <div class="controls">
+                                        <span class="text bold"><% if (student.how_know_id) {%><%= howKnowMap[student.how_know_id].name%><%}%></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span4 ">
+                                <div class="control-group">
+                                    <label class="control-label">途径:</label>
+                                    <div class="controls">
+                                        <span class="text bold"><%= sourceMap[student.source_id].name%></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span4 ">
+                                <div class="control-group">
+                                    <label class="control-label">创建时间:</label>
+                                    <div class="controls">
+                                        <span class="text bold"><%= dateUtil.dateTimeFormat(student.create_at)%></span>
                                     </div>
                                 </div>
                             </div>
@@ -302,6 +329,29 @@
                                 <%}%>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane row-fluid" id="warning_record">
+                    <div class="form-horizontal form-view">
+                        <div class="row-fluid">
+                            <div class="span6 ">
+                                <div class="control-group">
+                                    <label class="control-label">预警级别:</label>
+                                    <div class="controls">
+                                        <span class="text bold"><%if (student.warning_id) {%><%= warningMap[student.warning_id].name%><%}%></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="span6 ">
+                                <div class="control-group">
+                                    <label class="control-label">预警原因:</label>
+                                    <div class="controls">
+                                        <span class="text bold"><%= student.warning_reason%></span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

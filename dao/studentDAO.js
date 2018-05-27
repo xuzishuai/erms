@@ -62,7 +62,7 @@ exports.getStudentByCondition = function (condition) {
                     sql += ' and warning_id=?';
                     params[params.length] = condition.warning_id;
                 }
-                if (condition.status_id && condition.status_id !== '') {
+                if (condition.status_id && condition.status_id != '') {
                     sql += ' and status_id=?';
                     params[params.length] = condition.status_id;
                 }
@@ -86,9 +86,16 @@ exports.getStudentByCondition = function (condition) {
                     sql += ' and source_id=?';
                     params[params.length] = condition.source_id;
                 }
-                if (condition.audit_status_id && condition.audit_status_id !== '') {
+                if (condition.audit_status_id && condition.audit_status_id != '') {
                     sql += ' and audit_status_id=?';
                     params[params.length] = condition.audit_status_id;
+                }
+                if (condition.has_headmaster && condition.has_headmaster !='') {
+                    if (condition.has_headmaster == 'has') {
+                        sql += ' and headmaster_id is not null';
+                    } else if (condition.has_headmaster == 'hasnt') {
+                        sql += ' and headmaster_id is null';
+                    }
                 }
             }
             let students = await dataPool.query(sql, params);
@@ -104,10 +111,11 @@ exports.doUpdateStudent = function (student) {
         try {
             await dataPool.query('update student set name=?, gender=?, grade_id=?, school=?, birthday=?, contact=?, email=?, parent_name=?, relationship=?, appointment_time=?, ' +
                 'adviser_id=?, headmaster_id=?, source_id=?, how_know_id=?, status_id=?, home_address=?, note=?, arrive_time=?, audit_status_id=?, warning_id=?, warning_reason=?,' +
-                ' update_at=? where id=?',
+                'subject_ids=?, possibility_id=?, contact2=?, update_at=? where id=?',
                 [student.name, student.gender, student.grade_id, student.school, student.birthday, student.contact, student.email, student.parent_name, student.relationship,
                     student.appointment_time, student.adviser_id, student.headmaster_id, student.source_id, student.how_know_id, student.status_id, student.home_address,
-                    student.note, student.arrive_time, student.audit_status_id, student.warning_id, student.warning_reason, new Date(), student.id]);
+                    student.note, student.arrive_time, student.audit_status_id, student.warning_id, student.warning_reason, student.subject_ids, student.possibility_id,
+                    student.contact2, new Date(), student.id]);
             resolve();
         } catch (error) {
             reject(error);

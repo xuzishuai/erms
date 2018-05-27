@@ -526,6 +526,7 @@ router.get('/assign_headmaster_student_list', async function (req, res) {
         condition.appointment_start_time = req.query.appointment_start_time;
         condition.appointment_end_time = req.query.appointment_end_time;
         condition.headmaster_id = req.query.headmaster_id;
+        condition.has_headmaster = req.query.has_headmaster!=null?req.query.has_headmaster:'hasnt';
         condition.source_id = req.query.source_id;
         condition.adviser_id = req.query.adviser_id;
         condition.status_id = '03';//只显示已签约的学员
@@ -622,6 +623,68 @@ router.get('/signed_student_list', async function (req, res) {
     }
 });
 
+router.get('/edit_signed_student', async function (req, res) {
+    try {
+        let student = await baseDAO.getById('student', req.query.id);
+        let grades = await baseDAO.getAll('grade');
+        let sources = await baseDAO.getAll('source');
+        let howKnows = await baseDAO.getAll('how_know');
+        let subjects = await baseDAO.getAll('subject');
+        let possibilities = await baseDAO.getAll('possibility');
+        res.render('student/edit_signed_student', {
+            student: student[0],
+            grades: grades,
+            sources: sources,
+            howKnows: howKnows,
+            subjects: subjects,
+            possibilities: possibilities,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_update_signed_student', async function (req, res) {
+    try {
+        let student = await baseDAO.getById('student', req.body.id);
+        student = student[0];
+        student.id = req.body.id;
+        student.name = req.body.name;
+        student.gender = req.body.gender;
+        student.grade_id = req.body.grade_id;
+        student.school = (req.body.school&&req.body.school!='')?req.body.school:null;
+        student.birthday = (req.body.birthday&&req.body.birthday!='')?req.body.birthday:null;
+        student.contact = req.body.contact;
+        student.contact2 = (req.body.contact2&&req.body.contact2!='')?req.body.contact2:null;
+        student.possibility_id = (req.body.possibility_id&&req.body.possibility_id!='')?req.body.possibility_id:null;
+        student.email = (req.body.email&&req.body.email!='')?req.body.email:null;
+        student.parent_name = (req.body.parent_name&&req.body.parent_name!='')?req.body.parent_name:null;
+        student.relationship = (req.body.relationship&&req.body.relationship!='')?req.body.relationship:null;
+        student.appointment_time = req.body.appointment_time;
+        student.source_id = (req.body.source_id&&req.body.source_id!='')?req.body.source_id:null;
+        student.how_know_id = (req.body.how_know_id&&req.body.how_know_id!='')?req.body.how_know_id:null;
+        student.home_address = (req.body.home_address&&req.body.home_address!='')?req.body.home_address:null;
+        student.note = (req.body.note&&req.body.note!='')?req.body.note:null;
+        student.subject_ids = "#";
+        let subjectIds = req.body.subject_ids;
+        if (subjectIds) {
+            if (!Array.isArray(subjectIds)) {
+                student.subject_ids += subjectIds + "#";
+            } else {
+                for (let i = 0; i < subjectIds.length; i++) {
+                    student.subject_ids += subjectIds[i] + "#";
+                }
+            }
+        }
+        student.subject_ids = student.subject_ids=="#"?null:student.subject_ids;
+        await studentDAO.doUpdateStudent(student);
+        res.redirect('/student/signed_student_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
 router.get('/student_details', async function (req, res) {
     try {
         let student = await baseDAO.getById('student', req.query.id);
@@ -633,6 +696,20 @@ router.get('/student_details', async function (req, res) {
         let howKnows = await baseDAO.getAll('how_know');
         let sources = await baseDAO.getAll('source');
         let users = await baseDAO.getAll('user');
+        let possibilities = await baseDAO.getAll('possibility');
+        let subjects = await baseDAO.getAll('subject');
+        let subjectMap = commonUtil.toMap(subjects);
+        if (student.subject_ids) {
+            let subjectIds = student.subject_ids.split('#');
+            student.subjects = '';
+            for (let i = 1; i < subjectIds.length - 1; i++) {
+                if (i === 1) {
+                    student.subjects += subjectMap[subjectIds[i]].name;
+                } else {
+                    student.subjects += '，' + subjectMap[subjectIds[i]].name;
+                }
+            }
+        }
 
         //排课记录
 
@@ -654,7 +731,9 @@ router.get('/student_details', async function (req, res) {
         //校考成绩
         let testScores = await testScoreDAO.getTestScoreByCondition(condition);
         let testScoreTypes = await baseDAO.getAll('test_score_type');
-        let subjects = await baseDAO.getAll('subject');
+
+        //预警记录
+        let warnings = await baseDAO.getAll('student_warning');
 
         res.render('student/student_details', {
             student: student,
@@ -673,7 +752,9 @@ router.get('/student_details', async function (req, res) {
             rrTypeMap: commonUtil.toMap(rrTypes),
             testScores: testScores,
             testScoreTypeMap: commonUtil.toMap(testScoreTypes),
-            subjectMap: commonUtil.toMap(subjects)
+            subjectMap: subjectMap,
+            warningMap: commonUtil.toMap(warnings),
+            possibilityMap: commonUtil.toMap(possibilities)
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);

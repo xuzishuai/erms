@@ -47,25 +47,13 @@
                         </div>
                         <div class="clearfix">
                             <div class="control-group span3">
-                                <label class="control-label">预约上门起始时间:</label>
+                                <label class="control-label">已分配班主任:</label>
                                 <div class="controls">
-                                    <div class="input-append date form_datetime span12" style="padding-right: 56px;">
-                                        <input id="appointment_start_time" name="appointment_start_time" type="text"
-                                               <%if (condition.appointment_start_time){%>value="<%= dateUtil.dateTimeFormat(condition.appointment_start_time)%>"<%}%> readonly class="m-wrap span12"/>
-                                        <span class="add-on"><i class="icon-remove"></i></span>
-                                        <span class="add-on"><i class="icon-calendar"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="control-group span3">
-                                <label class="control-label">预约上门截止时间:</label>
-                                <div class="controls">
-                                    <div class="input-append date form_datetime span12" style="padding-right: 56px;">
-                                        <input id="appointment_end_time" name="appointment_end_time" type="text"
-                                               <%if (condition.appointment_end_time){%>value="<%= dateUtil.dateTimeFormat(condition.appointment_end_time)%>"<%}%> readonly class="m-wrap span12"/>
-                                        <span class="add-on"><i class="icon-remove"></i></span>
-                                        <span class="add-on"><i class="icon-calendar"></i></span>
-                                    </div>
+                                    <select class="span12 select2" tabindex="1" name="has_headmaster" id="has_headmaster">
+                                        <option value=""></option>
+                                        <option value="has">是</option>
+                                        <option value="hasnt">否</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="control-group span3">
@@ -157,6 +145,7 @@
 <script>
     $('#grade_id').val('<%= condition.grade_id%>');
     $('#adviser_id').val('<%= condition.adviser_id%>');
+    $('#has_headmaster').val('<%= condition.has_headmaster%>');
     $('#headmaster_id').val('<%= condition.headmaster_id%>');
     $('#source_id').val('<%= condition.source_id%>');
 </script>

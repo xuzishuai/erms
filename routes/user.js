@@ -243,8 +243,12 @@ router.post('/do_update_role', async function (req, res) {
         role.menu_ids = "#";
         let menuIds = req.body.menu_ids;
         if (menuIds) {
-            for (let i = 0; i < menuIds.length; i++) {
-                role.menu_ids += menuIds[i] + "#";
+            if (!Array.isArray(menuIds)) {
+                role.menu_ids += menuIds + "#";
+            } else {
+                for (let i = 0; i < menuIds.length; i++) {
+                    role.menu_ids += menuIds[i] + "#";
+                }
             }
         }
         role.menu_ids = role.menu_ids=="#"?null:role.menu_ids;

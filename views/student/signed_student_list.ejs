@@ -120,9 +120,8 @@
                         <td><%= statusMap[students[i].status_id].name%></td>
                         <td><% if (students[i].note){%><%= students[i].note%><%}%></td>
                         <td>
-                            <%if (students[i].status_id != '01'){%>
+                            <a href="/student/edit_signed_student?id=<%= students[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
                             <a href="/student/student_details?id=<%= students[i].id%>" class="btn yellow mini"><i class="icon-info-sign"></i> 查看详情</a>
-                            <%}%>
                         </td>
                     </tr>
                     <%}%>
