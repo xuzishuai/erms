@@ -534,6 +534,51 @@ create table test_score_type
 
 alter table test_score_type comment '校考类型表';
 
+/*==============================================================*/
+/* Table: contract_charge                                       */
+/*==============================================================*/
+create table contract_charge
+(
+   id                   varchar(36) not null,
+   contract_id          varchar(36) not null comment '合同id',
+   charge_date          date not null comment '收费日期',
+   type_id              varchar(36) not null comment '收费类型id',
+   is_payed             tinyint(2) not null comment '是否已支付，0否，1是',
+   mode_id              varchar(36) not null comment '支付方式id',
+   pos_no               varchar(100) comment 'POS单号',
+   money                double not null comment '收费金额',
+   operator_id          varchar(36) not null comment '操作人id',
+   create_at            datetime not null comment '创建时间',
+   update_at            datetime not null comment '更新时间',
+   primary key (id)
+);
+
+alter table contract_charge comment '合同收费表';
+
+/*==============================================================*/
+/* Table: contract_charge_type                                  */
+/*==============================================================*/
+create table contract_charge_type
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '合同收费类型',
+   primary key (id)
+);
+
+alter table contract_charge_type comment '合同收费类型表';
+
+/*==============================================================*/
+/* Table: contract_charge_mode                                  */
+/*==============================================================*/
+create table contract_charge_mode
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '合同收费方式',
+   primary key (id)
+);
+
+alter table contract_charge_mode comment '合同收费方式表';
+
 alter table menu add constraint FK_Reference_2 foreign key (parent_id)
       references menu (id) on delete restrict on update restrict;
 
@@ -701,3 +746,12 @@ alter table student add constraint FK_Reference_55 foreign key (warning_id)
 
 alter table student add constraint FK_Reference_56 foreign key (possibility_id)
       references possibility (id) on delete restrict on update restrict;
+
+alter table contract_charge add constraint FK_Reference_57 foreign key (contract_id)
+      references contract (id) on delete restrict on update restrict;
+
+alter table contract_charge add constraint FK_Reference_58 foreign key (type_id)
+      references contract_charge_type (id) on delete restrict on update restrict;
+
+alter table contract_charge add constraint FK_Reference_59 foreign key (mode_id)
+      references contract_charge_mode (id) on delete restrict on update restrict;

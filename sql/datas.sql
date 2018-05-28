@@ -202,3 +202,16 @@ INSERT INTO student_warning VALUES ('01', '0');
 INSERT INTO student_warning VALUES ('02', '1');
 INSERT INTO student_warning VALUES ('03', '2');
 INSERT INTO student_warning VALUES ('04', '3');
+
+-- ----------------------------
+-- Records of contract_charge_type
+-- ----------------------------
+INSERT INTO contract_charge_type VALUES ('01', '全款');
+INSERT INTO contract_charge_type VALUES ('02', '首款');
+INSERT INTO contract_charge_type VALUES ('03', '尾款');
+
+-- ----------------------------
+-- Records of contract_charge_mode
+-- ----------------------------
+INSERT INTO contract_charge_mode VALUES ('01', '刷卡');
+INSERT INTO contract_charge_mode VALUES ('02', '付现');

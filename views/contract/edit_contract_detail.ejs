@@ -392,8 +392,10 @@
         //计算合同金额
         let totalPrice = 0;
         let prices = $("[name^='price_']");
+        let lessonPeriods = $("[name^='lesson_period_']");
         for (let i = 0; i < prices.length; i++) {
-            totalPrice += (prices[i].value && prices[i].value != '')?parseFloat(prices[i].value):0;
+            totalPrice += ((prices[i].value && prices[i].value != '')?parseFloat(prices[i].value):0)
+                * ((lessonPeriods[i].value && lessonPeriods[i].value != '')?parseInt(lessonPeriods[i].value):0);
         }
         let totalDecimalStr = totalPrice.toString().split('.')[1];
         if (totalDecimalStr && totalDecimalStr.length > 2) {
@@ -401,7 +403,6 @@
         }
         //计算总课时数
         let totalLessonPeriod = 0;
-        let lessonPeriods = $("[name^='lesson_period_']");
         for (let i = 0; i < lessonPeriods.length; i++) {
             totalLessonPeriod += (lessonPeriods[i].value && lessonPeriods[i].value != '')?parseFloat(lessonPeriods[i].value):0;
         }
