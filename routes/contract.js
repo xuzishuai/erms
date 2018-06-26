@@ -6,6 +6,7 @@ const userDAO = require('../dao/userDAO');
 const commonUtil = require('../util/commonUtil');
 const dateUtil = require('../util/dateUtil');
 const contractDAO = require('../dao/contractDAO');
+const contractChargeDAO = require('../dao/contractChargeDAO');
 
 router.get('/new_contract', async function (req, res) {
     try {
@@ -479,6 +480,45 @@ router.get('/contract_detail_log', async function (req, res) {
             subjectMap: commonUtil.toMap(subjects),
             detailTypeMap: commonUtil.toMap(detailTypes),
             detailStatusMap: commonUtil.toMap(detailStatus)
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/contract_charge_list', async function (req, res) {
+    try {
+        let condition = {};
+        condition.student_id = req.query.student_id;
+        condition.contract_no = req.query.contract_no;
+        condition.grade_id = req.query.grade_id;
+        condition.mode_id = req.query.mode_id;
+        condition.signer_id = req.query.signer_id;
+        condition.type_id = req.query.type_id;
+        condition.start_date = req.query.start_date;
+        condition.end_date = req.query.end_date;
+        let contractCharges = await contractChargeDAO.getContractChargeByCondition(condition);
+        let students = await baseDAO.getAll('student');
+        let grades = await baseDAO.getAll('grade');
+        let modes = await baseDAO.getAll('contract_charge_mode');
+        let signers = await userDAO.getUserByRole(['03', '04']);//角色为顾问和班主任
+        let types = await baseDAO.getAll('contract_charge_type');
+        let contracts = await baseDAO.getAll('contract');
+        res.render('contract/contract_charge_list', {
+            contractCharges: contractCharges,
+            students: students,
+            grades: grades,
+            modes: modes,
+            signers: signers,
+            types: types,
+            studentMap: commonUtil.toMap(students),
+            gradeMap: commonUtil.toMap(grades),
+            modeMap: commonUtil.toMap(modes),
+            signerMap: commonUtil.toMap(signers),
+            typeMap: commonUtil.toMap(types),
+            contractMap: commonUtil.toMap(contracts),
+            condition: condition,
+            dateUtil: dateUtil
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);

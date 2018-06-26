@@ -543,7 +543,6 @@ create table contract_charge
    contract_id          varchar(36) not null comment '合同id',
    charge_date          date not null comment '收费日期',
    type_id              varchar(36) not null comment '收费类型id',
-   is_payed             tinyint(2) not null comment '是否已支付，0否，1是',
    mode_id              varchar(36) not null comment '支付方式id',
    pos_no               varchar(100) comment 'POS单号',
    money                double not null comment '收费金额',

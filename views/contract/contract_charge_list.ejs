@@ -5,10 +5,13 @@
                 <div class="caption">
                     <i class="icon-reorder"></i>
                 </div>
+                <div class="actions">
+                    <a href="/contract/new_contract_charge" class="btn green"><i class="icon-plus"></i> 新增合同收费</a>
+                </div>
             </div>
             <div class="portlet-body">
                 <div class="booking-search">
-                    <form action="/contract/my_contract_list">
+                    <form action="/contract/contract_charge_list">
                         <div class="clearfix">
                             <div class="control-group span3">
                                 <label class="control-label">学员:</label>
@@ -28,30 +31,6 @@
                                 </div>
                             </div>
                             <div class="control-group span3">
-                                <label class="control-label">合同属性:</label>
-                                <div class="controls">
-                                    <select class="span12 select2" tabindex="1" name="attribute_id" id="attribute_id">
-                                        <option value=""></option>
-                                        <%for (let i = 0; i < contractAttributes.length; i++){%>
-                                        <option value="<%= contractAttributes[i].id%>"><%= contractAttributes[i].name%></option>
-                                        <%}%>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="control-group span3">
-                                <label class="control-label">合同类型:</label>
-                                <div class="controls">
-                                    <select class="span12 select2" tabindex="1" name="contract_type_id" id="contract_type_id">
-                                        <option value=""></option>
-                                        <%for (let i = 0; i < contractTypes.length; i++){%>
-                                        <option value="<%= contractTypes[i].id%>"><%= contractTypes[i].name%></option>
-                                        <%}%>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="clearfix">
-                            <div class="control-group span3">
                                 <label class="control-label">年级:</label>
                                 <div class="controls">
                                     <select class="span12 select2" tabindex="1" name="grade_id" id="grade_id">
@@ -63,11 +42,46 @@
                                 </div>
                             </div>
                             <div class="control-group span3">
+                                <label class="control-label">支付方式:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="mode_id" id="mode_id">
+                                        <option value=""></option>
+                                        <%for (let i = 0; i < modes.length; i++){%>
+                                        <option value="<%= modes[i].id%>"><%= modes[i].name%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="control-group span3">
+                                <label class="control-label">签约人:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="signer_id" id="signer_id">
+                                        <option value=""></option>
+                                        <%for (let i = 0; i < signers.length; i++){%>
+                                        <option value="<%= signers[i].id%>"><%= signers[i].name%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label">收费类型:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="type_id" id="type_id">
+                                        <option value=""></option>
+                                        <%for (let i = 0; i < types.length; i++){%>
+                                        <option value="<%= types[i].id%>"><%= types[i].name%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group span3">
                                 <label class="control-label">起始日期:</label>
                                 <div class="controls">
                                     <div class="input-append date date-picker span12" style="padding-right: 56px;">
-                                        <input id="start_date_from" name="start_date_from" type="text"
-                                               <%if (condition.start_date_from){%>value="<%= dateUtil.dateFormat(condition.start_date_from)%>"<%}%> readonly class="m-wrap span12"/>
+                                        <input id="start_date" name="start_date" type="text"
+                                               <%if (condition.start_date){%>value="<%= dateUtil.dateFormat(condition.start_date)%>"<%}%> readonly class="m-wrap span12"/>
                                         <span class="add-on"><i class="icon-remove"></i></span>
                                         <span class="add-on"><i class="icon-calendar"></i></span>
                                     </div>
@@ -77,22 +91,11 @@
                                 <label class="control-label">截止日期:</label>
                                 <div class="controls">
                                     <div class="input-append date date-picker span12" style="padding-right: 56px;">
-                                        <input id="start_date_to" name="start_date_to" type="text"
-                                               <%if (condition.start_date_to){%>value="<%= dateUtil.dateFormat(condition.start_date_to)%>"<%}%> readonly class="m-wrap span12"/>
+                                        <input id="end_date" name="end_date" type="text"
+                                               <%if (condition.end_date){%>value="<%= dateUtil.dateFormat(condition.end_date)%>"<%}%> readonly class="m-wrap span12"/>
                                         <span class="add-on"><i class="icon-remove"></i></span>
                                         <span class="add-on"><i class="icon-calendar"></i></span>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="control-group span3">
-                                <label class="control-label">合同状态:</label>
-                                <div class="controls">
-                                    <select class="span12 select2" tabindex="1" name="status_id" id="status_id">
-                                        <option value=""></option>
-                                        <%for (let i = 0; i < contractStatus.length; i++){%>
-                                        <option value="<%= contractStatus[i].id%>"><%= contractStatus[i].name%></option>
-                                        <%}%>
-                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -108,34 +111,40 @@
                     <tr>
                         <th>合同编号</th>
                         <th>学员(编号)</th>
-                        <th>合同属性</th>
-                        <th>合同类型</th>
                         <th>年级</th>
-                        <th>合同金额</th>
-                        <th>未付款</th>
-                        <th>合同开始日期</th>
                         <th>签约人</th>
-                        <th>合同状态</th>
+                        <th>收费类型</th>
+                        <th>支付方式</th>
+                        <th>年级</th>
+                        <th>收费金额</th>
+                        <th>POS单号</th>
+                        <th>收费日期</th>
                         <th class="table_action" data-colNum=10>操作</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <%for (let i = 0; i < contracts.length; i++){%>
+                    <%for (let i = 0; i < contractCharges.length; i++){
+                    let contract = contractMap[contractCharges[i].contract_id];%>
                     <tr>
-                        <td><%= contracts[i].contract_no%></td>
-                        <td><%= studentMap[contracts[i].student_id].name%>(<%= studentMap[contracts[i].student_id].student_no%>)</td>
-                        <td><%= contractAttributeMap[contracts[i].attribute_id].name%></td>
-                        <td><%= contractTypeMap[contracts[i].contract_type_id].name%></td>
-                        <td><%= gradeMap[contracts[i].grade_id].name%></td>
-                        <td><%= contracts[i].total_money%></td>
-                        <td><%= contracts[i].left_money%></td>
-                        <td><%= dateUtil.dateFormat(contracts[i].start_date)%></td>
-                        <td><%= userMap[contracts[i].signer_id].name%></td>
-                        <td><%= contractStatusMap[contracts[i].status_id].name%></td>
+                        <td><%= contract.contract_no%></td>
+                        
+
+
+
+
+                        <td><%= studentMap[contractCharges[i].student_id].name%>(<%= studentMap[contractCharges[i].student_id].student_no%>)</td>
+                        <td><%= contractAttributeMap[contractCharges[i].attribute_id].name%></td>
+                        <td><%= contractTypeMap[contractCharges[i].contract_type_id].name%></td>
+                        <td><%= gradeMap[contractCharges[i].grade_id].name%></td>
+                        <td><%= contractCharges[i].total_money%></td>
+                        <td><%= contractCharges[i].left_money%></td>
+                        <td><%= dateUtil.dateFormat(contractCharges[i].start_date)%></td>
+                        <td><%= userMap[contractCharges[i].signer_id].name%></td>
+                        <td><%= contractStatusMap[contractCharges[i].status_id].name%></td>
                         <td>
-                            <% if (contracts[i].status_id == '02' || contracts[i].status_id == '03') {%>
-                            <a href="/contract/edit_contract?id=<%= contracts[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 修改</a>
-                            <a href="/contract/edit_contract_detail?id=<%= contracts[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 变更</a>
+                            <% if (contractCharges[i].status_id == '02' || contractCharges[i].status_id == '03') {%>
+                            <a href="/contract/edit_contract?id=<%= contractCharges[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 修改</a>
+                            <a href="/contract/edit_contract_detail?id=<%= contractCharges[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 变更</a>
                             <%}%>
                         </td>
                     </tr>
@@ -160,8 +169,8 @@
 <%- contentFor('script')%>
 <script>
     $('#student_id').val('<%= condition.student_id%>');
-    $('#attribute_id').val('<%= condition.attribute_id%>');
-    $('#contract_type_id').val('<%= condition.contract_type_id%>');
     $('#grade_id').val('<%= condition.grade_id%>');
-    $('#status_id').val('<%= condition.status_id%>');
+    $('#mode_id').val('<%= condition.mode_id%>');
+    $('#signer_id').val('<%= condition.signer_id%>');
+    $('#type_id').val('<%= condition.type_id%>');
 </script>

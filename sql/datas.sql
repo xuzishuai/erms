@@ -11,7 +11,7 @@ INSERT INTO menu VALUES ('7', '分配顾问', '4', '/student/assign_adviser_stud
 INSERT INTO menu VALUES ('8', '客户审核', '4', '/student/audit_student_list', null, null, '#/student/audit_student_list#', null);
 INSERT INTO menu VALUES ('9', '客户追踪', '4', '/student/follow_student_list', null, null, '#/student/follow_student_list#/student/student_tracking_list#/student/new_student_tracking#/student/edit_student_tracking#/student/delete_student_tracking#/student/do_create_student_tracking#/student/do_update_student_tracking#/student/visit_record_list#/student/new_visit_record#/student/edit_visit_record#/student/delete_visit_record#/student/do_create_visit_record#/student/do_update_visit_record#', null);
 INSERT INTO menu VALUES ('10', '客户管理', '4', '/student/student_list', null, null, '#/student/student_list#/student/edit_student#/student/do_update_student#/contract/new_contract#/contract/validate_contract_no#/contract/do_create_contract#/contract/add_contract_detail_tr#', null);
-INSERT INTO menu VALUES ('11', '合同', null, null, '#12#13#', 'icon-file-text', null, 2);
+INSERT INTO menu VALUES ('11', '合同', null, null, '#12#13#22#', 'icon-file-text', null, 2);
 INSERT INTO menu VALUES ('12', '待审核合同', '11', '/contract/audit_contract_list', null, null, '#/contract/audit_contract_list#/contract/audit_contract#/contract/do_audit_contract#', null);
 INSERT INTO menu VALUES ('13', '合同管理', '11', '/contract/my_contract_list', null, null, '#/contract/my_contract_list#/contract/edit_contract#/contract/validate_edit_contract_no#/contract/do_update_contract#/contract/edit_contract_detail#/contract/add_contract_detail_tr#', null);
 INSERT INTO menu VALUES ('14', '学员', null, null, '#15#16#17#18#19#20#21#', 'icon-group', null, 3);
@@ -22,6 +22,7 @@ INSERT INTO menu VALUES ('18', '家长会', '14', '/student/parents_meeting_list
 INSERT INTO menu VALUES ('19', '家长会查询', '14', '/student/parents_meeting_search_list', null, null, '#/student/parents_meeting_search_list#/student/parents_meeting_detail#', null);
 INSERT INTO menu VALUES ('20', '校考反馈', '14', '/student/test_score_list', null, null, '#/student/test_score_list#/student/new_test_score#/student/do_create_test_score#/student/edit_test_score#/student/do_update_test_score#/student/delete_test_score#', null);
 INSERT INTO menu VALUES ('21', '学员预警', '14', '/student/warning_student_list', null, null, '#/student/warning_student_list#/student/warning_student#/student/do_warning_student#', null);
+INSERT INTO menu VALUES ('22', '合同收费', '11', '/contract/contract_charge_list', null, null, '#/contract/contract_charge_list#', null);
 
 -- ----------------------------
 -- Records of user,插入超级管理员用户
@@ -35,6 +36,7 @@ INSERT INTO `role` VALUES ('01', '校长', null);
 INSERT INTO `role` VALUES ('02', '教务主任', null);
 INSERT INTO `role` VALUES ('03', '教育顾问', null);
 INSERT INTO `role` VALUES ('04', '班主任', null);
+INSERT INTO `role` VALUES ('05', '财务', null);
 
 -- ----------------------------
 -- Records of grade
