@@ -1,6 +1,7 @@
 const dataPool = require('../util/dataPool');
 const Promise = require('promise');
 const uuid = require('node-uuid');
+const baseDAO = require('../dao/baseDAO');
 
 exports.getContractChargeByCondition = function (condition) {
     return new Promise(async function (resolve, reject) {
@@ -44,6 +45,31 @@ exports.getContractChargeByCondition = function (condition) {
             sql += ' order by update_at';
             let contractCharges = await dataPool.query(sql, params);
             resolve(contractCharges);
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
+
+exports.saveContractCharge = function (contractCharge) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let sqls = [], params = [];
+            let now = new Date();
+            if (contractCharge.type_id == '03') {//如果是尾款，则加到合同的"已付款"里面，否则不改变合同
+                let contract = await baseDAO.getById('contract', contractCharge.contract_id);
+                contract = contract[0];
+                contract.prepay = contract.prepay + contractCharge.money;
+                contract.left_money = contract.total_money - contract.prepay;
+                sqls[sqls.length] = 'update contract set prepay=?, left_money=?, update_at=? where id=?';
+                params[params.length] = [contract.prepay, contract.left_money, now, contractCharge.contract_id];
+            }
+            sqls[sqls.length] = 'insert into contract_charge(id, contract_id, charge_date, type_id, mode_id, pos_no, money, operator_id, create_at, update_at)' +
+                ' values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            params[params.length] = [uuid.v1(), contractCharge.contract_id, contractCharge.charge_date, contractCharge.type_id, contractCharge.mode_id,
+                contractCharge.pos_no, contractCharge.money, contractCharge.operator_id, now, now];
+            await dataPool.batchQuery(sqls, params);
+            resolve();
         } catch (error) {
             reject(error);
         }

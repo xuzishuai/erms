@@ -115,37 +115,29 @@
                         <th>签约人</th>
                         <th>收费类型</th>
                         <th>支付方式</th>
-                        <th>年级</th>
                         <th>收费金额</th>
                         <th>POS单号</th>
                         <th>收费日期</th>
-                        <th class="table_action" data-colNum=10>操作</th>
+                        <th class="table_action" data-colNum=9>操作</th>
                     </tr>
                     </thead>
                     <tbody>
                     <%for (let i = 0; i < contractCharges.length; i++){
-                    let contract = contractMap[contractCharges[i].contract_id];%>
+                    let contract = contractMap[contractCharges[i].contract_id];
+                    let student = studentMap[contract.student_id];%>
                     <tr>
                         <td><%= contract.contract_no%></td>
-                        
-
-
-
-
-                        <td><%= studentMap[contractCharges[i].student_id].name%>(<%= studentMap[contractCharges[i].student_id].student_no%>)</td>
-                        <td><%= contractAttributeMap[contractCharges[i].attribute_id].name%></td>
-                        <td><%= contractTypeMap[contractCharges[i].contract_type_id].name%></td>
-                        <td><%= gradeMap[contractCharges[i].grade_id].name%></td>
-                        <td><%= contractCharges[i].total_money%></td>
-                        <td><%= contractCharges[i].left_money%></td>
-                        <td><%= dateUtil.dateFormat(contractCharges[i].start_date)%></td>
-                        <td><%= userMap[contractCharges[i].signer_id].name%></td>
-                        <td><%= contractStatusMap[contractCharges[i].status_id].name%></td>
+                        <td><%= student.name%>(<%= student.student_no%>)</td>
+                        <td><%= gradeMap[contract.grade_id].name%></td>
+                        <td><%= signerMap[contract.signer_id].name%></td>
+                        <td><%= typeMap[contractCharges[i].type_id].name%></td>
+                        <td><%= modeMap[contractCharges[i].mode_id].name%></td>
+                        <td><%= contractCharges[i].money%></td>
+                        <td><%= contractCharges[i].pos_no%></td>
+                        <td><%= dateUtil.dateFormat(contractCharges[i].charge_date)%></td>
                         <td>
-                            <% if (contractCharges[i].status_id == '02' || contractCharges[i].status_id == '03') {%>
-                            <a href="/contract/edit_contract?id=<%= contractCharges[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 修改</a>
-                            <a href="/contract/edit_contract_detail?id=<%= contractCharges[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 变更</a>
-                            <%}%>
+                            <a href="/contract/edit_contract_charge?id=<%= contractCharges[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
+                            <a data-toggle="modal" data-target="#confirm" data-id="<%= contractCharges[i].id%>" class="btn red mini"><i class="icon-minus"></i> 删除</a>
                         </td>
                     </tr>
                     <%}%>
@@ -155,8 +147,20 @@
         </div>
     </div>
 </div>
+<div id="confirm" class="modal hide fade" tabindex="-1" data-backdrop="static">
+    <div class="modal-body">
+        <p>确定删除此条记录吗?</p>
+    </div>
+    <div class="modal-footer">
+        <form action="/contract/delete_contract_charge">
+            <input id="id" name="id" hidden>
+            <button type="button" data-dismiss="modal" class="btn">取消</button>
+            <button type="submit" class="btn green">确认</button>
+        </form>
+    </div>
+</div>
 <%- contentFor('title')%>
-合同管理
+合同收费
 <%- contentFor('breadcrumb')%>
 <li>
     <i class="icon-angle-right"></i>
@@ -164,7 +168,7 @@
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/contract/my_contract_list">合同管理</a>
+    <a href="/contract/contract_charge_list">合同收费</a>
 </li>
 <%- contentFor('script')%>
 <script>

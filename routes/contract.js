@@ -525,4 +525,86 @@ router.get('/contract_charge_list', async function (req, res) {
     }
 });
 
+router.get('/new_contract_charge', async function (req, res) {
+    try {
+        let contracts = await baseDAO.getAll('contract');
+        let students = await baseDAO.getAll('student');
+        let types = await baseDAO.getAll('contract_charge_type');
+        let modes = await baseDAO.getAll('contract_charge_mode');
+        res.render('contract/new_contract_charge', {
+            contracts: contracts,
+            students: students,
+            modes: modes,
+            types: types,
+            studentMap: commonUtil.toMap(students),
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_create_contract_charge', async function (req, res) {
+    try {
+        let contractCharge = {};
+        contractCharge.contract_id = req.body.contract_id;
+        contractCharge.charge_date = req.body.charge_date;
+        contractCharge.type_id = req.body.type_id;
+        contractCharge.mode_id = req.body.mode_id;
+        contractCharge.pos_no = req.body.pos_no;
+        contractCharge.money = req.body.money;
+        contractCharge.signer_id = req.session.user[0].id;
+        await contractChargeDAO.saveContractCharge(contractCharge);
+        res.redirect('/contract/contract_charge_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/edit_contract_charge', async function (req, res) {
+    try {
+        let contractCharge = await baseDAO.getById('contract_charge', req.query.id);
+        contractCharge = contractCharge[0];
+        let student = await baseDAO.getById('student', contractCharge.student_id);
+        let modes = await baseDAO.getAll('contract_charge_mode');
+        let types = await baseDAO.getAll('contract_charge_type');
+        res.render('contract/edit_contract_charge', {
+            contractCharge: contractCharge,
+            student: student[0],
+            modes: modes,
+            types: types,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_update_contract_charge', async function (req, res) {
+    try {
+        let contractCharge = await baseDAO.getById('contract_charge', req.body.id);
+        contractCharge = contractCharge[0];
+        contractCharge.mode_id = req.body.mode_id;
+        contractCharge.visit_date = req.body.visit_date;
+        contractCharge.target = req.body.target;
+        contractCharge.type_id = req.body.type_id;
+        contractCharge.content = req.body.content;
+        contractCharge.suggestion = req.body.suggestion;
+        contractCharge.operator = req.body.operator;
+        await contractChargeDAO.updateContractCharge(contractCharge);
+        res.redirect('/contract/contract_charge_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/delete_contract_charge', async function (req, res) {
+    try {
+        await baseDAO.deleteById('contract_charge', req.query.id);
+        res.redirect('/contract/contract_charge_list');
+    } catch (error) {
+        exceptionHelper.sendException(res, error);
+    }
+});
+
 module.exports = router;
