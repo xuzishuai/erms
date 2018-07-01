@@ -561,6 +561,19 @@ router.post('/do_create_contract_charge', async function (req, res) {
     }
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 router.get('/edit_contract_charge', async function (req, res) {
     try {
         let contractCharge = await baseDAO.getById('contract_charge', req.query.id);
