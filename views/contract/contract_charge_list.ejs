@@ -177,4 +177,14 @@
     $('#mode_id').val('<%= condition.mode_id%>');
     $('#signer_id').val('<%= condition.signer_id%>');
     $('#type_id').val('<%= condition.type_id%>');
+
+    $(function() {
+        $('#confirm').on('show.bs.modal', function (event) {
+            let button = $(event.relatedTarget);
+            $('#id').val(button.data('id'));
+        })
+        $('#confirm').on('hidden.bs.modal', function () {
+            $('#id').val('');
+        })
+    });
 </script>

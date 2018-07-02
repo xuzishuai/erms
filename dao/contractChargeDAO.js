@@ -59,8 +59,8 @@ exports.saveContractCharge = function (contractCharge) {
             if (contractCharge.type_id == '03') {//如果是尾款，则加到合同的"已付款"里面，否则不改变合同
                 let contract = await baseDAO.getById('contract', contractCharge.contract_id);
                 contract = contract[0];
-                contract.prepay = contract.prepay + contractCharge.money;
-                contract.left_money = contract.total_money - contract.prepay;
+                contract.prepay = parseFloat(contract.prepay) + parseFloat(contractCharge.money);
+                contract.left_money = parseFloat(contract.total_money) - parseFloat(contract.prepay);
                 sqls[sqls.length] = 'update contract set prepay=?, left_money=?, update_at=? where id=?';
                 params[params.length] = [contract.prepay, contract.left_money, now, contract.id];
             }
@@ -96,8 +96,8 @@ exports.deleteContractCharge = function (id) {
             contractCharge = contractCharge[0];
             let contract = await baseDAO.getById('contract', contractCharge.contract_id);
             contract = contract[0];
-            contract.prepay = contract.prepay - contractCharge.money;
-            contract.left_money = contract.total_money - contract.prepay;
+            contract.prepay = parseFloat(contract.prepay) - parseFloat(contractCharge.money);
+            contract.left_money = parseFloat(contract.total_money) - parseFloat(contract.prepay);
 
             sqls[sqls.length] = 'update contract set prepay=?, left_money=?, update_at=? where id=?';
             params[params.length] = [contract.prepay, contract.left_money, new Date(), contract.id];

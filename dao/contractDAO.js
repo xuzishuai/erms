@@ -96,6 +96,17 @@ exports.getContractByCondition = function (table, condition) {
     })
 };
 
+exports.getContractChargesByContractId = function (contract_id) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let contractCharges = await dataPool.query('select * from contract_charge where contract_id=?', [contract_id]);
+            resolve(contractCharges);
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
+
 function getDetailsByContractId (contract_id) {
     return new Promise(async function (resolve, reject) {
         try {

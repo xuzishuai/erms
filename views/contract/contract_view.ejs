@@ -193,6 +193,33 @@
                         <%}%>
                         </tbody>
                     </table>
+                    <%if (contractCharges != null && contractCharges.length > 0) {%>
+                    <h3 class="form-section">收费明细</h3>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th>收费时间</th>
+                            <th>收费金额</th>
+                            <th>收费类型</th>
+                            <th>支付方式</th>
+                            <th>POS单号</th>
+                            <th>操作人</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <%for (let i = 0; i < contractCharges.length; i++) {%>
+                        <tr>
+                            <td><%= dateUtil.dateFormat(contractCharges[i].charge_date)%></td>
+                            <td><%= contractCharges[i].money%></td>
+                            <td><%= chargeTypeMap[contractCharges[i].type_id].name%></td>
+                            <td><%= chargeModeMap[contractCharges[i].mode_id].name%></td>
+                            <td><%= contractCharges[i].pos_no%></td>
+                            <td><%= userMap[contractCharges[i].operator_id].name%></td>
+                        </tr>
+                        <%}%>
+                        </tbody>
+                    </table>
+                    <%}%>
                 </div>
             </div>
         </div>

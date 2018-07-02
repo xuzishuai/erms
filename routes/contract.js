@@ -425,6 +425,9 @@ router.get('/contract_view', async function (req, res) {
         let contract = await baseDAO.getById('contract', req.query.id);
         contract = contract[0];
         let contractDetails = await contractDAO.getDetailsByContractId(contract.id);
+        let contractCharges = await contractDAO.getContractChargesByContractId(contract.id);
+        let chargeTypes = await baseDAO.getAll('contract_charge_type');
+        let chargeModes = await baseDAO.getAll('contract_charge_mode');
         let grades = await baseDAO.getAll('grade');
         let users = await baseDAO.getAll('user');
         let attributes = await baseDAO.getAll('contract_attribute');
@@ -437,6 +440,9 @@ router.get('/contract_view', async function (req, res) {
         res.render('contract/contract_view', {
             contract: contract,
             contractDetails: contractDetails,
+            contractCharges: contractCharges,
+            chargeTypeMap: commonUtil.toMap(chargeTypes),
+            chargeModeMap: commonUtil.toMap(chargeModes),
             gradeMap: commonUtil.toMap(grades),
             userMap: commonUtil.toMap(users),
             attributeMap: commonUtil.toMap(attributes),
@@ -553,7 +559,7 @@ router.post('/do_create_contract_charge', async function (req, res) {
         contractCharge.mode_id = req.body.mode_id;
         contractCharge.pos_no = req.body.pos_no;
         contractCharge.money = req.body.money;
-        contractCharge.signer_id = req.session.user[0].id;
+        contractCharge.operator_id = req.session.user[0].id;
         await contractChargeDAO.saveContractCharge(contractCharge);
         res.redirect('/contract/contract_charge_list');
     } catch (error) {
