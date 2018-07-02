@@ -62,12 +62,48 @@ exports.saveContractCharge = function (contractCharge) {
                 contract.prepay = contract.prepay + contractCharge.money;
                 contract.left_money = contract.total_money - contract.prepay;
                 sqls[sqls.length] = 'update contract set prepay=?, left_money=?, update_at=? where id=?';
-                params[params.length] = [contract.prepay, contract.left_money, now, contractCharge.contract_id];
+                params[params.length] = [contract.prepay, contract.left_money, now, contract.id];
             }
             sqls[sqls.length] = 'insert into contract_charge(id, contract_id, charge_date, type_id, mode_id, pos_no, money, operator_id, create_at, update_at)' +
                 ' values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
             params[params.length] = [uuid.v1(), contractCharge.contract_id, contractCharge.charge_date, contractCharge.type_id, contractCharge.mode_id,
                 contractCharge.pos_no, contractCharge.money, contractCharge.operator_id, now, now];
+            await dataPool.batchQuery(sqls, params);
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
+
+exports.updateContractCharge = function (contractCharge) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            await dataPool.query('update contract_charge set charge_date=?, type_id=?, mode_id=?, pos_no=?, update_at=? where id=?',
+                [contractCharge.charge_date, contractCharge.type_id, contractCharge.mode_id, contractCharge.pos_no, new Date(), contractCharge.id]);
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
+
+exports.deleteContractCharge = function (id) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let sqls = [], params = [];
+            let contractCharge = await baseDAO.getById('contract_charge', id);
+            contractCharge = contractCharge[0];
+            let contract = await baseDAO.getById('contract', contractCharge.contract_id);
+            contract = contract[0];
+            contract.prepay = contract.prepay - contractCharge.money;
+            contract.left_money = contract.total_money - contract.prepay;
+
+            sqls[sqls.length] = 'update contract set prepay=?, left_money=?, update_at=? where id=?';
+            params[params.length] = [contract.prepay, contract.left_money, new Date(), contract.id];
+
+            sqls[sqls.length] = 'delete from contract_charge where id=?';
+            params[params.length] = [id];
             await dataPool.batchQuery(sqls, params);
             resolve();
         } catch (error) {

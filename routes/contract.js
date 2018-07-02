@@ -561,28 +561,18 @@ router.post('/do_create_contract_charge', async function (req, res) {
     }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 router.get('/edit_contract_charge', async function (req, res) {
     try {
         let contractCharge = await baseDAO.getById('contract_charge', req.query.id);
         contractCharge = contractCharge[0];
-        let student = await baseDAO.getById('student', contractCharge.student_id);
-        let modes = await baseDAO.getAll('contract_charge_mode');
+        let contract = await baseDAO.getById('contract', contractCharge.contract_id);
+        contract = contract[0];
+        let student = await baseDAO.getAll('student', contract.student_id);
         let types = await baseDAO.getAll('contract_charge_type');
+        let modes = await baseDAO.getAll('contract_charge_mode');
         res.render('contract/edit_contract_charge', {
             contractCharge: contractCharge,
+            contract: contract,
             student: student[0],
             modes: modes,
             types: types,
@@ -597,13 +587,10 @@ router.post('/do_update_contract_charge', async function (req, res) {
     try {
         let contractCharge = await baseDAO.getById('contract_charge', req.body.id);
         contractCharge = contractCharge[0];
-        contractCharge.mode_id = req.body.mode_id;
-        contractCharge.visit_date = req.body.visit_date;
-        contractCharge.target = req.body.target;
+        contractCharge.charge_date = req.body.charge_date;
         contractCharge.type_id = req.body.type_id;
-        contractCharge.content = req.body.content;
-        contractCharge.suggestion = req.body.suggestion;
-        contractCharge.operator = req.body.operator;
+        contractCharge.mode_id = req.body.mode_id;
+        contractCharge.pos_no = req.body.pos_no;
         await contractChargeDAO.updateContractCharge(contractCharge);
         res.redirect('/contract/contract_charge_list');
     } catch (error) {
@@ -613,7 +600,7 @@ router.post('/do_update_contract_charge', async function (req, res) {
 
 router.get('/delete_contract_charge', async function (req, res) {
     try {
-        await baseDAO.deleteById('contract_charge', req.query.id);
+        await contractChargeDAO.deleteContractCharge(req.query.id);
         res.redirect('/contract/contract_charge_list');
     } catch (error) {
         exceptionHelper.sendException(res, error);
