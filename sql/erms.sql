@@ -578,6 +578,22 @@ create table contract_charge_mode
 
 alter table contract_charge_mode comment '合同收费方式表';
 
+/*==============================================================*/
+/* Table: contract_refund                                       */
+/*==============================================================*/
+create table contract_refund
+(
+   id                   varchar(36) not null,
+   contract_id          varchar(36) not null comment '合同id',
+   refund_date          date not null comment '退费日期',
+   money                double not null comment '退费金额',
+   operator_id          varchar(36) not null comment '操作人id',
+   create_at            datetime not null comment '创建时间',
+   primary key (id)
+);
+
+alter table contract_refund comment '合同退费表';
+
 alter table menu add constraint FK_Reference_2 foreign key (parent_id)
       references menu (id) on delete restrict on update restrict;
 
@@ -754,3 +770,12 @@ alter table contract_charge add constraint FK_Reference_58 foreign key (type_id)
 
 alter table contract_charge add constraint FK_Reference_59 foreign key (mode_id)
       references contract_charge_mode (id) on delete restrict on update restrict;
+
+alter table contract_charge add constraint FK_Reference_60 foreign key (operator_id)
+      references user (id) on delete restrict on update restrict;
+
+alter table contract_refund add constraint FK_Reference_61 foreign key (contract_id)
+      references contract (id) on delete restrict on update restrict;
+
+alter table contract_refund add constraint FK_Reference_62 foreign key (operator_id)
+      references user (id) on delete restrict on update restrict;

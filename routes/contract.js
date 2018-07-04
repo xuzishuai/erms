@@ -7,6 +7,7 @@ const commonUtil = require('../util/commonUtil');
 const dateUtil = require('../util/dateUtil');
 const contractDAO = require('../dao/contractDAO');
 const contractChargeDAO = require('../dao/contractChargeDAO');
+const contractRefundDAO = require('../dao/contractRefundDAO');
 
 router.get('/new_contract', async function (req, res) {
     try {
@@ -125,7 +126,7 @@ router.get('/audit_contract_list', async function (req, res) {
         condition.start_date_from = req.query.start_date_from;
         condition.start_date_to = req.query.start_date_to;
         condition.signer_id = req.query.signer_id;
-        condition.status_id = ['01'];
+        condition.status_id = '01';
         let contracts0 = await contractDAO.getContractByCondition('contract', condition);//查询待确认的合同
         condition.status_id = ['04', '05'];
         let contracts1 = await contractDAO.getContractByCondition('contract_temp', condition);//查询修改中和变更中的合同
@@ -610,6 +611,39 @@ router.get('/delete_contract_charge', async function (req, res) {
         res.redirect('/contract/contract_charge_list');
     } catch (error) {
         exceptionHelper.sendException(res, error);
+    }
+});
+
+router.get('/contract_refund_list', async function (req, res) {
+    try {
+        let condition = {};
+        condition.student_id = req.query.student_id;
+        condition.contract_no = req.query.contract_no;
+        condition.grade_id = req.query.grade_id;
+        condition.signer_id = req.query.signer_id;
+        condition.start_date = req.query.start_date;
+        condition.end_date = req.query.end_date;
+        let contractRefunds = await contractRefundDAO.getContractRefundByCondition(condition);
+        let students = await baseDAO.getAll('student');
+        let grades = await baseDAO.getAll('grade');
+        let signers = await userDAO.getUserByRole(['03', '04']);//角色为顾问和班主任
+        let contractCondition = {};
+        contractCondition.status_id = '02';//查询执行中的合同
+        let contracts = await contractDAO.getContractByCondition('contract', contractCondition);
+        res.render('contract/contract_refund_list', {
+            contractRefunds: contractRefunds,
+            students: students,
+            grades: grades,
+            signers: signers,
+            studentMap: commonUtil.toMap(students),
+            gradeMap: commonUtil.toMap(grades),
+            signerMap: commonUtil.toMap(signers),
+            contractMap: commonUtil.toMap(contracts),
+            condition: condition,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
     }
 });
 

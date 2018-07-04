@@ -1,0 +1,133 @@
+<div class="row-fluid">
+    <div class="span12">
+        <div class="portlet box purple">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-reorder"></i>
+                </div>
+                <div class="actions">
+                    <a href="/contract/new_contract_refund" class="btn green"><i class="icon-plus"></i> 新增合同退费</a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="booking-search">
+                    <form action="/contract/contract_refund_list">
+                        <div class="clearfix">
+                            <div class="control-group span3">
+                                <label class="control-label">学员:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="student_id" id="student_id">
+                                        <option value=""></option>
+                                        <%for (let i = 0; i < students.length; i++){%>
+                                        <option value="<%= students[i].id%>"><%= students[i].name%>(<%= students[i].student_no%>)</option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label">合同编号:</label>
+                                <div class="controls">
+                                    <input name="contract_no" class="m-wrap span12" type="text" value="<%= condition.contract_no%>">
+                                </div>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label">年级:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="grade_id" id="grade_id">
+                                        <option value=""></option>
+                                        <%for (let i = 0; i < grades.length; i++){%>
+                                        <option value="<%= grades[i].id%>"><%= grades[i].name%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label">签约人:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="signer_id" id="signer_id">
+                                        <option value=""></option>
+                                        <%for (let i = 0; i < signers.length; i++){%>
+                                        <option value="<%= signers[i].id%>"><%= signers[i].name%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="control-group span3">
+                                <label class="control-label">起始日期:</label>
+                                <div class="controls">
+                                    <div class="input-append date date-picker span12" style="padding-right: 56px;">
+                                        <input id="start_date" name="start_date" type="text"
+                                               <%if (condition.start_date){%>value="<%= dateUtil.dateFormat(condition.start_date)%>"<%}%> readonly class="m-wrap span12"/>
+                                        <span class="add-on"><i class="icon-remove"></i></span>
+                                        <span class="add-on"><i class="icon-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label">截止日期:</label>
+                                <div class="controls">
+                                    <div class="input-append date date-picker span12" style="padding-right: 56px;">
+                                        <input id="end_date" name="end_date" type="text"
+                                               <%if (condition.end_date){%>value="<%= dateUtil.dateFormat(condition.end_date)%>"<%}%> readonly class="m-wrap span12"/>
+                                        <span class="add-on"><i class="icon-remove"></i></span>
+                                        <span class="add-on"><i class="icon-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="pull-right">
+                                <button class="btn yellow"><i class="icon-search m-icon-white"></i> 搜索</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <table class="table table-list table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>合同编号</th>
+                        <th>学员(编号)</th>
+                        <th>年级</th>
+                        <th>签约人</th>
+                        <th>退费金额</th>
+                        <th>退费日期</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <%for (let i = 0; i < contractRefunds.length; i++){
+                        let contract = contractMap[contractRefunds[i].contract_id];
+                        let student = studentMap[contract.student_id];%>
+                    <tr>
+                        <td><%= contract.contract_no%></td>
+                        <td><%= student.name%>(<%= student.student_no%>)</td>
+                        <td><%= gradeMap[contract.grade_id].name%></td>
+                        <td><%= signerMap[contract.signer_id].name%></td>
+                        <td><%= contractRefunds[i].money%></td>
+                        <td><%= dateUtil.dateFormat(contractRefunds[i].refund_date)%></td>
+                    </tr>
+                    <%}%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<%- contentFor('title')%>
+合同退费
+<%- contentFor('breadcrumb')%>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="javascript:void(0);">合同</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/contract/contract_refund_list">合同退费</a>
+</li>
+<%- contentFor('script')%>
+<script>
+    $('#student_id').val('<%= condition.student_id%>');
+    $('#grade_id').val('<%= condition.grade_id%>');
+    $('#signer_id').val('<%= condition.signer_id%>');
+</script>
