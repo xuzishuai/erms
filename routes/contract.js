@@ -647,4 +647,21 @@ router.get('/contract_refund_list', async function (req, res) {
     }
 });
 
+router.get('/new_contract_refund', async function (req, res) {
+    try {
+        let contractCondition = {};
+        contractCondition.status_id = '02';//查询执行中的合同
+        let contracts = await contractDAO.getContractByCondition('contract', contractCondition);
+        let students = await baseDAO.getAll('student');
+        res.render('contract/new_contract_refund', {
+            contracts: contracts,
+            students: students,
+            studentMap: commonUtil.toMap(students),
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
 module.exports = router;
