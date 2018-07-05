@@ -664,4 +664,18 @@ router.get('/new_contract_refund', async function (req, res) {
     }
 });
 
+router.post('/do_create_contract_refund', async function (req, res) {
+    try {
+        let contractRefund = {};
+        contractRefund.contract_id = req.body.contract_id;
+        contractRefund.refund_date = req.body.refund_date;
+        contractRefund.money = req.body.money;
+        contractRefund.operator_id = req.session.user[0].id;
+        await contractRefundDAO.saveContractRefund(contractRefund);
+        res.redirect('/contract/contract_refund_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
 module.exports = router;

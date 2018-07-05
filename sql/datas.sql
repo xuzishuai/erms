@@ -23,7 +23,7 @@ INSERT INTO menu VALUES ('19', '家长会查询', '14', '/student/parents_meetin
 INSERT INTO menu VALUES ('20', '校考反馈', '14', '/student/test_score_list', null, null, '#/student/test_score_list#/student/new_test_score#/student/do_create_test_score#/student/edit_test_score#/student/do_update_test_score#/student/delete_test_score#', null);
 INSERT INTO menu VALUES ('21', '学员预警', '14', '/student/warning_student_list', null, null, '#/student/warning_student_list#/student/warning_student#/student/do_warning_student#', null);
 INSERT INTO menu VALUES ('22', '合同收费', '11', '/contract/contract_charge_list', null, null, '#/contract/contract_charge_list#/contract/new_contract_charge#/contract/do_create_contract_charge#/contract/edit_contract_charge#/contract/do_update_contract_charge#/contract/delete_contract_charge#', null);
-INSERT INTO menu VALUES ('23', '合同退费', '11', '/contract/contract_refund_list', null, null, '#/contract/contract_refund_list#', null);
+INSERT INTO menu VALUES ('23', '合同退费', '11', '/contract/contract_refund_list', null, null, '#/contract/contract_refund_list#/contract/new_contract_refund#/contract/do_create_contract_refund#', null);
 
 -- ----------------------------
 -- Records of user,插入超级管理员用户

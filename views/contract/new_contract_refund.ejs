@@ -6,11 +6,11 @@
                     <i class="icon-reorder"></i>
                 </div>
                 <div class="actions">
-                    <a href="/contract/contract_charge_list" class="btn yellow"><i class="icon-chevron-left"></i> 返回</a>
+                    <a href="/contract/contract_refund_list" class="btn yellow"><i class="icon-chevron-left"></i> 返回</a>
                 </div>
             </div>
             <div class="portlet-body form">
-                <form action="/contract/do_create_contract_charge" class="form-horizontal" method="post">
+                <form action="/contract/do_create_contract_refund" class="form-horizontal" method="post">
                     <div class="control-group">
                         <label class="control-label">合同<span class="required">*</span></label>
                         <div class="controls">
@@ -23,45 +23,17 @@
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label">收费日期<span class="required">*</span></label>
+                        <label class="control-label">退费日期<span class="required">*</span></label>
                         <div class="controls">
                             <div class="input-append date date-picker">
-                                <input id="charge_date" name="charge_date" size="16" type="text" readonly class="m-wrap"/>
+                                <input id="refund_date" name="refund_date" size="16" type="text" readonly class="m-wrap"/>
                                 <span class="add-on"><i class="icon-remove"></i></span>
                                 <span class="add-on"><i class="icon-calendar"></i></span>
                             </div>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label">收费类型<span class="required">*</span></label>
-                        <div class="controls">
-                            <select class="span6 select2" tabindex="1" name="type_id" id="type_id">
-                                <option value="">请选择收费类型</option>
-                                <%for (let i = 0; i < types.length; i++){%>
-                                <option value="<%= types[i].id%>"><%= types[i].name%></option>
-                                <%}%>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">支付方式<span class="required">*</span></label>
-                        <div class="controls">
-                            <select class="span6 select2" tabindex="1" name="mode_id" id="mode_id">
-                                <option value="">请选择支付方式</option>
-                                <%for (let i = 0; i < modes.length; i++){%>
-                                <option value="<%= modes[i].id%>"><%= modes[i].name%></option>
-                                <%}%>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">POS单号</label>
-                        <div class="controls">
-                            <input type="text" class="m-wrap span6" name="pos_no" id="pos_no">
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">收费金额<span class="required">*</span></label>
+                        <label class="control-label">退费金额<span class="required">*</span></label>
                         <div class="controls">
                             <input type="number" class="m-wrap span6" name="money" id="money">
                         </div>
@@ -76,7 +48,7 @@
     </div>
 </div>
 <%- contentFor('title')%>
-新增收费记录
+新增退费记录
 <%- contentFor('breadcrumb')%>
 <li>
     <i class="icon-angle-right"></i>
@@ -84,11 +56,11 @@
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/contract/contract_charge_list">合同收费</a>
+    <a href="/contract/contract_refund_list">合同退费</a>
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/contract/new_contract_charge">新增收费记录</a>
+    <a href="/contract/new_contract_refund">新增退费记录</a>
 </li>
 <%- contentFor('script')%>
 <script>
@@ -99,13 +71,7 @@
                 contract_id: {
                     required: true
                 },
-                charge_date: {
-                    required: true
-                },
-                type_id: {
-                    required: true
-                },
-                mode_id: {
+                refund_date: {
                     required: true
                 },
                 money: {
@@ -116,14 +82,8 @@
                 contract_id: {
                     required: "请选择合同"
                 },
-                charge_date: {
+                refund_date: {
                     required: "请选择收费日期"
-                },
-                type_id: {
-                    required: "请选择收费类型"
-                },
-                mode_id: {
-                    required: "请选择支付方式"
                 },
                 money: {
                     required: "请输入收费金额"

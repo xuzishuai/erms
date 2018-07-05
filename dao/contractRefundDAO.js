@@ -42,3 +42,21 @@ exports.getContractRefundByCondition = function (condition) {
         }
     })
 };
+
+exports.saveContractRefund = function (contractRefund) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let sqls = [], params = [];
+            let now = new Date();
+            sqls[sqls.length] = 'update contract set status_id=?, update_at=? where id=?';
+            params[params.length] = ['06', now, contractRefund.contract_id];//退费后此合同设置为作废状态
+            
+            sqls[sqls.length] = 'insert into contract_refund(id, contract_id, refund_date, money, operator_id, create_at) values (?, ?, ?, ?, ?, ?)';
+            params[params.length] = [uuid.v1(), contractRefund.contract_id, contractRefund.refund_date, contractRefund.money, contractRefund.operator_id, now];
+            await dataPool.batchQuery(sqls, params);
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
