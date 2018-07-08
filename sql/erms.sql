@@ -594,6 +594,33 @@ create table contract_refund
 
 alter table contract_refund comment '合同退费表';
 
+/*==============================================================*/
+/* Table: class_room                                            */
+/*==============================================================*/
+create table class_room
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '教室名称',
+   status_id            varchar(36) not null comment '教室状态id',
+   create_at            datetime not null comment '创建时间',
+   update_at            datetime not null comment '更新时间',
+   primary key (id)
+);
+
+alter table class_room comment '教室表';
+
+/*==============================================================*/
+/* Table: class_room_status                                     */
+/*==============================================================*/
+create table class_room_status
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '教室状态',
+   primary key (id)
+);
+
+alter table class_room_status comment '教室状态表';
+
 alter table menu add constraint FK_Reference_2 foreign key (parent_id)
       references menu (id) on delete restrict on update restrict;
 
@@ -779,3 +806,6 @@ alter table contract_refund add constraint FK_Reference_61 foreign key (contract
 
 alter table contract_refund add constraint FK_Reference_62 foreign key (operator_id)
       references user (id) on delete restrict on update restrict;
+
+alter table class_room add constraint FK_Reference_63 foreign key (status_id)
+      references class_room_status (id) on delete restrict on update restrict;

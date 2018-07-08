@@ -6,36 +6,25 @@
                     <i class="icon-reorder"></i>
                 </div>
                 <div class="actions">
-                    <a href="/contract/contract_refund_list" class="btn yellow"><i class="icon-chevron-left"></i> 返回</a>
+                    <a href="/course/room_class_list" class="btn yellow"><i class="icon-chevron-left"></i> 返回</a>
                 </div>
             </div>
             <div class="portlet-body form">
-                <form action="/contract/do_create_contract_refund" class="form-horizontal" method="post">
+                <form action="/course/do_create_room_class" class="form-horizontal" method="post">
                     <div class="control-group">
-                        <label class="control-label">合同<span class="required">*</span></label>
+                        <label class="control-label">教室名称<span class="required">*</span></label>
                         <div class="controls">
-                            <select class="span6 select2" tabindex="1" name="contract_id" id="contract_id">
-                                <option value="">请选择合同</option>
-                                <%for (let i = 0; i < contracts.length; i++){%>
-                                <option value="<%= contracts[i].id%>"><%= contracts[i].contract_no%>(<%= studentMap[contracts[i].student_id].name%>)</option>
+                            <input type="text" class="m-wrap span6" name="name" id="name">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">教室状态<span class="required">*</span></label>
+                        <div class="controls">
+                            <select class="span6 select2" tabindex="1" name="status_id" id="status_id">
+                                <%for (let i = 0; i < status.length; i++){%>
+                                <option <%if (status[i].id == '02'){%>selected<%}%> value="<%= status[i].id%>"><%= status[i].name%></option>
                                 <%}%>
                             </select>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">退费日期<span class="required">*</span></label>
-                        <div class="controls">
-                            <div class="input-append date date-picker">
-                                <input id="refund_date" name="refund_date" size="16" type="text" readonly class="m-wrap"/>
-                                <span class="add-on"><i class="icon-remove"></i></span>
-                                <span class="add-on"><i class="icon-calendar"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label">退费金额<span class="required">*</span></label>
-                        <div class="controls">
-                            <input type="number" class="m-wrap span6" name="money" id="money">
                         </div>
                     </div>
                     <div class="form-actions">
@@ -48,19 +37,19 @@
     </div>
 </div>
 <%- contentFor('title')%>
-新增退费记录
+新增教室
 <%- contentFor('breadcrumb')%>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="javascript:void(0);">合同</a>
+    <a href="javascript:void(0);">排课</a>
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/contract/contract_refund_list">合同退费</a>
+    <a href="/course/room_class_list">教室管理</a>
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/contract/new_contract_refund">新增退费记录</a>
+    <a href="/course/new_room_class">新增教室</a>
 </li>
 <%- contentFor('script')%>
 <script>
@@ -68,25 +57,13 @@
         $('form').validate({
             errorClass: 'help-inline', // default input error message class
             rules: {
-                contract_id: {
-                    required: true
-                },
-                refund_date: {
-                    required: true
-                },
-                money: {
+                name: {
                     required: true
                 }
             },
             messages: {
-                contract_id: {
-                    required: "请选择合同"
-                },
-                refund_date: {
-                    required: "请选择收费日期"
-                },
-                money: {
-                    required: "请输入收费金额"
+                name: {
+                    required: "请输入教室名称"
                 }
             },
             errorPlacement: function(error, element) {

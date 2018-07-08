@@ -1,7 +1,7 @@
 -- ----------------------------
 -- Records of menu,插入菜单数据
 -- ----------------------------
-INSERT INTO menu VALUES ('1', '用户', null, null, '#2#3#', 'icon-user', null, 4);
+INSERT INTO menu VALUES ('1', '用户', null, null, '#2#3#', 'icon-user', null, 5);
 INSERT INTO menu VALUES ('2', '账号管理', '1', '/user/user_list', null, null,'#/user/user_list#/user/new_user#/user/validate_user_no#/user/do_create_user#/user/edit_user#/user/do_update_user#/user/delete_user#/user/reset_password#', null);
 INSERT INTO menu VALUES ('3', '角色管理', '1', '/user/role_list', null, null, '#/user/role_list#/user/new_role#/user/validate_role_name#/user/do_create_role#/user/edit_role#/user/do_update_role#/user/delete_role#', null);
 INSERT INTO menu VALUES ('4', '客户', null, null, '#5#6#7#8#9#10#', 'icon-briefcase', null, 1);
@@ -24,6 +24,8 @@ INSERT INTO menu VALUES ('20', '校考反馈', '14', '/student/test_score_list',
 INSERT INTO menu VALUES ('21', '学员预警', '14', '/student/warning_student_list', null, null, '#/student/warning_student_list#/student/warning_student#/student/do_warning_student#', null);
 INSERT INTO menu VALUES ('22', '合同收费', '11', '/contract/contract_charge_list', null, null, '#/contract/contract_charge_list#/contract/new_contract_charge#/contract/do_create_contract_charge#/contract/edit_contract_charge#/contract/do_update_contract_charge#/contract/delete_contract_charge#', null);
 INSERT INTO menu VALUES ('23', '合同退费', '11', '/contract/contract_refund_list', null, null, '#/contract/contract_refund_list#/contract/new_contract_refund#/contract/do_create_contract_refund#', null);
+INSERT INTO menu VALUES ('24', '排课', null, null, '#25#', 'icon-calendar', null, 4);
+INSERT INTO menu VALUES ('25', '教室管理', '24', '/course/class_room_list', null, null, '#/course/class_room_list#', null);
 
 -- ----------------------------
 -- Records of user,插入超级管理员用户
@@ -218,3 +220,10 @@ INSERT INTO contract_charge_type VALUES ('03', '尾款');
 -- ----------------------------
 INSERT INTO contract_charge_mode VALUES ('01', '刷卡');
 INSERT INTO contract_charge_mode VALUES ('02', '付现');
+
+-- ----------------------------
+-- Records of class_room_status
+-- ----------------------------
+INSERT INTO class_room_status VALUES ('01', '不可用');
+INSERT INTO class_room_status VALUES ('02', '空闲');
+INSERT INTO class_room_status VALUES ('03', '使用中');
