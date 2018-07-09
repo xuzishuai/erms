@@ -621,6 +621,20 @@ create table class_room_status
 
 alter table class_room_status comment '教室状态表';
 
+/*==============================================================*/
+/* Table: lesson_period                                         */
+/*==============================================================*/
+create table lesson_period
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '课时名称',
+   start_time           datetime not null comment '开始时间',
+   end_time             datetime not null comment '结束时间',
+   primary key (id)
+);
+
+alter table lesson_period comment '课时表';
+
 alter table menu add constraint FK_Reference_2 foreign key (parent_id)
       references menu (id) on delete restrict on update restrict;
 
