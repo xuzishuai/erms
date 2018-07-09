@@ -73,3 +73,5 @@ router.post('/do_update_class_room', async function (req, res) {
         exceptionHelper.renderException(res, error);
     }
 });
+
+module.exports = router;

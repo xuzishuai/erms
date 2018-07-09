@@ -13,7 +13,7 @@ exports.getClassRoomByCondition = function (condition) {
                     params[params.length] = '%' + condition.name + '%';
                 }
                 if (condition.status_id && condition.status_id != '') {
-                    sql += ' and status_id=?)';
+                    sql += ' and status_id=?';
                     params[params.length] = condition.status_id;
                 }
             }

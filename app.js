@@ -12,6 +12,7 @@ const index = require('./routes/index');
 const user = require('./routes/user');
 const student = require('./routes/student');
 const contract = require('./routes/contract');
+const course = require('./routes/course');
 
 const app = express();
 
@@ -83,6 +84,7 @@ app.use('/', index);
 app.use('/user', user);
 app.use('/student', student);
 app.use('/contract', contract);
+app.use('/course', course);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

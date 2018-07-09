@@ -50,11 +50,13 @@
                     <tbody>
                     <%for (let i = 0; i < classRooms.length; i++){%>
                     <tr>
-                        <td><%= classRooms.name%></td>
-                        <td><%= statusMap[classRooms.status_id].name%></td>
+                        <td><%= classRooms[i].name%></td>
+                        <td><%= statusMap[classRooms[i].status_id].name%></td>
                         <td><%= dateUtil.dateFormat(classRooms[i].create_at)%></td>
                         <td>
+                            <%if (classRooms[i].status_id != '03') { %>
                             <a href="/course/edit_class_room?id=<%= classRooms[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
+                            <%}%>
                         </td>
                     </tr>
                     <%}%>

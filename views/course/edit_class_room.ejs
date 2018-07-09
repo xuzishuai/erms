@@ -6,11 +6,11 @@
                     <i class="icon-reorder"></i>
                 </div>
                 <div class="actions">
-                    <a href="/course/room_class_list" class="btn yellow"><i class="icon-chevron-left"></i> 返回</a>
+                    <a href="/course/class_room_list" class="btn yellow"><i class="icon-chevron-left"></i> 返回</a>
                 </div>
             </div>
             <div class="portlet-body form">
-                <form action="/course/do_create_room_class" class="form-horizontal" method="post">
+                <form action="/course/do_update_class_room" class="form-horizontal" method="post">
                     <input id="id" name="id" value="<%= classRoom.id%>" type="hidden">
                     <div class="control-group">
                         <label class="control-label" >教室名称</label>
@@ -23,7 +23,9 @@
                         <div class="controls">
                             <select class="span6 select2" tabindex="1" name="status_id" id="status_id">
                                 <%for (let i = 0; i < status.length; i++){%>
+                                <%if (status[i].id != '03'){%>
                                 <option <%if (status[i].id == classRoom.status_id){%>selected<%}%> value="<%= status[i].id%>"><%= status[i].name%></option>
+                                <%}%>
                                 <%}%>
                             </select>
                         </div>
@@ -46,10 +48,10 @@
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/course/room_class_list">教室管理</a>
+    <a href="/course/class_room_list">教室管理</a>
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/course/edit_room_class?id=<%= classRoom.id%>">编辑教室</a>
+    <a href="/course/edit_class_room?id=<%= classRoom.id%>">编辑教室</a>
 </li>
 <%- contentFor('script')%>
