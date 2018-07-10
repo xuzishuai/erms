@@ -628,8 +628,8 @@ create table lesson_period
 (
    id                   varchar(36) not null,
    name                 varchar(50) not null comment '课时名称',
-   start_time           datetime not null comment '开始时间',
-   end_time             datetime not null comment '结束时间',
+   start_time           varchar(50) not null comment '开始时间',
+   end_time             varchar(50) not null comment '结束时间',
    primary key (id)
 );
 

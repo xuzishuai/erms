@@ -1,0 +1,74 @@
+<div class="row-fluid">
+    <div class="span12">
+        <div class="portlet box purple">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-reorder"></i>
+                </div>
+                <div class="actions">
+                    <a href="/course/new_lesson_period" class="btn green"><i class="icon-plus"></i> 新增课时</a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-list table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>课时名称</th>
+                        <th>开始时间</th>
+                        <th>结束时间</th>
+                        <th class="table_action" data-colNum=3>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <%for (let i = 0; i < lessonPeriods.length; i++){%>
+                    <tr>
+                        <td><%= lessonPeriods[i].name%></td>
+                        <td><%= lessonPeriods[i].start_time%></td>
+                        <td><%= lessonPeriods[i].end_time%></td>
+                        <td>
+                            <a href="/course/edit_lesson_period?id=<%= lessonPeriods[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
+                            <a data-toggle="modal" data-target="#confirm" data-id="<%= lessonPeriods[i].id%>" class="btn red mini"><i class="icon-minus"></i> 删除</a>
+                        </td>
+                    </tr>
+                    <%}%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirm" class="modal hide fade" tabindex="-1" data-backdrop="static">
+    <div class="modal-body">
+        <p>确定删除此课时吗?</p>
+    </div>
+    <div class="modal-footer">
+        <form action="/course/delete_lesson_period">
+            <input id="id" name="id" hidden>
+            <button type="button" data-dismiss="modal" class="btn">取消</button>
+            <button type="submit" class="btn green">确认</button>
+        </form>
+    </div>
+</div>
+<%- contentFor('title')%>
+课时管理
+<%- contentFor('breadcrumb')%>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="javascript:void(0);">排课</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/course/lesson_period_list">课时管理</a>
+</li>
+<%- contentFor('script')%>
+<script>
+    $(function() {
+        $('#confirm').on('show.bs.modal', function (event) {
+            let button = $(event.relatedTarget);
+            $('#id').val(button.data('id'));
+        })
+        $('#confirm').on('hidden.bs.modal', function () {
+            $('#id').val('');
+        })
+    });
+</script>

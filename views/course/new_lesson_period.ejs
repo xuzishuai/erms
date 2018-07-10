@@ -1,0 +1,114 @@
+<div class="row-fluid">
+    <div class="span12">
+        <div class="portlet box green">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-reorder"></i>
+                </div>
+                <div class="actions">
+                    <a href="/course/lesson_period_list" class="btn yellow"><i class="icon-chevron-left"></i> 返回</a>
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <form action="/course/do_create_lesson_period" class="form-horizontal" method="post">
+                    <div class="control-group">
+                        <label class="control-label">课时名称<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" class="m-wrap span6" name="name" id="name">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">开始时间<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" class="m-wrap span6" name="start_time" id="start_time" placeholder="如：09:00">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">结束时间<span class="required">*</span></label>
+                        <div class="controls">
+                            <input type="text" class="m-wrap span6" name="end_time" id="end_time" placeholder="如：09:40">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn green"><i class="icon-ok"></i> 提交</button>
+                        <button type="button" class="btn" onclick="javascript:history.back(-1);"><i class="icon-remove"></i> 取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%- contentFor('title')%>
+新增课时
+<%- contentFor('breadcrumb')%>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="javascript:void(0);">排课</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/course/lesson_period_list">课时管理</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/course/new_lesson_period">新增课时</a>
+</li>
+<%- contentFor('script')%>
+<script>
+    $(function() {
+        $('form').validate({
+            errorClass: 'help-inline', // default input error message class
+            rules: {
+                name: {
+                    required: true,
+                    remote: {
+                        url: "/course/validate_lesson_period_name",     //后台处理程序
+                        type: "post",               //数据发送方式
+                        dataType: "json",           //接受数据格式
+                        data: {                     //要传递的数据
+                            name: function() {
+                                return $("#name").val();
+                            }
+                        }
+                    }
+                },
+                start_time: {
+                    required: true
+                },
+                end_time: {
+                    required: true
+                }
+            },
+            messages: {
+                name: {
+                    required: "请输入课时名称",
+                    remote: "课时名称已存在，请重新输入"
+                },
+                start_time: {
+                    required: "请选择开始时间"
+                },
+                end_time: {
+                    required: "请选择结束时间"
+                }
+            },
+            errorPlacement: function(error, element) {
+                error.appendTo( element.parent() );
+            },
+            highlight: function (element) { // hightlight error inputs
+                $(element)
+                    .closest('.help-inline').removeClass('ok'); // display OK icon
+                $(element)
+                    .closest('.control-group').removeClass('success').addClass('error'); // set error class to the control group
+            },
+            unhighlight: function (element) { // revert the change dony by hightlight
+                $(element)
+                    .closest('.control-group').removeClass('error'); // set error class to the control group
+            },
+            success: function (label) {
+                label
+                    .addClass('valid').addClass('help-inline ok') // mark the current input as valid and display OK icon
+                    .closest('.control-group').removeClass('error').addClass('success'); // set success class to the control group
+            }
+        });
+    });
+</script>
