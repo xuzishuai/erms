@@ -92,11 +92,10 @@
                         <th>学校</th>
                         <th>年级</th>
                         <th>科目</th>
-                        <th>学科老师</th>
                         <th>学年</th>
                         <th>校考类型</th>
                         <th>卷面分(总分)</th>
-                        <th class="table_action" data-colNum=9>操作</th>
+                        <th class="table_action" data-colNum=8>操作</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -107,7 +106,6 @@
                         <td><%= studentMap[testScores[i].student_id].school%></td>
                         <td><%= gradeMap[testScores[i].grade_id].name%></td>
                         <td><%= subjectMap[testScores[i].subject_id].name%></td>
-                        <td></td>
                         <td><%= testScores[i].school_year%></td>
                         <td><%= typeMap[testScores[i].type_id].name%></td>
                         <td><%= testScores[i].score%>(<%= testScores[i].total_score%>)</td>

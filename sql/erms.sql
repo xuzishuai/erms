@@ -635,6 +635,39 @@ create table lesson_period
 
 alter table lesson_period comment '课时表';
 
+/*==============================================================*/
+/* Table: teacher                                               */
+/*==============================================================*/
+create table teacher
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '教师姓名',
+   gender               tinyint(2) not null comment '性别，0男，1女',
+   contact              varchar(20) not null comment '联系电话',
+   grade_ids            varchar(100) comment '年级id，用#隔开',
+   subject_id           varchar(36) comment '科目id',
+   is_part_time         tinyint(2) not null comment '是否兼职，0否，1是',
+   status               tinyint(2) not null comment '状态，0已离职，1在职',
+   create_at            datetime not null comment '创建时间',
+   update_at            datetime not null comment '更新时间',
+   primary key (id)
+);
+
+alter table teacher comment '教师表';
+
+/*==============================================================*/
+/* Table: teacher_free_time                                     */
+/*==============================================================*/
+create table teacher_free_time
+(
+   id                   varchar(36) not null,
+   free_date            date not null comment '空闲日期',
+   lesson_period_ids    varchar(50) not null comment '课时id，用#隔开',
+   primary key (id)
+);
+
+alter table teacher_free_time comment '教师空闲时间表';
+
 alter table menu add constraint FK_Reference_2 foreign key (parent_id)
       references menu (id) on delete restrict on update restrict;
 
@@ -823,3 +856,6 @@ alter table contract_refund add constraint FK_Reference_62 foreign key (operator
 
 alter table class_room add constraint FK_Reference_63 foreign key (status_id)
       references class_room_status (id) on delete restrict on update restrict;
+
+alter table teacher add constraint FK_Reference_64 foreign key (subject_id)
+      references subject (id) on delete restrict on update restrict;

@@ -242,7 +242,36 @@
                     </div>
                 </div>
 
-                <div class="tab-pane" id="refund_log">
+                <div class="tab-pane row-fluid" id="refund_log">
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <table class="table table-list table-striped table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th>合同编号</th>
+                                    <th>学员(编号)</th>
+                                    <th>年级</th>
+                                    <th>签约人</th>
+                                    <th>退费金额</th>
+                                    <th>退费日期</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <%for (let i = 0; i < contractRefunds.length; i++){
+                                    let contract = contractMap[contractRefunds[i].contract_id];%>
+                                <tr>
+                                    <td><%= contract.contract_no%></td>
+                                    <td><%= student.name%>(<%= student.student_no%>)</td>
+                                    <td><%= gradeMap[contract.grade_id].name%></td>
+                                    <td><%= userMap[contract.signer_id].name%></td>
+                                    <td><%= contractRefunds[i].money%></td>
+                                    <td><%= dateUtil.dateFormat(contractRefunds[i].refund_date)%></td>
+                                </tr>
+                                <%}%>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="tab-pane row-fluid" id="revisit_record">
@@ -328,11 +357,10 @@
                                     <th>学校</th>
                                     <th>年级</th>
                                     <th>科目</th>
-                                    <th>学科老师</th>
                                     <th>学年</th>
                                     <th>校考类型</th>
                                     <th>卷面分(总分)</th>
-                                    <th class="table_action" data-colNum=9>操作</th>
+                                    <th class="table_action" data-colNum=8>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -343,7 +371,6 @@
                                     <td><%= student.school%></td>
                                     <td><%= gradeMap[testScores[i].grade_id].name%></td>
                                     <td><%= subjectMap[testScores[i].subject_id].name%></td>
-                                    <td></td>
                                     <td><%= testScores[i].school_year%></td>
                                     <td><%= testScoreTypeMap[testScores[i].type_id].name%></td>
                                     <td><%= testScores[i].score%>(<%= testScores[i].total_score%>)</td>

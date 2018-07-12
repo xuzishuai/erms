@@ -1,0 +1,131 @@
+<div class="row-fluid">
+    <div class="span12">
+        <div class="portlet box purple">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-reorder"></i>
+                </div>
+                <div class="actions">
+                    <a href="/course/new_teacher" class="btn green"><i class="icon-plus"></i> 新增教师</a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="booking-search">
+                    <form action="/course/teacher_list">
+                        <div class="clearfix">
+                            <div class="control-group span3">
+                                <label class="control-label">教师姓名:</label>
+                                <div class="controls">
+                                    <input name="name" class="m-wrap span12" type="text" value="<%= condition.name%>">
+                                </div>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label">年级:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="grade_id" id="grade_id">
+                                        <option value=""></option>
+                                        <%for (let i = 0; i < grades.length; i++){%>
+                                        <option value="<%= grades[i].id%>"><%= grades[i].name%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label">科目:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="sbuject_id" id="sbuject_id">
+                                        <option value=""></option>
+                                        <%for (let i = 0; i < subjects.length; i++){%>
+                                        <option value="<%= subjects[i].id%>"><%= subjects[i].name%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label">联系电话:</label>
+                                <div class="controls">
+                                    <input name="contact" class="m-wrap span12" type="text" value="<%= condition.contact%>">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="control-group span3">
+                                <label class="control-label">是否兼职:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="is_part_time" id="is_part_time">
+                                        <option value=""></option>
+                                        <option value="0">否</option>
+                                        <option value="1">是</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label">状态:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="status" id="status">
+                                        <option value=""></option>
+                                        <option value="0">已离职</option>
+                                        <option value="1">在职</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="pull-right">
+                                <button class="btn yellow"><i class="icon-search m-icon-white"></i> 搜索</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <table class="table table-list table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>教师姓名</th>
+                        <th>性别</th>
+                        <th>联系电话</th>
+                        <th>年级</th>
+                        <th>科目</th>
+                        <th>是否兼职</th>
+                        <th>状态</th>
+                        <th class="table_action" data-colNum=7>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <%for (let i = 0; i < teachers.length; i++){%>
+                    <tr>
+                        <td><%= teachers[i].name%>)</td>
+                        <td><%if (teachers[i].gender == 0){%>男<%} else {%>女<%}%></td>
+                        <td><%= teachers[i].contact%></td>
+                        <td><%= teachers[i].grades%></td>
+                        <td><%= subjectMap[teachers[i].subject_id].name%></td>
+                        <td><%if (teachers[i].is_part_time == 0){%>否<%} else {%>是<%}%></td>
+                        <td><%if (teachers[i].status == 0){%>已离职<%} else {%>在职<%}%></td>
+                        <td>
+                            <a href="/course/edit_teacher?id=<%= teachers[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
+                        </td>
+                    </tr>
+                    <%}%>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<%- contentFor('title')%>
+教师管理
+<%- contentFor('breadcrumb')%>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="javascript:void(0);">排课</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/course/teacher_list">教师管理</a>
+</li>
+<%- contentFor('script')%>
+<script>
+    $('#grade_id').val('<%= condition.grade_id%>');
+    $('#sbuject_id').val('<%= condition.sbuject_id%>');
+    $('#is_part_time').val('<%= condition.is_part_time%>');
+    $('#status').val('<%= condition.status%>');
+</script>

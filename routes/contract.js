@@ -627,9 +627,7 @@ router.get('/contract_refund_list', async function (req, res) {
         let students = await baseDAO.getAll('student');
         let grades = await baseDAO.getAll('grade');
         let signers = await userDAO.getUserByRole(['03', '04']);//角色为顾问和班主任
-        let contractCondition = {};
-        contractCondition.status_id = '02';//查询执行中的合同
-        let contracts = await contractDAO.getContractByCondition('contract', contractCondition);
+        let contracts = await baseDAO.getAll('contract');
         res.render('contract/contract_refund_list', {
             contractRefunds: contractRefunds,
             students: students,

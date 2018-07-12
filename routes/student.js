@@ -12,6 +12,7 @@ const parentsMeetingDAO = require('../dao/parentsMeetingDAO');
 const testScoreDAO = require('../dao/testScoreDAO');
 const commonUtil = require('../util/commonUtil');
 const dateUtil = require('../util/dateUtil');
+const contractRefundDAO = require('../dao/contractRefundDAO');
 
 router.get('/new_student', async function (req, res) {
     try {
@@ -714,12 +715,15 @@ router.get('/student_details', async function (req, res) {
 
         //排课记录
 
-        //合同
+        //合同列表
         let contracts = await contractDAO.getContractByCondition('contract', condition);
         let grades = await baseDAO.getAll('grade');
         let contractAttributes = await baseDAO.getAll('contract_attribute');
         let contractTypes = await baseDAO.getAll('contract_type');
         let contractStatus = await baseDAO.getAll('contract_status');
+
+        //退费记录
+        let contractRefunds = await contractRefundDAO.getContractRefundByCondition(condition);
 
         //回访记录
         let revisitRecords = await revisitRecordDAO.getRevisitRecordByCondition(condition);
@@ -743,6 +747,8 @@ router.get('/student_details', async function (req, res) {
             userMap: commonUtil.toMap(users),
             dateUtil: dateUtil,
             contracts: contracts,
+            contractRefunds: contractRefunds,
+            contractMap: commonUtil.toMap(contracts),
             gradeMap: commonUtil.toMap(grades),
             contractAttributeMap: commonUtil.toMap(contractAttributes),
             contractTypeMap: commonUtil.toMap(contractTypes),

@@ -1,7 +1,6 @@
 const dataPool = require('../util/dataPool');
 const Promise = require('promise');
 const uuid = require('node-uuid');
-const baseDAO = require('../dao/baseDAO');
 
 exports.getContractRefundByCondition = function (condition) {
     return new Promise(async function (resolve, reject) {
