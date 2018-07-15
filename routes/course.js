@@ -286,6 +286,21 @@ router.get('/edit_teacher', async function (req, res) {
     }
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 router.post('/do_update_test_score', async function (req, res) {
     try {
         let testScore = await baseDAO.getById('test_score', req.body.id);

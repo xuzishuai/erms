@@ -11,6 +11,7 @@
             </div>
             <div class="portlet-body form">
                 <form action="/course/do_update_teacher" method="post" class="form-horizontal">
+                    <input name="id" value="<%= teacher.id%>" type="hidden">
                     <h3 class="form-section">教师信息</h3>
                     <div class="control-group">
                         <label class="control-label">教师姓名<span class="required">*</span></label>
@@ -40,7 +41,7 @@
                         <div class="controls">
                             <%for (let i = 0; i < grades.length; i++){%>
                             <label class="checkbox">
-                                <input type="checkbox" <%if (teacher.grade_ids&&teacher.grade_ids.indexOf('#'+grades[i].id+'#')>-1){%>checked<%}%>  name="grade_ids" value="<%= grades[i].id%>"> <%= grades[i].name%>
+                                <input type="checkbox" <%if (teacher.grade_ids&&teacher.grade_ids.indexOf('#'+grades[i].id+'#')>-1){%>checked<%}%> name="grade_ids" value="<%= grades[i].id%>"> <%= grades[i].name%>
                             </label>
                             <%}%>
                         </div>
@@ -87,30 +88,26 @@
                         </tr>
                         </thead>
                         <tbody id="teacher_free_time_body">
-
-
-
-
-
-
-                        
-                        <tr>
+                        <%for (let i = 0; i < teacherFreeTimes.length; i++) {%>
+                        <tr <%if (i > 0) {%> id="teacher_free_time_<%= i%>"<%}%>>
+                            <input name="id_<%= i%>" value="<%= teacherFreeTimes[i].id%>" type="hidden">
                             <td class="control-group">
                                 <div class="input-append date date-picker">
-                                    <input id="free_date_0" name="free_date_0" size="16" type="text" readonly class="m-wrap"/>
+                                    <input id="free_date_<%= i%>" name="free_date_<%= i%>" size="16" type="text" readonly class="m-wrap" value="<%= dateUtil.dateFormat(teacherFreeTimes[i].free_date)%>"/>
                                     <span class="add-on"><i class="icon-remove"></i></span>
                                     <span class="add-on"><i class="icon-calendar"></i></span>
                                 </div>
                             </td>
                             <td class="control-group">
-                                <%for (let i = 0; i < lessonPeriods.length; i++){%>
+                                <%for (let j = 0; j < lessonPeriods.length; j++){%>
                                 <label class="checkbox">
-                                    <input type="checkbox" name="lesson_period_ids_0" value="<%= lessonPeriods[i].id%>"> <%= lessonPeriods[i].name%>
+                                    <input type="checkbox" <%if (teacherFreeTimes[i].lesson_period_ids&&teacherFreeTimes[i].lesson_period_ids.indexOf('#'+lessonPeriods[i].id+'#')>-1){%>checked<%}%> name="lesson_period_ids_<%= i%>" value="<%= lessonPeriods[j].id%>"> <%= lessonPeriods[j].name%>
                                 </label>
                                 <%}%>
                             </td>
-                            <td></td>
+                            <td><%if (i > 0) {%><a onclick="removeFreeTimeTr('<%= i%>')" class="btn red mini"><i class="icon-minus"></i> 删除</a><%}%></td>
                         </tr>
+                        <%}%>
                         </tbody>
                     </table>
                     <div class="text-right" style="margin-bottom: 10px;">
@@ -126,19 +123,19 @@
     </div>
 </div>
 <%- contentFor('title')%>
-新增合同
+编辑教师
 <%- contentFor('breadcrumb')%>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="javascript:void(0);">客户</a>
+    <a href="javascript:void(0);">排课</a>
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/course/student_list">客户管理</a>
+    <a href="/course/teacher_list">教师管理</a>
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/course/new_contract?id=<%= student.id%>">新增合同</a>
+    <a href="/course/edit_teacher?id=<%= teacher.id%>">编辑教师</a>
 </li>
 <%- contentFor('script')%>
 <script>
@@ -220,7 +217,7 @@
         });
     }
 
-    let freeTimeIndex = 0;//当前详情的索引
+    let freeTimeIndex = parseInt('<%= teacherFreeTimes.length - 1%>');//当前详情的索引
     function addFreeTimeTr() {
         freeTimeIndex += 1;
         $.post('/course/add_teacher_free_time_tr', {free_time_index: freeTimeIndex}, function (result) {
