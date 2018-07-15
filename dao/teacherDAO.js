@@ -40,3 +40,35 @@ exports.getTeacherByCondition = function (condition) {
         }
     })
 };
+
+exports.saveTeacher = function (teacher) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let teacherId = uuid.v1();
+            let now = new Date();
+            let sqls = ['insert into teacher(id, name, gender, contact, grade_ids, subject_id, is_part_time, status, create_at, update_at)' +
+            ' values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'];
+            let params = [[teacherId, teacher.name, teacher.gender, teacher.contact, teacher.grade_ids, teacher.subject_id, teacher.is_part_time, teacher.status, now, now]];
+            let teacherFreeTime = teacher.teacherFreeTime;
+            for (let i = 0; i < teacherFreeTime.length; i++) {
+                sqls[sqls.length] = 'insert into teacher_free_time(id, teacher_id, free_date, lesson_period_ids) values (?, ?, ?, ?)';
+                params[params.length] = [uuid.v1(), teacherId, teacherFreeTime[i].free_date, teacherFreeTime[i].lesson_period_ids];
+            }
+            await dataPool.batchQuery(sqls, params);
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
+
+exports.getFreeTimeByTeacherId = function (teacher_id) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let teacherFreeTimes = await dataPool.query('select * from teacher_free_time where teacher_id=?', [teacher_id]);
+            resolve(teacherFreeTimes);
+        } catch (error) {
+            reject(error);
+        }
+    })
+};

@@ -181,7 +181,7 @@ router.get('/teacher_list', async function (req, res) {
                 }
             }
         }
-        res.render('student/teacher_list', {
+        res.render('course/teacher_list', {
             teachers: teachers,
             grades: grades,
             subjects: subjects,
@@ -194,88 +194,91 @@ router.get('/teacher_list', async function (req, res) {
     }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-router.get('/new_test_score', async function (req, res) {
+router.get('/new_teacher', async function (req, res) {
     try {
-        let sCondition = {};
-        sCondition.status_id = '03';//只显示已签约的学员
-        let students = await studentDAO.getStudentByCondition(sCondition);
-        let now = new Date();
-        let year = parseInt(now.getFullYear());
-        let month = parseInt(now.getMonth());
-        let school_year_placeholder = "";
-        if (month < 8) {
-            school_year_placeholder = (year - 1) + '-' + year;
-        } else {
-            school_year_placeholder = year + '-' + (year + 1);
-        }
-        let types = await baseDAO.getAll('test_score_type');
-        let subjects = await baseDAO.getAll('subject');
         let grades = await baseDAO.getAll('grade');
-        res.render('student/new_test_score', {
-            students: students,
-            types: types,
+        let subjects = await baseDAO.getAll('subject');
+        let lessonPeriods = await baseDAO.getAll('lesson_period');
+        res.render('course/new_teacher', {
             subjects: subjects,
             grades: grades,
-            school_year_placeholder: school_year_placeholder
+            lessonPeriods: lessonPeriods
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }
 });
 
-router.post('/do_create_test_score', async function (req, res) {
+router.post('/add_teacher_free_time_tr', async function (req, res) {
     try {
-        let testScore = {};
-        testScore.student_id = req.body.student_id;
-        testScore.school_year = req.body.school_year;
-        testScore.grade_id = req.body.grade_id;
-        testScore.test_date = req.body.test_date;
-        testScore.type_id = req.body.type_id;
-        testScore.class_size = req.body.class_size;
-        testScore.enroll_school = req.body.enroll_school;
-        testScore.subject_id = req.body.subject_id;
-        testScore.score = req.body.score;
-        testScore.total_score = req.body.total_score;
-        testScore.class_rank = req.body.class_rank;
-        testScore.teacher_assess = req.body.teacher_assess;
-        testScore.parents_assess = req.body.parents_assess;
-        testScore.headmaster_assess = req.body.headmaster_assess;
-        await testScoreDAO.saveTestScore(testScore);
-        res.redirect('/student/test_score_list');
+        let lessonPeriods = await baseDAO.getAll('lesson_period');
+        res.render('course/add_teacher_free_time_tr', {
+            hideLayout: true,
+            lessonPeriods: lessonPeriods,
+            free_time_index: req.body.free_time_index
+        });
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }
 });
 
-router.get('/edit_test_score', async function (req, res) {
+router.post('/do_create_teacher', async function (req, res) {
     try {
-        let testScore = await baseDAO.getById('test_score', req.query.id);
-        testScore = testScore[0];
-        let student = await baseDAO.getById('student', testScore.student_id);
-        let types = await baseDAO.getAll('test_score_type');
-        let subjects = await baseDAO.getAll('subject');
+        let teacher = {};
+        teacher.name = req.body.name;
+        teacher.gender = req.body.gender;
+        teacher.contact = req.body.contact;
+        teacher.subject_id = req.body.subject_id;
+        teacher.is_part_time = req.body.is_part_time;
+        teacher.status = req.body.status;
+        teacher.grade_ids = "#";
+        let gradeIds = req.body.grade_ids;
+        if (gradeIds) {
+            if (!Array.isArray(gradeIds)) {
+                teacher.grade_ids += gradeIds + "#";
+            } else {
+                for (let i = 0; i < gradeIds.length; i++) {
+                    teacher.grade_ids += gradeIds[i] + "#";
+                }
+            }
+        }
+        teacher.grade_ids = teacher.grade_ids=="#"?null:teacher.grade_ids;
+
+        let teacherFreeTime = [];
+        for (let key in req.body) {
+            let pattFreeDate = new RegExp('^free_date_');
+            if (pattFreeDate.test(key)) {
+                let freeTime = {};
+                freeTime.free_date = req.body[key];
+                teacherFreeTime[teacherFreeTime.length] = freeTime;
+            }
+            let pattLessonPeriodIds = new RegExp('^lesson_period_ids_');
+            if (pattLessonPeriodIds.test(key)) {
+                teacherFreeTime[teacherFreeTime.length - 1].lesson_period_ids = req.body[key];
+            }
+        }
+        teacher.teacherFreeTime = teacherFreeTime;
+        await teacherDAO.saveTeacher(teacher);
+        res.redirect('/course/teacher_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/edit_teacher', async function (req, res) {
+    try {
+        let teacher = await baseDAO.getById('teacher', req.query.id);
+        teacher = teacher[0];
+        let teacherFreeTimes = await teacherDAO.getFreeTimeByTeacherId(teacher.id);
         let grades = await baseDAO.getAll('grade');
-        res.render('student/edit_test_score', {
-            testScore: testScore,
-            student: student[0],
-            types: types,
-            subjects: subjects,
+        let subjects = await baseDAO.getAll('subject');
+        let lessonPeriods = await baseDAO.getAll('lesson_period');
+        res.render('course/edit_teacher', {
+            teacher: teacher,
+            teacherFreeTimes: teacherFreeTimes,
             grades: grades,
+            subjects: subjects,
+            lessonPeriods: lessonPeriods,
             dateUtil: dateUtil
         });
     } catch (error) {
