@@ -50,9 +50,11 @@ exports.saveTeacher = function (teacher) {
             ' values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'];
             let params = [[teacherId, teacher.name, teacher.gender, teacher.contact, teacher.grade_ids, teacher.subject_id, teacher.is_part_time, teacher.status, now, now]];
             let teacherFreeTime = teacher.teacherFreeTime;
-            for (let i = 0; i < teacherFreeTime.length; i++) {
-                sqls[sqls.length] = 'insert into teacher_free_time(id, teacher_id, free_date, lesson_period_ids) values (?, ?, ?, ?)';
-                params[params.length] = [uuid.v1(), teacherId, teacherFreeTime[i].free_date, teacherFreeTime[i].lesson_period_ids];
+            if (teacherFreeTime && teacherFreeTime.length > 0) {
+                for (let i = 0; i < teacherFreeTime.length; i++) {
+                    sqls[sqls.length] = 'insert into teacher_free_time(id, teacher_id, free_date, lesson_period_ids) values (?, ?, ?, ?)';
+                    params[params.length] = [uuid.v1(), teacherId, teacherFreeTime[i].free_date, teacherFreeTime[i].lesson_period_ids];
+                }
             }
             await dataPool.batchQuery(sqls, params);
             resolve();
@@ -81,9 +83,11 @@ exports.updateTeacher = function (teacher) {
             let params = [[teacher.name, teacher.gender, teacher.contact, teacher.grade_ids, teacher.subject_id, teacher.is_part_time, teacher.status, new Date(), teacher.id],
                 [teacher.id]];
             let teacherFreeTime = teacher.teacherFreeTime;
-            for (let i = 0; i < teacherFreeTime.length; i++) {
-                sqls[sqls.length] = 'insert into teacher_free_time(id, teacher_id, free_date, lesson_period_ids) values (?, ?, ?, ?)';
-                params[params.length] = [uuid.v1(), teacher.id, teacherFreeTime[i].free_date, teacherFreeTime[i].lesson_period_ids];
+            if (teacherFreeTime && teacherFreeTime.length > 0) {
+                for (let i = 0; i < teacherFreeTime.length; i++) {
+                    sqls[sqls.length] = 'insert into teacher_free_time(id, teacher_id, free_date, lesson_period_ids) values (?, ?, ?, ?)';
+                    params[params.length] = [uuid.v1(), teacher.id, teacherFreeTime[i].free_date, teacherFreeTime[i].lesson_period_ids];
+                }
             }
             await dataPool.batchQuery(sqls, params);
             resolve();

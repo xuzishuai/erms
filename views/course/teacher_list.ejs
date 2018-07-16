@@ -93,7 +93,7 @@
                     <tbody>
                     <%for (let i = 0; i < teachers.length; i++){%>
                     <tr>
-                        <td><%= teachers[i].name%>)</td>
+                        <td><%= teachers[i].name%></td>
                         <td><%if (teachers[i].gender == 0){%>男<%} else {%>女<%}%></td>
                         <td><%= teachers[i].contact%></td>
                         <td><%= teachers[i].grades%></td>
@@ -102,6 +102,7 @@
                         <td><%if (teachers[i].status == 0){%>已离职<%} else {%>在职<%}%></td>
                         <td>
                             <a href="/course/edit_teacher?id=<%= teachers[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
+                            <a href="/course/teacher_view?id=<%= teachers[i].id%>" class="btn yellow mini"><i class="icon-info-sign"></i> 查看详情</a>
                         </td>
                     </tr>
                     <%}%>

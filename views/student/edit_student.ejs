@@ -196,7 +196,7 @@
                 }
             },
             errorPlacement: function(error, element) {
-                error.appendTo( element.parent() );
+                error.appendTo( element.parents('.controls') );
             },
             highlight: function (element) { // hightlight error inputs
                 $(element)

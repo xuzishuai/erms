@@ -737,12 +737,16 @@ var App = function () {
     // Handle Select2 Dropdowns
     var handleSelect2 = function() {
         if ($().select2) {
-            $('.select2').select2({
-                placeholder: "",
-                allowClear: true,
-                formatNoMatches: function () { return "没有找到匹配项"; },
-                formatLoadMore: function () { return "加载结果中…"; },
-                formatSearching: function () { return "搜索中…"; }
+            $("select.select2").each(function(){
+                if(!$(this).prev().hasClass("select2-container")){
+                    $(this).select2({
+                        placeholder: "",
+                        allowClear: true,
+                        formatNoMatches: function () { return "没有找到匹配项"; },
+                        formatLoadMore: function () { return "加载结果中…"; },
+                        formatSearching: function () { return "搜索中…"; }
+                    });
+                }
             });
         }
     };
@@ -974,8 +978,9 @@ var App = function () {
             } else {
                 return '';
             }
-        }
+        },
 
+        handleUniform: handleUniform
     };
 
 }();

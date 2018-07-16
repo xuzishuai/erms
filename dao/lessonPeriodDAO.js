@@ -2,6 +2,17 @@ const dataPool = require('../util/dataPool');
 const Promise = require('promise');
 const uuid = require('node-uuid');
 
+exports.getLessonPeriod = function () {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let lessonPeriod = await dataPool.query('select * from lesson_period order by start_time');
+            resolve(lessonPeriod);
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
+
 exports.isLessonPeriodExist = function (id, name) {
     return new Promise(async function (resolve, reject) {
         try {

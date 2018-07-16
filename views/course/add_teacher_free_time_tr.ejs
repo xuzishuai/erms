@@ -7,11 +7,13 @@
         </div>
     </td>
     <td class="control-group">
-        <%for (let i = 0; i < lessonPeriods.length; i++){%>
-        <label class="checkbox">
-            <input type="checkbox" name="lesson_period_ids_<%= free_time_index%>" value="<%= lessonPeriods[i].id%>"> <%= lessonPeriods[i].name%>
-        </label>
-        <%}%>
+        <div class="controls" style="margin-left: 0;">
+            <%for (let i = 0; i < lessonPeriods.length; i++){%>
+            <label class="checkbox">
+                <input type="checkbox" name="lesson_period_ids_<%= free_time_index%>" value="<%= lessonPeriods[i].id%>"> <%= lessonPeriods[i].name%>
+            </label>
+            <%}%>
+        </div>
     </td>
     <td><a onclick="removeFreeTimeTr('<%= free_time_index%>')" class="btn red mini"><i class="icon-minus"></i> 删除</a></td>
 </tr>

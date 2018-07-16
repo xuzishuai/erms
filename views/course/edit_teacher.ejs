@@ -89,7 +89,7 @@
                         </thead>
                         <tbody id="teacher_free_time_body">
                         <%for (let i = 0; i < teacherFreeTimes.length; i++) {%>
-                        <tr <%if (i > 0) {%> id="teacher_free_time_<%= i%>"<%}%>>
+                        <tr id="teacher_free_time_<%= i%>">
                             <td class="control-group">
                                 <div class="input-append date date-picker">
                                     <input id="free_date_<%= i%>" name="free_date_<%= i%>" size="16" type="text" readonly class="m-wrap" value="<%= dateUtil.dateFormat(teacherFreeTimes[i].free_date)%>"/>
@@ -98,13 +98,15 @@
                                 </div>
                             </td>
                             <td class="control-group">
-                                <%for (let j = 0; j < lessonPeriods.length; j++){%>
-                                <label class="checkbox">
-                                    <input type="checkbox" <%if (teacherFreeTimes[i].lesson_period_ids&&teacherFreeTimes[i].lesson_period_ids.indexOf('#'+lessonPeriods[i].id+'#')>-1){%>checked<%}%> name="lesson_period_ids_<%= i%>" value="<%= lessonPeriods[j].id%>"> <%= lessonPeriods[j].name%>
-                                </label>
-                                <%}%>
+                                <div class="controls" style="margin-left: 0;">
+                                    <%for (let j = 0; j < lessonPeriods.length; j++){%>
+                                    <label class="checkbox">
+                                        <input type="checkbox" <%if (teacherFreeTimes[i].lesson_period_ids&&teacherFreeTimes[i].lesson_period_ids.indexOf('#'+lessonPeriods[j].id+'#')>-1){%>checked<%}%> name="lesson_period_ids_<%= i%>" value="<%= lessonPeriods[j].id%>"> <%= lessonPeriods[j].name%>
+                                    </label>
+                                    <%}%>
+                                </div>
                             </td>
-                            <td><%if (i > 0) {%><a onclick="removeFreeTimeTr('<%= i%>')" class="btn red mini"><i class="icon-minus"></i> 删除</a><%}%></td>
+                            <td><a onclick="removeFreeTimeTr('<%= i%>')" class="btn red mini"><i class="icon-minus"></i> 删除</a></td>
                         </tr>
                         <%}%>
                         </tbody>
@@ -178,7 +180,7 @@
                 }
             },
             errorPlacement: function(error, element) {
-                error.appendTo( element.parent() );
+                error.appendTo( element.parents('.controls') );
             },
             highlight: function (element) { // hightlight error inputs
                 $(element)
@@ -221,8 +223,8 @@
         freeTimeIndex += 1;
         $.post('/course/add_teacher_free_time_tr', {free_time_index: freeTimeIndex}, function (result) {
             $('#teacher_free_time_body').append(result);
-            App.init();
-            FormComponents.init();
+            App.handleUniform();//对新添加的tr中的CheckBox元素初始化
+            FormComponents.handleDatePickers();//对新添加的tr中的日期选择器元素初始化
             validate.resetForm();
             validator();
         })

@@ -464,7 +464,9 @@ var FormComponents = function () {
                 resetWysihtml5();
             });
             App.initFancybox();
-        }
+        },
+
+        handleDatePickers: handleDatePickers
 
     };
 

@@ -78,7 +78,7 @@ router.post('/do_update_class_room', async function (req, res) {
 
 router.get('/lesson_period_list', async function (req, res) {
     try {
-        let lessonPeriods = await baseDAO.getAll('lesson_period');
+        let lessonPeriods = await lessonPeriodDAO.getLessonPeriod();
         res.render('course/lesson_period_list', {
             lessonPeriods: lessonPeriods
         });
@@ -172,11 +172,60 @@ router.get('/teacher_list', async function (req, res) {
             for (let i = 0; i < teachers.length; i++) {
                 let gradeIds = teachers[i].grade_ids.split('#');
                 teachers[i].grades = '';
-                for (let i = 1; i < gradeIds.length - 1; i++) {
-                    if (i === 1) {
-                        teachers[i].grades += gradeMap[gradeIds[i]].name;
+                for (let j = 1; j < gradeIds.length - 1; j++) {
+                    if (j === 1) {
+                        teachers[i].grades += gradeMap[gradeIds[j]].name;
                     } else {
-                        teachers[i].grades += '，' + gradeMap[gradeIds[i]].name;
+                        teachers[i].grades += '，' + gradeMap[gradeIds[j]].name;
+                    }
+                }
+            }
+        }
+        res.render('course/teacher_list', {
+            teachers: teachers,
+            grades: grades,
+            subjects: subjects,
+            subjectMap: commonUtil.toMap(subjects),
+            condition: condition,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/teacher_view', async function (req, res) {
+    try {
+
+
+
+
+
+
+
+
+
+        //查看教师详情，另做一个只能查询和带查看按钮的"教师查询"菜单
+        let condition = {};
+        condition.name = req.query.name;
+        condition.grade_id = req.query.grade_id;
+        condition.sbuject_id = req.query.sbuject_id;
+        condition.contact = req.query.contact;
+        condition.is_part_time = req.query.is_part_time;
+        condition.status = req.query.is_part_time!=null?req.query.is_part_time:'1';//若不填默认搜索在职教师
+        let teachers = await teacherDAO.getTeacherByCondition(condition);
+        let grades = await baseDAO.getAll('grade');
+        let subjects = await baseDAO.getAll('subject');
+        let gradeMap = commonUtil.toMap(grades);
+        if (teachers != null && teachers.length > 0) {
+            for (let i = 0; i < teachers.length; i++) {
+                let gradeIds = teachers[i].grade_ids.split('#');
+                teachers[i].grades = '';
+                for (let j = 1; j < gradeIds.length - 1; j++) {
+                    if (j === 1) {
+                        teachers[i].grades += gradeMap[gradeIds[j]].name;
+                    } else {
+                        teachers[i].grades += '，' + gradeMap[gradeIds[j]].name;
                     }
                 }
             }
@@ -198,11 +247,9 @@ router.get('/new_teacher', async function (req, res) {
     try {
         let grades = await baseDAO.getAll('grade');
         let subjects = await baseDAO.getAll('subject');
-        let lessonPeriods = await baseDAO.getAll('lesson_period');
         res.render('course/new_teacher', {
             subjects: subjects,
-            grades: grades,
-            lessonPeriods: lessonPeriods
+            grades: grades
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);
@@ -211,7 +258,7 @@ router.get('/new_teacher', async function (req, res) {
 
 router.post('/add_teacher_free_time_tr', async function (req, res) {
     try {
-        let lessonPeriods = await baseDAO.getAll('lesson_period');
+        let lessonPeriods = await lessonPeriodDAO.getLessonPeriod();
         res.render('course/add_teacher_free_time_tr', {
             hideLayout: true,
             lessonPeriods: lessonPeriods,
@@ -254,7 +301,18 @@ router.post('/do_create_teacher', async function (req, res) {
             }
             let pattLessonPeriodIds = new RegExp('^lesson_period_ids_');
             if (pattLessonPeriodIds.test(key)) {
-                teacherFreeTime[teacherFreeTime.length - 1].lesson_period_ids = req.body[key];
+                let lesson_period_ids = "#";
+                let lessonPeriodIds = req.body[key];
+                if (lessonPeriodIds) {
+                    if (!Array.isArray(lessonPeriodIds)) {
+                        lesson_period_ids += lessonPeriodIds + "#";
+                    } else {
+                        for (let i = 0; i < lessonPeriodIds.length; i++) {
+                            lesson_period_ids += lessonPeriodIds[i] + "#";
+                        }
+                    }
+                }
+                teacherFreeTime[teacherFreeTime.length - 1].lesson_period_ids = lesson_period_ids=="#"?null:lesson_period_ids;
             }
         }
         teacher.teacherFreeTime = teacherFreeTime;
@@ -272,7 +330,7 @@ router.get('/edit_teacher', async function (req, res) {
         let teacherFreeTimes = await teacherDAO.getFreeTimeByTeacherId(teacher.id);
         let grades = await baseDAO.getAll('grade');
         let subjects = await baseDAO.getAll('subject');
-        let lessonPeriods = await baseDAO.getAll('lesson_period');
+        let lessonPeriods = await lessonPeriodDAO.getLessonPeriod();
         res.render('course/edit_teacher', {
             teacher: teacher,
             teacherFreeTimes: teacherFreeTimes,
@@ -319,7 +377,18 @@ router.post('/do_update_teacher', async function (req, res) {
             }
             let pattLessonPeriodIds = new RegExp('^lesson_period_ids_');
             if (pattLessonPeriodIds.test(key)) {
-                teacherFreeTime[teacherFreeTime.length - 1].lesson_period_ids = req.body[key];
+                let lesson_period_ids = "#";
+                let lessonPeriodIds = req.body[key];
+                if (lessonPeriodIds) {
+                    if (!Array.isArray(lessonPeriodIds)) {
+                        lesson_period_ids += lessonPeriodIds + "#";
+                    } else {
+                        for (let i = 0; i < lessonPeriodIds.length; i++) {
+                            lesson_period_ids += lessonPeriodIds[i] + "#";
+                        }
+                    }
+                }
+                teacherFreeTime[teacherFreeTime.length - 1].lesson_period_ids = lesson_period_ids=="#"?null:lesson_period_ids;
             }
         }
         teacher.teacherFreeTime = teacherFreeTime;

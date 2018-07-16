@@ -15,7 +15,7 @@ create table menu
    path                 varchar(200) comment '菜单路径',
    children_ids         varchar(200) comment '子菜单id，用#隔开，并用#开头和结束，只包含最底层有链接的子菜单',
    icon                 varchar(100) comment '图标',
-   auth_path            varchar(500) comment '授权路径',
+   auth_path            varchar(1000) comment '授权路径',
    priority             int(20) comment '优先级，菜单排序用',
    primary key (id)
 );
@@ -150,7 +150,7 @@ create table student
    audit_status_id      varchar(36) not null comment '客户审核状态id',
    warning_id           varchar(36) comment '学员预警id',
    warning_reason       varchar(500) comment '预警原因',
-   subject_ids          varchar(100) comment '需辅导科目id，用#隔开',
+   subject_ids          varchar(1000) comment '需辅导科目id，用#隔开',
    possibility_id       varchar(36) comment '续费可能性id',
    contact2             varchar(20) comment '联系电话2',
    create_at            datetime not null comment '登记时间',
@@ -644,7 +644,7 @@ create table teacher
    name                 varchar(50) not null comment '教师姓名',
    gender               tinyint(2) not null comment '性别，0男，1女',
    contact              varchar(20) not null comment '联系电话',
-   grade_ids            varchar(100) not null comment '年级id，用#隔开',
+   grade_ids            varchar(1000) not null comment '年级id，用#隔开',
    subject_id           varchar(36) not null comment '科目id',
    is_part_time         tinyint(2) not null comment '是否兼职，0否，1是',
    status               tinyint(2) not null comment '状态，0已离职，1在职',
@@ -663,7 +663,7 @@ create table teacher_free_time
    id                   varchar(36) not null,
    teacher_id           varchar(36) not null comment '教师id',
    free_date            date not null comment '空闲日期',
-   lesson_period_ids    varchar(50) not null comment '课时id，用#隔开',
+   lesson_period_ids    varchar(500) not null comment '课时id，用#隔开',
    primary key (id)
 );
 
