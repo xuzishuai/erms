@@ -90,7 +90,6 @@
                         <tbody id="teacher_free_time_body">
                         <%for (let i = 0; i < teacherFreeTimes.length; i++) {%>
                         <tr <%if (i > 0) {%> id="teacher_free_time_<%= i%>"<%}%>>
-                            <input name="id_<%= i%>" value="<%= teacherFreeTimes[i].id%>" type="hidden">
                             <td class="control-group">
                                 <div class="input-append date date-picker">
                                     <input id="free_date_<%= i%>" name="free_date_<%= i%>" size="16" type="text" readonly class="m-wrap" value="<%= dateUtil.dateFormat(teacherFreeTimes[i].free_date)%>"/>

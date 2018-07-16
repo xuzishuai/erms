@@ -72,3 +72,23 @@ exports.getFreeTimeByTeacherId = function (teacher_id) {
         }
     })
 };
+
+exports.updateTeacher = function (teacher) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let sqls = ['update teacher set name=?, gender=?, contact=?, grade_ids=?, subject_id=?, is_part_time=?, status=?, update_at=? where id=?',
+                'delete from teacher_free_time where teacher_id=?'];
+            let params = [[teacher.name, teacher.gender, teacher.contact, teacher.grade_ids, teacher.subject_id, teacher.is_part_time, teacher.status, new Date(), teacher.id],
+                [teacher.id]];
+            let teacherFreeTime = teacher.teacherFreeTime;
+            for (let i = 0; i < teacherFreeTime.length; i++) {
+                sqls[sqls.length] = 'insert into teacher_free_time(id, teacher_id, free_date, lesson_period_ids) values (?, ?, ?, ?)';
+                params[params.length] = [uuid.v1(), teacher.id, teacherFreeTime[i].free_date, teacherFreeTime[i].lesson_period_ids];
+            }
+            await dataPool.batchQuery(sqls, params);
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+};

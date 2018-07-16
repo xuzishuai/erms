@@ -27,7 +27,7 @@ INSERT INTO menu VALUES ('23', '合同退费', '11', '/contract/contract_refund_
 INSERT INTO menu VALUES ('24', '排课', null, null, '#25#26#27#', 'icon-calendar', null, 4);
 INSERT INTO menu VALUES ('25', '教室管理', '24', '/course/class_room_list', null, null, '#/course/class_room_list#/course/new_class_room#/course/do_create_class_room#/course/edit_class_room#/course/do_update_class_room#', null);
 INSERT INTO menu VALUES ('26', '课时管理', '24', '/course/lesson_period_list', null, null, '#/course/lesson_period_list#/course/new_lesson_period#/course/validate_lesson_period_name#/course/do_create_lesson_period#/course/edit_lesson_period#/course/do_update_lesson_period#/course/delete_lesson_period#', null);
-INSERT INTO menu VALUES ('27', '教师管理', '24', '/course/teacher_list', null, null, '#/course/teacher_list#', null);
+INSERT INTO menu VALUES ('27', '教师管理', '24', '/course/teacher_list', null, null, '#/course/teacher_list#/course/new_teacher#/course/add_teacher_free_time_tr#/course/do_create_teacher#/course/edit_teacher#/course/do_update_teacher#', null);
 
 -- ----------------------------
 -- Records of user,插入超级管理员用户

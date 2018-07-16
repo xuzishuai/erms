@@ -286,51 +286,47 @@ router.get('/edit_teacher', async function (req, res) {
     }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-router.post('/do_update_test_score', async function (req, res) {
+router.post('/do_update_teacher', async function (req, res) {
     try {
-        let testScore = await baseDAO.getById('test_score', req.body.id);
-        testScore = testScore[0];
-        testScore.school_year = req.body.school_year;
-        testScore.grade_id = req.body.grade_id;
-        testScore.test_date = req.body.test_date;
-        testScore.type_id = req.body.type_id;
-        testScore.class_size = req.body.class_size;
-        testScore.enroll_school = req.body.enroll_school;
-        testScore.subject_id = req.body.subject_id;
-        testScore.score = req.body.score;
-        testScore.total_score = req.body.total_score;
-        testScore.class_rank = req.body.class_rank;
-        testScore.teacher_assess = req.body.teacher_assess;
-        testScore.parents_assess = req.body.parents_assess;
-        testScore.headmaster_assess = req.body.headmaster_assess;
-        await testScoreDAO.updateTestScore(testScore);
-        res.redirect('/student/test_score_list');
+        let teacher = await baseDAO.getById('teacher', req.body.id);
+        teacher = teacher[0];
+        teacher.name = req.body.name;
+        teacher.gender = req.body.gender;
+        teacher.contact = req.body.contact;
+        teacher.subject_id = req.body.subject_id;
+        teacher.is_part_time = req.body.is_part_time;
+        teacher.status = req.body.status;
+        teacher.grade_ids = "#";
+        let gradeIds = req.body.grade_ids;
+        if (gradeIds) {
+            if (!Array.isArray(gradeIds)) {
+                teacher.grade_ids += gradeIds + "#";
+            } else {
+                for (let i = 0; i < gradeIds.length; i++) {
+                    teacher.grade_ids += gradeIds[i] + "#";
+                }
+            }
+        }
+        teacher.grade_ids = teacher.grade_ids=="#"?null:teacher.grade_ids;
+
+        let teacherFreeTime = [];
+        for (let key in req.body) {
+            let pattFreeDate = new RegExp('^free_date_');
+            if (pattFreeDate.test(key)) {
+                let freeTime = {};
+                freeTime.free_date = req.body[key];
+                teacherFreeTime[teacherFreeTime.length] = freeTime;
+            }
+            let pattLessonPeriodIds = new RegExp('^lesson_period_ids_');
+            if (pattLessonPeriodIds.test(key)) {
+                teacherFreeTime[teacherFreeTime.length - 1].lesson_period_ids = req.body[key];
+            }
+        }
+        teacher.teacherFreeTime = teacherFreeTime;
+        await teacherDAO.updateTeacher(teacher);
+        res.redirect('/course/teacher_list');
     } catch (error) {
         exceptionHelper.renderException(res, error);
-    }
-});
-
-router.get('/delete_test_score', async function (req, res) {
-    try {
-        await baseDAO.deleteById('test_score', req.query.id);
-        res.redirect('/student/test_score_list');
-    } catch (error) {
-        exceptionHelper.sendException(res, error);
     }
 });
 
