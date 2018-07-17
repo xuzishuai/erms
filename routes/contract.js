@@ -460,6 +460,57 @@ router.get('/contract_view', async function (req, res) {
     }
 });
 
+router.get('/course_apply', async function (req, res) {
+    try {
+
+
+
+
+
+
+
+
+
+
+
+        //TODO：排课申请上传文件页面，展示合同信息和合同明细
+        let contract = await baseDAO.getById('contract', req.query.id);
+        contract = contract[0];
+        let contractDetails = await contractDAO.getDetailsByContractId(contract.id);
+        let contractCharges = await contractDAO.getContractChargesByContractId(contract.id);
+        let chargeTypes = await baseDAO.getAll('contract_charge_type');
+        let chargeModes = await baseDAO.getAll('contract_charge_mode');
+        let grades = await baseDAO.getAll('grade');
+        let users = await baseDAO.getAll('user');
+        let attributes = await baseDAO.getAll('contract_attribute');
+        let types = await baseDAO.getAll('contract_type');
+        let possibilities = await baseDAO.getAll('possibility');
+        let status = await baseDAO.getAll('contract_status');
+        let subjects = await baseDAO.getAll('subject');
+        let detailTypes = await baseDAO.getAll('contract_detail_type');
+        let detailStatus = await baseDAO.getAll('contract_detail_status');
+        res.render('contract/contract_view', {
+            contract: contract,
+            contractDetails: contractDetails,
+            contractCharges: contractCharges,
+            chargeTypeMap: commonUtil.toMap(chargeTypes),
+            chargeModeMap: commonUtil.toMap(chargeModes),
+            gradeMap: commonUtil.toMap(grades),
+            userMap: commonUtil.toMap(users),
+            attributeMap: commonUtil.toMap(attributes),
+            typeMap: commonUtil.toMap(types),
+            possibilityMap: commonUtil.toMap(possibilities),
+            statusMap: commonUtil.toMap(status),
+            subjectMap: commonUtil.toMap(subjects),
+            detailTypeMap: commonUtil.toMap(detailTypes),
+            detailStatusMap: commonUtil.toMap(detailStatus),
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
 router.get('/contract_detail_log', async function (req, res) {
     try {
         let contract = await baseDAO.getById('contract', req.query.id);
