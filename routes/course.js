@@ -196,46 +196,41 @@ router.get('/teacher_list', async function (req, res) {
 
 router.get('/teacher_view', async function (req, res) {
     try {
-
-
-
-
-
-
-
-
-
-        //查看教师详情，另做一个只能查询和带查看按钮的"教师查询"菜单
-        let condition = {};
-        condition.name = req.query.name;
-        condition.grade_id = req.query.grade_id;
-        condition.sbuject_id = req.query.sbuject_id;
-        condition.contact = req.query.contact;
-        condition.is_part_time = req.query.is_part_time;
-        condition.status = req.query.is_part_time!=null?req.query.is_part_time:'1';//若不填默认搜索在职教师
-        let teachers = await teacherDAO.getTeacherByCondition(condition);
+        let teacher = await baseDAO.getById('teacher', req.query.id);
+        teacher = teacher[0];
         let grades = await baseDAO.getAll('grade');
         let subjects = await baseDAO.getAll('subject');
         let gradeMap = commonUtil.toMap(grades);
-        if (teachers != null && teachers.length > 0) {
-            for (let i = 0; i < teachers.length; i++) {
-                let gradeIds = teachers[i].grade_ids.split('#');
-                teachers[i].grades = '';
-                for (let j = 1; j < gradeIds.length - 1; j++) {
+        let gradeIds = teacher.grade_ids.split('#');
+        teacher.grades = '';
+        for (let i = 1; i < gradeIds.length - 1; i++) {
+            if (i === 1) {
+                teacher.grades += gradeMap[gradeIds[i]].name;
+            } else {
+                teacher.grades += '，' + gradeMap[gradeIds[i]].name;
+            }
+        }
+        let freeTimes = await teacherDAO.getFreeTimeByTeacherId(teacher.id);
+        let lessonPeriods = await lessonPeriodDAO.getLessonPeriod();
+        let lessonPeriodMap = commonUtil.toMap(lessonPeriods);
+        if (freeTimes != null && freeTimes.length > 0) {
+            for (let i = 0; i < freeTimes.length; i++) {
+                let lessonPeriodIds = freeTimes[i].lesson_period_ids.split('#');
+                freeTimes[i].lessonPeriods = '';
+                for (let j = 1; j < lessonPeriodIds.length - 1; j++) {
                     if (j === 1) {
-                        teachers[i].grades += gradeMap[gradeIds[j]].name;
+                        freeTimes[i].lessonPeriods += lessonPeriodMap[lessonPeriodIds[j]].name;
                     } else {
-                        teachers[i].grades += '，' + gradeMap[gradeIds[j]].name;
+                        freeTimes[i].lessonPeriods += '，' + lessonPeriodMap[lessonPeriodIds[j]].name;
                     }
                 }
             }
         }
-        res.render('course/teacher_list', {
-            teachers: teachers,
-            grades: grades,
-            subjects: subjects,
+        res.render('course/teacher_view', {
+            teacher: teacher,
             subjectMap: commonUtil.toMap(subjects),
-            condition: condition,
+            freeTimes: freeTimes,
+            backUrl: req.query.back_url,
             dateUtil: dateUtil
         });
     } catch (error) {
@@ -394,6 +389,45 @@ router.post('/do_update_teacher', async function (req, res) {
         teacher.teacherFreeTime = teacherFreeTime;
         await teacherDAO.updateTeacher(teacher);
         res.redirect('/course/teacher_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/teacher_search', async function (req, res) {
+    try {
+        let condition = {};
+        condition.name = req.query.name;
+        condition.grade_id = req.query.grade_id;
+        condition.sbuject_id = req.query.sbuject_id;
+        condition.contact = req.query.contact;
+        condition.is_part_time = req.query.is_part_time;
+        condition.status = req.query.is_part_time!=null?req.query.is_part_time:'1';//若不填默认搜索在职教师
+        let teachers = await teacherDAO.getTeacherByCondition(condition);
+        let grades = await baseDAO.getAll('grade');
+        let subjects = await baseDAO.getAll('subject');
+        let gradeMap = commonUtil.toMap(grades);
+        if (teachers != null && teachers.length > 0) {
+            for (let i = 0; i < teachers.length; i++) {
+                let gradeIds = teachers[i].grade_ids.split('#');
+                teachers[i].grades = '';
+                for (let j = 1; j < gradeIds.length - 1; j++) {
+                    if (j === 1) {
+                        teachers[i].grades += gradeMap[gradeIds[j]].name;
+                    } else {
+                        teachers[i].grades += '，' + gradeMap[gradeIds[j]].name;
+                    }
+                }
+            }
+        }
+        res.render('course/teacher_search', {
+            teachers: teachers,
+            grades: grades,
+            subjects: subjects,
+            subjectMap: commonUtil.toMap(subjects),
+            condition: condition,
+            dateUtil: dateUtil
+        });
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }

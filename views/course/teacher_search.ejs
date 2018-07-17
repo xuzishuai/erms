@@ -5,13 +5,10 @@
                 <div class="caption">
                     <i class="icon-reorder"></i>
                 </div>
-                <div class="actions">
-                    <a href="/course/new_teacher" class="btn green"><i class="icon-plus"></i> 新增教师</a>
-                </div>
             </div>
             <div class="portlet-body">
                 <div class="booking-search">
-                    <form action="/course/teacher_list">
+                    <form action="/course/teacher_search">
                         <div class="clearfix">
                             <div class="control-group span3">
                                 <label class="control-label">教师姓名:</label>
@@ -101,8 +98,7 @@
                         <td><%if (teachers[i].is_part_time == 0){%>否<%} else {%>是<%}%></td>
                         <td><%if (teachers[i].status == 0){%>已离职<%} else {%>在职<%}%></td>
                         <td>
-                            <a href="/course/edit_teacher?id=<%= teachers[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
-                            <a href="/course/teacher_view?id=<%= teachers[i].id%>&back_url=teacher_list" class="btn yellow mini"><i class="icon-info-sign"></i> 查看详情</a>
+                            <a href="/course/teacher_view?id=<%= teachers[i].id%>&back_url=teacher_search" class="btn yellow mini"><i class="icon-info-sign"></i> 查看详情</a>
                         </td>
                     </tr>
                     <%}%>
@@ -113,7 +109,7 @@
     </div>
 </div>
 <%- contentFor('title')%>
-教师管理
+教师查询
 <%- contentFor('breadcrumb')%>
 <li>
     <i class="icon-angle-right"></i>
@@ -121,7 +117,7 @@
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/course/teacher_list">教师管理</a>
+    <a href="/course/teacher_search">教师查询</a>
 </li>
 <%- contentFor('script')%>
 <script>
