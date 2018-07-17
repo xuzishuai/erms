@@ -980,7 +980,24 @@ var App = function () {
             }
         },
 
-        handleUniform: handleUniform
+        handleUniform: handleUniform,
+
+        handleSelect2: function () {
+            if ($().select2) {
+                $("select.select2").each(function(){
+                    if(!$(this).prev().hasClass("select2-container")){
+                        $(this).select2({
+                            placeholder: "",
+                            allowClear: true,
+                            formatNoMatches: function () { return "没有找到匹配项"; },
+                            formatLoadMore: function () { return "加载结果中…"; },
+                            formatSearching: function () { return "搜索中…"; }
+                        });
+                        $('.select2').attr("style", "width: 220px;")
+                    }
+                });
+            }
+        }
     };
 
 }();

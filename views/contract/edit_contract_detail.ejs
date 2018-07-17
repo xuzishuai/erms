@@ -269,23 +269,35 @@
                         <% for (let i = 0; i < contractDetails.length; i++) {%>
                         <tr>
                             <td class="control-group">
-                                <select name="subject_id_<%= i%>" class="select2">
-                                    <option value="">请选择科目</option>
-                                    <% for (let j = 0; j < subjects.length; j++){%>
-                                    <option <%if (contractDetails[i].subject_id == subjects[j].id) {%>selected<%}%> value="<%= subjects[j].id%>"><%= subjects[j].name%></option>
-                                    <%}%>
-                                </select>
+                                <div class="controls" style="margin-left: 0;">
+                                    <select name="subject_id_<%= i%>" class="select2">
+                                        <option value="">请选择科目</option>
+                                        <% for (let j = 0; j < subjects.length; j++){%>
+                                        <option <%if (contractDetails[i].subject_id == subjects[j].id) {%>selected<%}%> value="<%= subjects[j].id%>"><%= subjects[j].name%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
                             </td>
-                            <td class="control-group"><input name="lesson_period_<%= i%>" type="text" onkeyup="calculateTotal(this, 'lesson_period')" value="<%= contractDetails[i].lesson_period%>"></td>
                             <td class="control-group">
-                                <select name="type_id_<%= i%>" class="select2">
-                                    <option value="">请选择类型</option>
-                                    <% for (let j = 0; j < detailTypes.length; j++){%>
-                                    <option <%if (contractDetails[i].type_id == detailTypes[j].id) {%>selected<%}%> value="<%= detailTypes[j].id%>"><%= detailTypes[j].name%></option>
-                                    <%}%>
-                                </select>
+                                <div class="controls" style="margin-left: 0;">
+                                    <input name="lesson_period_<%= i%>" type="text" onkeyup="calculateTotal(this, 'lesson_period')" value="<%= contractDetails[i].lesson_period%>">
+                                </div>
                             </td>
-                            <td class="control-group"><input name="price_<%= i%>" type="number" onkeyup="calculateTotal()" value="<%= contractDetails[i].price%>"></td>
+                            <td class="control-group">
+                                <div class="controls" style="margin-left: 0;">
+                                    <select name="type_id_<%= i%>" class="select2">
+                                        <option value="">请选择类型</option>
+                                        <% for (let j = 0; j < detailTypes.length; j++){%>
+                                        <option <%if (contractDetails[i].type_id == detailTypes[j].id) {%>selected<%}%> value="<%= detailTypes[j].id%>"><%= detailTypes[j].name%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="control-group">
+                                <div class="controls" style="margin-left: 0;">
+                                    <input name="price_<%= i%>" type="number" onkeyup="calculateTotal()" value="<%= contractDetails[i].price%>">
+                                </div>
+                            </td>
                             <td></td>
                         </tr>
                         <input name="id_<%= i%>" value="<%= contractDetails[i].id%>" type="hidden">
@@ -427,16 +439,7 @@
         detailIndex += 1;
         $.post('/contract/add_contract_detail_tr', {detail_index: detailIndex}, function (result) {
             $('#contract_detail_body').append(result);
-            $('select[class="select2"]').each(function(){
-                $(this).select2({
-                    placeholder: "",
-                    allowClear: true,
-                    formatNoMatches: function () { return "没有找到匹配项"; },
-                    formatLoadMore: function () { return "加载结果中…"; },
-                    formatSearching: function () { return "搜索中…"; }
-                });
-                $('.select2').attr("style", "width: 220px;")
-            });
+            App.handleSelect2();
             validate.resetForm();
             validator();
         })

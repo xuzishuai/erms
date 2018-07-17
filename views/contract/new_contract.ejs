@@ -230,23 +230,35 @@
                         <tbody id="contract_detail_body">
                         <tr>
                             <td class="control-group">
-                                <select name="subject_id_0" class="select2">
-                                    <option value="">请选择科目</option>
-                                    <%for (let i = 0; i < subjects.length; i++){%>
-                                    <option value="<%= subjects[i].id%>"><%= subjects[i].name%></option>
-                                    <%}%>
-                                </select>
+                                <div class="controls" style="margin-left: 0;">
+                                    <select name="subject_id_0" class="select2">
+                                        <option value="">请选择科目</option>
+                                        <%for (let i = 0; i < subjects.length; i++){%>
+                                        <option value="<%= subjects[i].id%>"><%= subjects[i].name%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
                             </td>
-                            <td class="control-group"><input name="lesson_period_0" type="text" onkeyup="calculateTotal(this, 'lesson_period')"></td>
                             <td class="control-group">
-                                <select name="type_id_0" class="select2">
-                                    <option value="">请选择类型</option>
-                                    <%for (let i = 0; i < types.length; i++){%>
-                                    <option value="<%= types[i].id%>"><%= types[i].name%></option>
-                                    <%}%>
-                                </select>
+                                <div class="controls" style="margin-left: 0;">
+                                    <input name="lesson_period_0" type="text" onkeyup="calculateTotal(this, 'lesson_period')">
+                                </div>
                             </td>
-                            <td class="control-group"><input name="price_0" type="number" onkeyup="calculateTotal()"></td>
+                            <td class="control-group">
+                                <div class="controls" style="margin-left: 0;">
+                                    <select name="type_id_0" class="select2">
+                                        <option value="">请选择类型</option>
+                                        <%for (let i = 0; i < types.length; i++){%>
+                                        <option value="<%= types[i].id%>"><%= types[i].name%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="control-group">
+                                <div class="controls" style="margin-left: 0;">
+                                    <input name="price_0" type="number" onkeyup="calculateTotal()">
+                                </div>
+                            </td>
                             <td></td>
                         </tr>
                         </tbody>
@@ -450,16 +462,7 @@
         detailIndex += 1;
         $.post('/contract/add_contract_detail_tr', {detail_index: detailIndex}, function (result) {
             $('#contract_detail_body').append(result);
-            $('select[class="select2"]').each(function(){
-                $(this).select2({
-                    placeholder: "",
-                    allowClear: true,
-                    formatNoMatches: function () { return "没有找到匹配项"; },
-                    formatLoadMore: function () { return "加载结果中…"; },
-                    formatSearching: function () { return "搜索中…"; }
-                });
-                $('.select2').attr("style", "width: 220px;")
-            });
+            App.handleSelect2();
             validate.resetForm();
             validator();
         })
