@@ -7,6 +7,17 @@ const commonUtil = require('../util/commonUtil');
 const dateUtil = require('../util/dateUtil');
 const lessonPeriodDAO = require('../dao/lessonPeriodDAO');
 const teacherDAO = require('../dao/teacherDAO');
+const contractDAO = require('../dao/contractDAO');
+const fileUtil = require('../util/fileUtil');
+const uuid = require('node-uuid');
+const multer  = require('multer');
+const storage = multer.diskStorage({
+    destination: '../linenFiles/' + uuid.v1(),
+    filename: function (req, file, cb) {
+        cb(null, file.originalname);
+    }
+});
+const upload = multer({ storage: storage });
 
 router.get('/class_room_list', async function (req, res) {
     try {
@@ -428,6 +439,81 @@ router.get('/teacher_search', async function (req, res) {
             condition: condition,
             dateUtil: dateUtil
         });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/new_course_apply', async function (req, res) {
+    try {
+        let contract = await baseDAO.getById('contract', req.query.contract_id);
+        contract = contract[0];
+        let contractDetails = await contractDAO.getDetailsByContractId(contract.id);
+        let contractCharges = await contractDAO.getContractChargesByContractId(contract.id);
+        let chargeTypes = await baseDAO.getAll('contract_charge_type');
+        let chargeModes = await baseDAO.getAll('contract_charge_mode');
+        let grades = await baseDAO.getAll('grade');
+        let users = await baseDAO.getAll('user');
+        let attributes = await baseDAO.getAll('contract_attribute');
+        let types = await baseDAO.getAll('contract_type');
+        let possibilities = await baseDAO.getAll('possibility');
+        let status = await baseDAO.getAll('contract_status');
+        let subjects = await baseDAO.getAll('subject');
+        let detailTypes = await baseDAO.getAll('contract_detail_type');
+        let detailStatus = await baseDAO.getAll('contract_detail_status');
+        res.render('course/new_course_apply', {
+            contract: contract,
+            contractDetails: contractDetails,
+            contractCharges: contractCharges,
+            chargeTypeMap: commonUtil.toMap(chargeTypes),
+            chargeModeMap: commonUtil.toMap(chargeModes),
+            gradeMap: commonUtil.toMap(grades),
+            userMap: commonUtil.toMap(users),
+            attributeMap: commonUtil.toMap(attributes),
+            typeMap: commonUtil.toMap(types),
+            possibilityMap: commonUtil.toMap(possibilities),
+            statusMap: commonUtil.toMap(status),
+            subjectMap: commonUtil.toMap(subjects),
+            detailTypeMap: commonUtil.toMap(detailTypes),
+            detailStatusMap: commonUtil.toMap(detailStatus),
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_create_course_apply', upload.single('file_path'), async function (req, res) {
+    try {
+        //TODO：每个文件分一个文件夹储存，文件名用上传时的名字（带后缀）
+        console.log(req.file.originalname)
+        /*if (req.body.id && req.body.id != '') {
+            let img = await baseDAO.getById('product_img', req.body.id);
+            let img_path = req.file?req.file.filename:null;
+            let old_img_path = req.body.old_img_path;
+            if (!(img_path == null && old_img_path != '')) {
+                await fileUtil.deleteFile('../linenFiles/'+img[0].img_path);
+            }
+            if (req.file) {
+                let img = {};
+                img.filename = req.file.filename;
+                img.id = req.body.id;
+                await productDAO.updateProductImgs(img);
+            } else {
+                if (!(img_path == null && old_img_path != '')) {
+                    await baseDAO.deleteById('product_img', req.body.id);
+                }
+            }
+        } else {
+            if (req.file) {
+                let img = {};
+                img.img_type = req.body.img_type;
+                img.type_id = type.id;
+                img.img_path = req.file.filename;
+                await productDAO.saveProductImgs(img);
+            }
+        }
+        res.redirect('/product/product_upload_img?id='+type.id+'&img_type='+req.body.img_type);*/
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }

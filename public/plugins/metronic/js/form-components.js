@@ -101,12 +101,12 @@ var FormComponents = function () {
     }
 
     var handleTimePickers = function () {
-        
+        //已经启用
         if (jQuery().timepicker) {
             $('.timepicker-default').timepicker();
             $('.timepicker-24').timepicker({
+                defaultTime: 'value',
                 minuteStep: 1,
-                showSeconds: true,
                 showMeridian: false
             });
         }

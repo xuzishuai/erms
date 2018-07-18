@@ -663,11 +663,40 @@ create table teacher_free_time
    id                   varchar(36) not null,
    teacher_id           varchar(36) not null comment '教师id',
    free_date            date not null comment '空闲日期',
-   lesson_period_ids    varchar(500) not null comment '课时id，用#隔开',
+   lesson_period_ids    varchar(1000) not null comment '课时id，用#隔开',
    primary key (id)
 );
 
 alter table teacher_free_time comment '教师空闲时间表';
+
+/*==============================================================*/
+/* Table: course_apply                                     */
+/*==============================================================*/
+create table course_apply
+(
+   id                   varchar(36) not null,
+   contract_id          varchar(36) not null comment '合同id',
+   status_id            varchar(36) not null comment '状态id',
+   path                 varchar(500) not null comment '排课文件路径',
+   operator_id          varchar(36) not null comment '操作人id',
+   create_at            datetime not null comment '创建时间',
+   update_at            datetime not null comment '更新时间',
+   primary key (id)
+);
+
+alter table course_apply comment '排课申请表';
+
+/*==============================================================*/
+/* Table: course_apply_status                                   */
+/*==============================================================*/
+create table course_apply_status
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '排课申请状态',
+   primary key (id)
+);
+
+alter table course_apply_status comment '排课申请状态表';
 
 alter table menu add constraint FK_Reference_2 foreign key (parent_id)
       references menu (id) on delete restrict on update restrict;
@@ -863,3 +892,12 @@ alter table teacher add constraint FK_Reference_64 foreign key (subject_id)
 
 alter table teacher_free_time add constraint FK_Reference_65 foreign key (teacher_id)
       references teacher (id) on delete restrict on update restrict;
+
+alter table course_apply add constraint FK_Reference_66 foreign key (contract_id)
+      references contract (id) on delete restrict on update restrict;
+
+alter table course_apply add constraint FK_Reference_67 foreign key (status_id)
+      references course_apply_status (id) on delete restrict on update restrict;
+
+alter table course_apply add constraint FK_Reference_68 foreign key (operator_id)
+      references user (id) on delete restrict on update restrict;

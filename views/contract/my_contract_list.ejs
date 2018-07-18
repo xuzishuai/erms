@@ -138,7 +138,7 @@
                             <a href="/contract/edit_contract_detail?id=<%= contracts[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 变更</a>
                             <%}%>
                             <% if (contracts[i].status_id == '02') {%>
-                            <a href="/contract/course_apply?id=<%= contracts[i].id%>" class="btn green mini"><i class="icon-plus"></i> 排课申请</a>
+                            <a href="/course/new_course_apply?contract_id=<%= contracts[i].id%>" class="btn green mini"><i class="icon-plus"></i> 排课申请</a>
                             <%}%>
                         </td>
                     </tr>
