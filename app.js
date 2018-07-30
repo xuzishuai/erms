@@ -36,8 +36,9 @@ app.use(session({
 //拦截器
 app.all('/*', async function(req, res, next){
     let publicPattern=/^\/public/;
+    let filePattern=/^\/ermsFiles/;
     let url=req.path;
-    if(publicPattern.test(url) || url == '/user/login' || url == '/user/do_login' || url == '/error'){
+    if(publicPattern.test(url) || filePattern.test(url) || url == '/user/login' || url == '/user/do_login' || url == '/error'){
         next();
         return;
     }
@@ -80,6 +81,7 @@ app.all('/*', async function(req, res, next){
 
 // routes
 app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/ermsFiles', express.static(path.join(__dirname, '../ermsFiles')));
 app.use('/', index);
 app.use('/user', user);
 app.use('/student', student);
