@@ -12,9 +12,10 @@ const fileUtil = require('../util/fileUtil');
 const uuid = require('node-uuid');
 const multer  = require('multer');
 const storage = multer.diskStorage({
-    destination: '../linenFiles/' + uuid.v1(),
+    destination: '../ermsFiles',
     filename: function (req, file, cb) {
-        cb(null, file.originalname);
+        let fileFormat =(file.originalname).split(".");
+        cb(null, uuid.v1() + "." + fileFormat[fileFormat.length - 1]);
     }
 });
 const upload = multer({ storage: storage });
@@ -485,7 +486,6 @@ router.get('/new_course_apply', async function (req, res) {
 
 router.post('/do_create_course_apply', upload.single('file_path'), async function (req, res) {
     try {
-        //TODO：每个文件分一个文件夹储存，文件名用上传时的名字（带后缀）
         console.log(req.file.originalname)
         /*if (req.body.id && req.body.id != '') {
             let img = await baseDAO.getById('product_img', req.body.id);

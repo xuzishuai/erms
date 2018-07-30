@@ -677,6 +677,7 @@ create table course_apply
    id                   varchar(36) not null,
    contract_id          varchar(36) not null comment '合同id',
    status_id            varchar(36) not null comment '状态id',
+   name                 varchar(100) not null comment '排课文件名称',
    path                 varchar(500) not null comment '排课文件路径',
    operator_id          varchar(36) not null comment '操作人id',
    create_at            datetime not null comment '创建时间',
