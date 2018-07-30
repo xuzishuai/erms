@@ -8,6 +8,9 @@ const dateUtil = require('../util/dateUtil');
 const lessonPeriodDAO = require('../dao/lessonPeriodDAO');
 const teacherDAO = require('../dao/teacherDAO');
 const contractDAO = require('../dao/contractDAO');
+const courseApplyDAO = require('../dao/courseApplyDAO');
+const studentDAO = require('../dao/studentDAO');
+const userDAO = require('../dao/userDAO');
 const fileUtil = require('../util/fileUtil');
 const uuid = require('node-uuid');
 const multer  = require('multer');
@@ -486,7 +489,13 @@ router.get('/new_course_apply', async function (req, res) {
 
 router.post('/do_create_course_apply', upload.single('file_path'), async function (req, res) {
     try {
-        console.log(req.file.originalname)
+        let courseApply = {};
+        courseApply.contract_id = req.body.contract_id;
+        courseApply.name = req.file.originalname;
+        courseApply.path = req.file.filename;
+        courseApply.operator_id = req.session.user[0].id;
+        await courseApplyDAO.saveCourseApply(courseApply);
+        res.redirect('/contract/my_contract_list');
         /*if (req.body.id && req.body.id != '') {
             let img = await baseDAO.getById('product_img', req.body.id);
             let img_path = req.file?req.file.filename:null;
@@ -514,6 +523,41 @@ router.post('/do_create_course_apply', upload.single('file_path'), async functio
             }
         }
         res.redirect('/product/product_upload_img?id='+type.id+'&img_type='+req.body.img_type);*/
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/my_course_apply_list', async function (req, res) {
+    try {
+        let currentUser = req.session.user[0];
+        let condition = {};
+        condition.student_id = req.query.student_id;
+        condition.contract_no = req.query.contract_no;
+        condition.status_id = req.query.status_id;
+        condition.operator_id = currentUser.id;
+        let courseApplies = await courseApplyDAO.getCourseApplyByCondition(condition);
+        let sCondition = {};
+        sCondition.status_id = '03';//只显示已签约的学员
+        let students = await studentDAO.getStudentByCondition(sCondition);
+        let cCondition = {};
+        cCondition.status_id = '02';//查询执行中的合同
+        let contracts = await contractDAO.getContractByCondition('contract', cCondition);
+        let status = await baseDAO.getAll('course_apply_status');
+        //let appliers = await userDAO.getAllAdviser();
+        let appliers = [currentUser];//申请人只可选自己
+        res.render('course/my_course_apply_list', {
+            courseApplies: courseApplies,
+            students: students,
+            status: status,
+            appliers: appliers,
+            studentMap: commonUtil.toMap(students),
+            contractMap: commonUtil.toMap(contracts),
+            statusMap: commonUtil.toMap(status),
+            appliersMap: commonUtil.toMap(appliers),
+            condition: condition,
+            dateUtil: dateUtil
+        });
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }

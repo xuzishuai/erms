@@ -670,7 +670,7 @@ create table teacher_free_time
 alter table teacher_free_time comment '教师空闲时间表';
 
 /*==============================================================*/
-/* Table: course_apply                                     */
+/* Table: course_apply                                          */
 /*==============================================================*/
 create table course_apply
 (

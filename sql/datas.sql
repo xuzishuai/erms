@@ -13,7 +13,7 @@ INSERT INTO menu VALUES ('9', '客户追踪', '4', '/student/follow_student_list
 INSERT INTO menu VALUES ('10', '客户管理', '4', '/student/student_list', null, null, '#/student/student_list#/student/edit_student#/student/do_update_student#/contract/new_contract#/contract/validate_contract_no#/contract/do_create_contract#/contract/add_contract_detail_tr#', null);
 INSERT INTO menu VALUES ('11', '合同', null, null, '#12#13#22#23#', 'icon-file-text', null, 2);
 INSERT INTO menu VALUES ('12', '待审核合同', '11', '/contract/audit_contract_list', null, null, '#/contract/audit_contract_list#/contract/audit_contract#/contract/do_audit_contract#', null);
-INSERT INTO menu VALUES ('13', '合同管理', '11', '/contract/my_contract_list', null, null, '#/contract/my_contract_list#/contract/edit_contract#/contract/validate_edit_contract_no#/contract/do_update_contract#/contract/edit_contract_detail#/contract/add_contract_detail_tr#/course/new_course_apply#', null);
+INSERT INTO menu VALUES ('13', '合同管理', '11', '/contract/my_contract_list', null, null, '#/contract/my_contract_list#/contract/edit_contract#/contract/validate_edit_contract_no#/contract/do_update_contract#/contract/edit_contract_detail#/contract/add_contract_detail_tr#/course/new_course_apply#/course/do_create_course_apply#', null);
 INSERT INTO menu VALUES ('14', '学员', null, null, '#15#16#17#18#19#20#21#', 'icon-group', null, 3);
 INSERT INTO menu VALUES ('15', '学员管理', '14', '/student/signed_student_list', null, null, '#/student/signed_student_list#/student/student_details#/contract/contract_view#/contract/contract_detail_log#/student/revisit_record_detail#/student/parents_meeting_detail#/student/test_score_detail#/student/edit_signed_student#', null);
 INSERT INTO menu VALUES ('16', '分配班主任', '14', '/student/assign_headmaster_student_list', null, null, '#/student/assign_headmaster_student_list#/student/assign_headmaster#/student/do_assign_headmaster#', null);
@@ -24,11 +24,12 @@ INSERT INTO menu VALUES ('20', '校考反馈', '14', '/student/test_score_list',
 INSERT INTO menu VALUES ('21', '学员预警', '14', '/student/warning_student_list', null, null, '#/student/warning_student_list#/student/warning_student#/student/do_warning_student#', null);
 INSERT INTO menu VALUES ('22', '合同收费', '11', '/contract/contract_charge_list', null, null, '#/contract/contract_charge_list#/contract/new_contract_charge#/contract/do_create_contract_charge#/contract/edit_contract_charge#/contract/do_update_contract_charge#/contract/delete_contract_charge#', null);
 INSERT INTO menu VALUES ('23', '合同退费', '11', '/contract/contract_refund_list', null, null, '#/contract/contract_refund_list#/contract/new_contract_refund#/contract/do_create_contract_refund#', null);
-INSERT INTO menu VALUES ('24', '排课', null, null, '#25#26#27#28#', 'icon-calendar', null, 4);
+INSERT INTO menu VALUES ('24', '排课', null, null, '#25#26#27#28#29#', 'icon-calendar', null, 4);
 INSERT INTO menu VALUES ('25', '教室管理', '24', '/course/class_room_list', null, null, '#/course/class_room_list#/course/new_class_room#/course/do_create_class_room#/course/edit_class_room#/course/do_update_class_room#', null);
 INSERT INTO menu VALUES ('26', '课时管理', '24', '/course/lesson_period_list', null, null, '#/course/lesson_period_list#/course/new_lesson_period#/course/validate_lesson_period_name#/course/do_create_lesson_period#/course/edit_lesson_period#/course/do_update_lesson_period#/course/delete_lesson_period#', null);
 INSERT INTO menu VALUES ('27', '教师管理', '24', '/course/teacher_list', null, null, '#/course/teacher_list#/course/teacher_view#/course/new_teacher#/course/add_teacher_free_time_tr#/course/do_create_teacher#/course/edit_teacher#/course/do_update_teacher#', null);
 INSERT INTO menu VALUES ('28', '教师查询', '24', '/course/teacher_search', null, null, '#/course/teacher_search#/course/teacher_view#', null);
+INSERT INTO menu VALUES ('29', '排课申请', '24', '/course/my_course_apply_list', null, null, '#/course/my_course_apply_list#', null);
 
 -- ----------------------------
 -- Records of user,插入超级管理员用户
