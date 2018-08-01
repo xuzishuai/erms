@@ -1,12 +1,12 @@
 <div class="row-fluid">
     <div class="span12">
-        <div class="portlet box green">
+        <div class="portlet box blue">
             <div class="portlet-title">
                 <div class="caption">
                     <i class="icon-reorder"></i>
                 </div>
                 <div class="actions">
-                    <a href="/contract/my_contract_list" class="btn yellow"><i class="icon-chevron-left"></i> 返回</a>
+                    <a href="/course/my_course_apply_list" class="btn yellow"><i class="icon-chevron-left"></i> 返回</a>
                 </div>
             </div>
             <div class="portlet-body form">
@@ -194,33 +194,32 @@
                         </tbody>
                     </table>
                 </div>
-                <form action="/course/do_create_course_apply" method="post" class="form-horizontal" enctype="multipart/form-data">
+                <form action="/course/do_update_course_apply" method="post" class="form-horizontal" enctype="multipart/form-data">
                     <fieldset>
-                    <input name="contract_id" value="<%= contract.id%>" type="hidden">
-                    <h3 class="form-section">新增排课申请</h3>
-                    <div class="control-group">
-                        <label class="control-label">排课文件<span class="required">*</span></label>
-                        <div class="controls">
-                            <div class="fileupload fileupload-new" data-provides="fileupload">
-                                <div class="input-append">
-                                    <div class="uneditable-input">
-                                        <i class="icon-file fileupload-exists"></i>
-                                        <span class="fileupload-preview"></span>
-                                    </div>
-                                    <span class="btn btn-file">
+                        <input name="id" value="<%= courseApply.id%>" type="hidden">
+                        <h3 class="form-section">编辑排课申请</h3>
+                        <div class="control-group">
+                            <label class="control-label">排课文件<span class="required">*</span></label>
+                            <div class="controls">
+                                <div class="fileupload fileupload-exists" data-provides="fileupload">
+                                    <div class="input-append">
+                                        <div class="uneditable-input">
+                                            <i class="icon-file fileupload-exists"></i>
+                                            <span class="fileupload-preview"><%= courseApply.name%></span>
+                                        </div>
+                                        <span class="btn btn-file">
                                         <span class="fileupload-new">选择文件</span>
                                         <span class="fileupload-exists">变更</span>
-                                        <input type="file" class="default" multiple id="file_path" name="file_path" required/>
+                                        <input type="file" class="default" multiple id="file_path" name="file_path"/>
                                     </span>
-                                    <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">移除</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit" class="btn green"><i class="icon-ok"></i> 提交</button>
-                        <button type="button" class="btn" onclick="javascript:history.back(-1);"><i class="icon-remove"></i> 取消</button>
-                    </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn green"><i class="icon-ok"></i> 提交</button>
+                            <button type="button" class="btn" onclick="javascript:history.back(-1);"><i class="icon-remove"></i> 取消</button>
+                        </div>
                     </fieldset>
                 </form>
             </div>
@@ -228,43 +227,18 @@
     </div>
 </div>
 <%- contentFor('title')%>
-新增排课申请
+编辑排课申请
 <%- contentFor('breadcrumb')%>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="javascript:void(0);">合同</a>
+    <a href="javascript:void(0);">排课</a>
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/contract/my_contract_list">合同管理</a>
+    <a href="/course/my_course_apply_list">排课申请</a>
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/course/new_course_apply?contract_id=<%= contract.id%>">新增排课申请</a>
+    <a href="/course/edit_course_apply?id=<%= courseApply.id%>">编辑排课申请</a>
 </li>
 <%- contentFor('script')%>
-<script>
-    $(function() {
-        $('form').validate({
-            errorClass: 'help-inline', // default input error message class
-            errorPlacement: function(error, element) {
-                error.appendTo( element.parents('.input-append') );
-            },
-            highlight: function (element) { // hightlight error inputs
-                $(element)
-                    .closest('.help-inline').removeClass('ok'); // display OK icon
-                $(element)
-                    .closest('.control-group').removeClass('success').addClass('error'); // set error class to the control group
-            },
-            unhighlight: function (element) { // revert the change dony by hightlight
-                $(element)
-                    .closest('.control-group').removeClass('error'); // set error class to the control group
-            },
-            success: function (label) {
-                label
-                    .addClass('valid').addClass('help-inline ok') // mark the current input as valid and display OK icon
-                    .closest('.control-group').removeClass('error').addClass('success'); // set success class to the control group
-            }
-        });
-    });
-</script>

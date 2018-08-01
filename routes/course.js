@@ -496,33 +496,6 @@ router.post('/do_create_course_apply', upload.single('file_path'), async functio
         courseApply.operator_id = req.session.user[0].id;
         await courseApplyDAO.saveCourseApply(courseApply);
         res.redirect('/contract/my_contract_list');
-        /*if (req.body.id && req.body.id != '') {
-            let img = await baseDAO.getById('product_img', req.body.id);
-            let img_path = req.file?req.file.filename:null;
-            let old_img_path = req.body.old_img_path;
-            if (!(img_path == null && old_img_path != '')) {
-                await fileUtil.deleteFile('../linenFiles/'+img[0].img_path);
-            }
-            if (req.file) {
-                let img = {};
-                img.filename = req.file.filename;
-                img.id = req.body.id;
-                await productDAO.updateProductImgs(img);
-            } else {
-                if (!(img_path == null && old_img_path != '')) {
-                    await baseDAO.deleteById('product_img', req.body.id);
-                }
-            }
-        } else {
-            if (req.file) {
-                let img = {};
-                img.img_type = req.body.img_type;
-                img.type_id = type.id;
-                img.img_path = req.file.filename;
-                await productDAO.saveProductImgs(img);
-            }
-        }
-        res.redirect('/product/product_upload_img?id='+type.id+'&img_type='+req.body.img_type);*/
     } catch (error) {
         exceptionHelper.renderException(res, error);
     }
@@ -544,9 +517,160 @@ router.get('/my_course_apply_list', async function (req, res) {
         cCondition.status_id = '02';//查询执行中的合同
         let contracts = await contractDAO.getContractByCondition('contract', cCondition);
         let status = await baseDAO.getAll('course_apply_status');
-        //let appliers = await userDAO.getAllAdviser();
         let appliers = [currentUser];//申请人只可选自己
         res.render('course/my_course_apply_list', {
+            courseApplies: courseApplies,
+            students: students,
+            status: status,
+            appliers: appliers,
+            studentMap: commonUtil.toMap(students),
+            contractMap: commonUtil.toMap(contracts),
+            statusMap: commonUtil.toMap(status),
+            appliersMap: commonUtil.toMap(appliers),
+            condition: condition,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/edit_course_apply', async function (req, res) {
+    try {
+        let courseApply = await baseDAO.getById('course_apply', req.query.id);
+        courseApply = courseApply[0];
+        let contract = await baseDAO.getById('contract', courseApply.contract_id);
+        contract = contract[0];
+        let contractDetails = await contractDAO.getDetailsByContractId(contract.id);
+        let contractCharges = await contractDAO.getContractChargesByContractId(contract.id);
+        let chargeTypes = await baseDAO.getAll('contract_charge_type');
+        let chargeModes = await baseDAO.getAll('contract_charge_mode');
+        let grades = await baseDAO.getAll('grade');
+        let users = await baseDAO.getAll('user');
+        let attributes = await baseDAO.getAll('contract_attribute');
+        let types = await baseDAO.getAll('contract_type');
+        let possibilities = await baseDAO.getAll('possibility');
+        let status = await baseDAO.getAll('contract_status');
+        let subjects = await baseDAO.getAll('subject');
+        let detailTypes = await baseDAO.getAll('contract_detail_type');
+        let detailStatus = await baseDAO.getAll('contract_detail_status');
+        res.render('course/edit_course_apply', {
+            courseApply: courseApply,
+            contract: contract,
+            contractDetails: contractDetails,
+            contractCharges: contractCharges,
+            chargeTypeMap: commonUtil.toMap(chargeTypes),
+            chargeModeMap: commonUtil.toMap(chargeModes),
+            gradeMap: commonUtil.toMap(grades),
+            userMap: commonUtil.toMap(users),
+            attributeMap: commonUtil.toMap(attributes),
+            typeMap: commonUtil.toMap(types),
+            possibilityMap: commonUtil.toMap(possibilities),
+            statusMap: commonUtil.toMap(status),
+            subjectMap: commonUtil.toMap(subjects),
+            detailTypeMap: commonUtil.toMap(detailTypes),
+            detailStatusMap: commonUtil.toMap(detailStatus),
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_update_course_apply', upload.single('file_path'), async function (req, res) {
+    try {
+        let courseApply = await baseDAO.getById('course_apply', req.body.id);
+        courseApply = courseApply[0];
+        if (req.file) {
+            await fileUtil.deleteFile('../ermsFiles/'+courseApply.path);
+            courseApply.name = req.file.originalname;
+            courseApply.path = req.file.filename;
+        }
+        courseApply.status_id = '01';//修改后变为待审核
+        await courseApplyDAO.updateCourseApply(courseApply);
+        res.redirect('/course/my_course_apply_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/delete_course_apply', async function (req, res) {
+    try {
+        let courseApply = await baseDAO.getById('course_apply', req.query.id);
+        courseApply = courseApply[0];
+        await fileUtil.deleteFile('../ermsFiles/'+courseApply.path);
+        await baseDAO.deleteById('course_apply', courseApply.id);
+        res.redirect(req.query.back_url);
+    } catch (error) {
+        exceptionHelper.sendException(res, error);
+    }
+});
+
+router.get('/audit_course_apply_list', async function (req, res) {
+    try {
+        let condition = {};
+        condition.student_id = req.query.student_id;
+        condition.contract_no = req.query.contract_no;
+        condition.status_id = '01';//值查询待审核的申请
+        condition.operator_id = req.query.operator_id;
+        let courseApplies = await courseApplyDAO.getCourseApplyByCondition(condition);
+        let sCondition = {};
+        sCondition.status_id = '03';//只显示已签约的学员
+        let students = await studentDAO.getStudentByCondition(sCondition);
+        let cCondition = {};
+        cCondition.status_id = '02';//查询执行中的合同
+        let contracts = await contractDAO.getContractByCondition('contract', cCondition);
+        let status = await baseDAO.getById('course_apply_status', '01');
+        let appliers = await userDAO.getAllAdviser();
+        res.render('course/audit_course_apply_list', {
+            courseApplies: courseApplies,
+            students: students,
+            status: status,
+            appliers: appliers,
+            studentMap: commonUtil.toMap(students),
+            contractMap: commonUtil.toMap(contracts),
+            statusMap: commonUtil.toMap(status),
+            appliersMap: commonUtil.toMap(appliers),
+            condition: condition,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/do_audit_course_apply', async function (req, res) {
+    try {
+        let courseApply = await baseDAO.getById('course_apply', req.query.id);
+        courseApply = courseApply[0];
+        courseApply.status_id = req.query.status_id;
+        await courseApplyDAO.updateCourseApply(courseApply);
+        res.redirect('/course/audit_course_apply_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/audited_course_apply_list', async function (req, res) {
+    try {
+        let currentUser = req.session.user[0];
+        let condition = {};
+        condition.student_id = req.query.student_id;
+        condition.contract_no = req.query.contract_no;
+        condition.status_id = '02';//值查询已审核通过的申请
+        condition.operator_id = req.query.operator_id;
+        condition.headmaster_id = currentUser.id;//当前用户作为班主任条件，查询学员，进而查询合同，最终查出排课申请（班主任用户只能看到自己学员相关的排课申请）
+        let courseApplies = await courseApplyDAO.getCourseApplyByCondition(condition);
+        let sCondition = {};
+        sCondition.status_id = '03';//只显示已签约的学员
+        sCondition.headmaster_id = currentUser.id;//只显示班主任是当前用户的学员
+        let students = await studentDAO.getStudentByCondition(sCondition);
+        let cCondition = {};
+        cCondition.status_id = '02';//查询执行中的合同
+        let contracts = await contractDAO.getContractByCondition('contract', cCondition);
+        let status = await baseDAO.getById('course_apply_status', '02');
+        let appliers = await userDAO.getAllAdviser();
+        res.render('course/audited_course_apply_list', {
             courseApplies: courseApplies,
             students: students,
             status: status,

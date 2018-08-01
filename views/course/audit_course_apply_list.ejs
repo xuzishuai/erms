@@ -8,7 +8,7 @@
             </div>
             <div class="portlet-body">
                 <div class="booking-search">
-                    <form action="/course/my_course_apply_list">
+                    <form action="/course/audit_course_apply_list">
                         <div class="clearfix">
                             <div class="control-group span3">
                                 <label class="control-label">学员:</label>
@@ -71,7 +71,7 @@
                     </thead>
                     <tbody>
                     <%for (let i = 0; i < courseApplies.length; i++){
-                    let contract = contractMap[courseApplies[i].contract_id];
+                        let contract = contractMap[courseApplies[i].contract_id];
                     %>
                     <tr>
                         <td><%= studentMap[contract.student_id].name%>(<%= studentMap[contract.student_id].student_no%>)</td>
@@ -81,10 +81,8 @@
                         <td><a href="/ermsFiles/<%= courseApplies[i].path%>" download="<%= courseApplies[i].name%>"><%= courseApplies[i].name%></a></td>
                         <td><%= dateUtil.dateTimeFormat(courseApplies[i].create_at)%></td>
                         <td>
-                            <%if (courseApplies[i].status_id == '03') {%>
-                            <a href="/course/edit_course_apply?id=<%= courseApplies[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
-                            <a data-toggle="modal" data-target="#confirm" data-id="<%= courseApplies[i].id%>" class="btn red mini"><i class="icon-minus"></i> 删除</a>
-                            <%}%>
+                            <a href="/course/do_audit_course_apply?id=<%= courseApplies[i].id%>&status_id=02" class="btn green mini"><i class="icon-ok"></i> 通过</a>
+                            <a href="/course/do_audit_course_apply?id=<%= courseApplies[i].id%>&status_id=03" class="btn red mini"><i class="icon-remove"></i> 不通过</a>
                         </td>
                     </tr>
                     <%}%>
@@ -94,21 +92,8 @@
         </div>
     </div>
 </div>
-<div id="confirm" class="modal hide fade" tabindex="-1" data-backdrop="static">
-    <div class="modal-body">
-        <p>确定删除此申请吗?</p>
-    </div>
-    <div class="modal-footer">
-        <form action="/course/delete_course_apply">
-            <input id="id" name="id" hidden>
-            <input id="back_url" name="back_url" value="/course/my_course_apply_list" hidden>
-            <button type="button" data-dismiss="modal" class="btn">取消</button>
-            <button type="submit" class="btn green">确认</button>
-        </form>
-    </div>
-</div>
 <%- contentFor('title')%>
-排课申请
+排课申请审核
 <%- contentFor('breadcrumb')%>
 <li>
     <i class="icon-angle-right"></i>
@@ -116,21 +101,11 @@
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/course/my_course_apply_list">排课申请</a>
+    <a href="/course/audit_course_apply_list">排课申请审核</a>
 </li>
 <%- contentFor('script')%>
 <script>
     $('#student_id').val('<%= condition.student_id%>');
     $('#status_id').val('<%= condition.status_id%>');
     $('#operator_id').val('<%= condition.operator_id%>');
-
-    $(function() {
-        $('#confirm').on('show.bs.modal', function (event) {
-            let button = $(event.relatedTarget);
-            $('#id').val(button.data('id'));
-        })
-        $('#confirm').on('hidden.bs.modal', function () {
-            $('#id').val('');
-        })
-    });
 </script>

@@ -24,6 +24,10 @@ exports.getCourseApplyByCondition = function (condition) {
                     sql += ' and operator_id=?';
                     params[params.length] = condition.operator_id;
                 }
+                if (condition.headmaster_id && condition.headmaster_id != '') {
+                    sql += ' and contract_id in (select id from contract where status_id="02" and student_id in (select id from student where status_id="03" and headmaster_id=?))';
+                    params[params.length] = condition.headmaster_id;
+                }
             }
             let courseApplies = await dataPool.query(sql, params);
             resolve(courseApplies);
@@ -46,12 +50,11 @@ exports.saveCourseApply = function (courseApply) {
     })
 };
 
-//todo:编辑申请，删除以前的申请文件，替换为新的文件
 exports.updateCourseApply = function (courseApply) {
     return new Promise(async function (resolve, reject) {
         try {
-            await dataPool.query('update course_apply set mode_id=?, visit_date=?, target=?, type_id=?, content=?, suggestion=?, operator=?, update_at=? where id=?',
-                [courseApply.mode_id, courseApply.visit_date, courseApply.target, courseApply.type_id, courseApply.content, courseApply.suggestion, courseApply.operator, new Date(), courseApply.id]);
+            await dataPool.query('update course_apply set status_id=?, name=?, path=?, update_at=? where id=?',
+                [courseApply.status_id, courseApply.name, courseApply.path, new Date(), courseApply.id]);
             resolve();
         } catch (error) {
             reject(error);

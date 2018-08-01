@@ -200,7 +200,6 @@ router.get('/do_audit_student', async function (req, res) {
     try {
         let student = await baseDAO.getById('student', req.query.id);
         student = student[0];
-        student.id = req.query.id;
         student.audit_status_id = req.query.audit_status_id;
         await studentDAO.doUpdateStudent(student);
         res.redirect('/student/audit_student_list');
@@ -208,7 +207,6 @@ router.get('/do_audit_student', async function (req, res) {
         exceptionHelper.renderException(res, error);
     }
 });
-
 
 router.get('/follow_student_list', async function (req, res) {
     try {
