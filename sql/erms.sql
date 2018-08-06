@@ -707,6 +707,7 @@ create table course_schedule
    id                   varchar(36) not null,
    contract_id          varchar(36) not null comment '合同id',
    status_id            varchar(36) not null comment '状态id',
+   teacher_id           varchar(36) not null comment '教师id',
 
 
 
@@ -943,3 +944,6 @@ alter table course_schedule add constraint FK_Reference_69 foreign key (contract
 
 alter table course_schedule add constraint FK_Reference_70 foreign key (status_id)
       references course_schedule_status (id) on delete restrict on update restrict;
+
+alter table course_schedule add constraint FK_Reference_71 foreign key (teacher_id)
+      references teacher (id) on delete restrict on update restrict;
