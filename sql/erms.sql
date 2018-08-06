@@ -699,6 +699,41 @@ create table course_apply_status
 
 alter table course_apply_status comment '排课申请状态表';
 
+/*==============================================================*/
+/* Table: course_schedule                                       */
+/*==============================================================*/
+create table course_schedule
+(
+   id                   varchar(36) not null,
+   contract_id          varchar(36) not null comment '合同id',
+   status_id            varchar(36) not null comment '状态id',
+
+
+
+
+
+   name                 varchar(100) not null comment '排课文件名称',
+   path                 varchar(500) not null comment '排课文件路径',
+   operator_id          varchar(36) not null comment '操作人id',
+   create_at            datetime not null comment '创建时间',
+   update_at            datetime not null comment '更新时间',
+   primary key (id)
+);
+
+alter table course_schedule comment '排课表';
+
+/*==============================================================*/
+/* Table: course_schedule_status                                */
+/*==============================================================*/
+create table course_schedule_status
+(
+   id                   varchar(36) not null,
+   name                 varchar(50) not null comment '排课状态',
+   primary key (id)
+);
+
+alter table course_schedule_status comment '排课状态表';
+
 alter table menu add constraint FK_Reference_2 foreign key (parent_id)
       references menu (id) on delete restrict on update restrict;
 
@@ -902,3 +937,9 @@ alter table course_apply add constraint FK_Reference_67 foreign key (status_id)
 
 alter table course_apply add constraint FK_Reference_68 foreign key (operator_id)
       references user (id) on delete restrict on update restrict;
+
+alter table course_schedule add constraint FK_Reference_69 foreign key (contract_id)
+      references contract (id) on delete restrict on update restrict;
+
+alter table course_schedule add constraint FK_Reference_70 foreign key (status_id)
+      references course_schedule_status (id) on delete restrict on update restrict;

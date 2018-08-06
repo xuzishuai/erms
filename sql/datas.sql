@@ -240,3 +240,9 @@ INSERT INTO class_room_status VALUES ('03', '使用中');
 INSERT INTO course_apply_status VALUES ('01', '未审核');
 INSERT INTO course_apply_status VALUES ('02', '已通过');
 INSERT INTO course_apply_status VALUES ('03', '未通过');
+
+-- ----------------------------
+-- Records of course_schedule_status
+-- ----------------------------
+INSERT INTO course_schedule_status VALUES ('01', '未上课');
+INSERT INTO course_schedule_status VALUES ('02', '已上课');
