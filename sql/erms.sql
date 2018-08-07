@@ -706,15 +706,13 @@ create table course_schedule
 (
    id                   varchar(36) not null,
    contract_id          varchar(36) not null comment '合同id',
-   status_id            varchar(36) not null comment '状态id',
+   subject_id           varchar(36) not null comment '科目id',
+   grade_id             varchar(36) not null comment '年级id',
    teacher_id           varchar(36) not null comment '教师id',
-
-
-
-
-
-   name                 varchar(100) not null comment '排课文件名称',
-   path                 varchar(500) not null comment '排课文件路径',
+   lesson_date          date not null comment '上课日期',
+   lesson_period_id     varchar(36) not null comment '课时id',
+   class_room_id        varchar(36) not null comment '教室id',
+   status_id            varchar(36) not null comment '状态id',
    operator_id          varchar(36) not null comment '操作人id',
    create_at            datetime not null comment '创建时间',
    update_at            datetime not null comment '更新时间',
@@ -947,3 +945,18 @@ alter table course_schedule add constraint FK_Reference_70 foreign key (status_i
 
 alter table course_schedule add constraint FK_Reference_71 foreign key (teacher_id)
       references teacher (id) on delete restrict on update restrict;
+
+alter table course_schedule add constraint FK_Reference_72 foreign key (lesson_period_id)
+      references lesson_period (id) on delete restrict on update restrict;
+
+alter table course_schedule add constraint FK_Reference_73 foreign key (class_room_id)
+      references class_room (id) on delete restrict on update restrict;
+
+alter table course_schedule add constraint FK_Reference_74 foreign key (subject_id)
+      references subject (id) on delete restrict on update restrict;
+
+alter table course_schedule add constraint FK_Reference_75 foreign key (operator_id)
+      references user (id) on delete restrict on update restrict;
+
+alter table course_schedule add constraint FK_Reference_76 foreign key (grade_id)
+      references grade (id) on delete restrict on update restrict;
