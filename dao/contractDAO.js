@@ -54,6 +54,10 @@ exports.getContractByCondition = function (table, condition) {
                     sql += ' and student_id=?';
                     params[params.length] = condition.student_id;
                 }
+                if (condition.headmaster_id && condition.headmaster_id != '') {
+                    sql += ' and student_id in (select id from student where status_id="03" and headmaster_id=?)';
+                    params[params.length] = condition.headmaster_id;
+                }
                 if (condition.contract_no && condition.contract_no != '') {
                     sql += ' and contract_no like ?';
                     params[params.length] = '%' + condition.contract_no + '%';

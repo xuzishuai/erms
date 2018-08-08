@@ -11,6 +11,7 @@ const contractDAO = require('../dao/contractDAO');
 const courseApplyDAO = require('../dao/courseApplyDAO');
 const studentDAO = require('../dao/studentDAO');
 const userDAO = require('../dao/userDAO');
+const courseScheduleDAO = require('../dao/courseScheduleDAO');
 const fileUtil = require('../util/fileUtil');
 const uuid = require('node-uuid');
 const multer  = require('multer');
@@ -695,5 +696,52 @@ router.get('/audited_course_apply_list', async function (req, res) {
 //todo:提交后返回上一界面，即显示合同信息和合同明细的界面
 //todo:提交后状态为"待审核"，可被审核通过为"未上课"或审核不通过为"未通过"，若为"未通过"，班主任可以编辑，其他状态不可编辑，编辑后变为"待审核"，"未通过"状态时也可以删除
 //todo:排课管理list列表查询当前用户班主任的学生的相关数据，在"未上课"状态且上课日期小于或等于今天的的排课数据后面增加操作按钮"已上课"，点击后改变此条数据状态为"已上课"，并在对应的合同明细的"已完成课时数"中加1
+
+router.get('/course_schedule_list', async function (req, res) {
+    try {
+        let headmaster_id = req.session.user[0].id;
+        let condition = {};
+        condition.student_id = req.query.student_id;
+        condition.contract_no = req.query.contract_no;
+        condition.sbuject_id = req.query.sbuject_id;
+        condition.grade_id = req.query.grade_id;
+        condition.teacher_id = req.query.teacher_id;
+        condition.lesson_date = req.query.lesson_date;
+        condition.lesson_period_id = req.query.lesson_period_id;
+        condition.class_room_id = req.query.class_room_id;
+        condition.operator_id = headmaster_id;//查询当前用户（班主任）创建的排课信息
+        let courseSchedules = await courseScheduleDAO.getCourseScheduleByCondition(condition);
+        let sCondition = {};
+        sCondition.status_id = '03';//只显示已签约的学员
+        sCondition.headmaster_id = headmaster_id;//查询当前用户（班主任）的学生
+        let students = await studentDAO.getStudentByCondition(sCondition);
+        let cCondition = {};
+        cCondition.status_id = '02';//查询执行中的合同
+        cCondition.headmaster_id = headmaster_id;//查询当前用户（班主任）的学生的合同
+        let contracts = await contractDAO.getContractByCondition('contract', cCondition);
+        let subjects = await baseDAO.getAll('subject');
+        let grades = await baseDAO.getAll('grade');
+        let teachers = await baseDAO.getAll('teacher');
+        let lessonPeriods = await baseDAO.getAll('lesson_period');
+        let classRooms = await baseDAO.getAll('class_room');
+        res.render('course/course_schedule_list', {
+            courseSchedules: courseSchedules,
+            students: students,
+            contracts: contracts,
+            subjects: subjects,
+            grades: grades,
+            teachers: teachers,
+            lessonPeriods: lessonPeriods,
+            classRooms: classRooms,
+            studentMap: commonUtil.toMap(students),
+            contractMap: commonUtil.toMap(contracts),
+            subjectMap: commonUtil.toMap(subjects),
+            condition: condition,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
 
 module.exports = router;
