@@ -724,6 +724,7 @@ router.get('/course_schedule_list', async function (req, res) {
         let teachers = await baseDAO.getAll('teacher');
         let lessonPeriods = await baseDAO.getAll('lesson_period');
         let classRooms = await baseDAO.getAll('class_room');
+        let status = await baseDAO.getAll('course_schedule_status');
         res.render('course/course_schedule_list', {
             courseSchedules: courseSchedules,
             students: students,
@@ -736,6 +737,10 @@ router.get('/course_schedule_list', async function (req, res) {
             studentMap: commonUtil.toMap(students),
             contractMap: commonUtil.toMap(contracts),
             subjectMap: commonUtil.toMap(subjects),
+            gradeMap: commonUtil.toMap(grades),
+            teacherMap: commonUtil.toMap(teachers),
+            lessonPeriodMap: commonUtil.toMap(lessonPeriods),
+            statusMap: commonUtil.toMap(status),
             condition: condition,
             dateUtil: dateUtil
         });
