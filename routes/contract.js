@@ -8,6 +8,7 @@ const dateUtil = require('../util/dateUtil');
 const contractDAO = require('../dao/contractDAO');
 const contractChargeDAO = require('../dao/contractChargeDAO');
 const contractRefundDAO = require('../dao/contractRefundDAO');
+const courseScheduleDAO = require('../dao/courseScheduleDAO');
 
 router.get('/new_contract', async function (req, res) {
     try {
@@ -229,6 +230,10 @@ router.get('/my_contract_list', async function (req, res) {
         condition.status_id = (req.query.status_id && req.query.status_id != '')?[req.query.status_id]:null;
         condition.signer_id = req.session.user[0].id;
         let contracts = await contractDAO.getContractByCondition('contract', condition);
+        for (let i = 0; i < contracts.length; i++) {
+            let lesson_periods = await courseScheduleDAO.getCountByContractId(contracts[i].id);
+            contracts[i].lesson_periods = lesson_periods[0].lesson_periods;
+        }
         let students = await baseDAO.getAll('student');
         let grades = await baseDAO.getAll('grade');
         let users = await baseDAO.getAll('user');

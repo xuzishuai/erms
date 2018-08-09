@@ -56,6 +56,16 @@ exports.getCourseScheduleByCondition = function (condition) {
         }
     })
 };
+exports.getCountByContractId = function (contract_id) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let count = await dataPool.query("select count(*) lesson_periods from course_schedule where contract_id=?", [contract_id]);
+            resolve(count);
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
 /*
 
 exports.saveCourseSchedule = function (courseSchedule) {
