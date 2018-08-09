@@ -8,7 +8,7 @@
             </div>
             <div class="portlet-body">
                 <div class="booking-search">
-                    <form action="/contract/my_contract_list">
+                    <form action="/course/new_course_schedule_contract_list">
                         <div class="clearfix">
                             <div class="control-group span3">
                                 <label class="control-label">学员:</label>
@@ -84,17 +84,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="control-group span3">
-                                <label class="control-label">合同状态:</label>
-                                <div class="controls">
-                                    <select class="span12 select2" tabindex="1" name="status_id" id="status_id">
-                                        <option value=""></option>
-                                        <%for (let i = 0; i < contractStatus.length; i++){%>
-                                        <option value="<%= contractStatus[i].id%>"><%= contractStatus[i].name%></option>
-                                        <%}%>
-                                    </select>
-                                </div>
-                            </div>
                         </div>
                         <div class="clearfix">
                             <div class="pull-right">
@@ -133,13 +122,7 @@
                         <td><%= userMap[contracts[i].signer_id].name%></td>
                         <td><%= contractStatusMap[contracts[i].status_id].name%></td>
                         <td>
-                            <% if (contracts[i].status_id == '02' || contracts[i].status_id == '03') {%>
-                            <a href="/contract/edit_contract?id=<%= contracts[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 修改</a>
-                            <a href="/contract/edit_contract_detail?id=<%= contracts[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 变更</a>
-                            <%}%>
-                            <% if (contracts[i].status_id == '02') {%>
-                            <a href="/course/new_course_apply?contract_id=<%= contracts[i].id%>" class="btn green mini"><i class="icon-plus"></i> 排课申请</a>
-                            <%}%>
+                            <a href="/course/new_course_schedule_contract_detail?contract_id=<%= contracts[i].id%>" class="btn green mini"><i class="icon-plus"></i> 排课</a>
                         </td>
                     </tr>
                     <%}%>
@@ -150,15 +133,15 @@
     </div>
 </div>
 <%- contentFor('title')%>
-合同管理
+新增排课
 <%- contentFor('breadcrumb')%>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="javascript:void(0);">合同</a>
+    <a href="javascript:void(0);">排课</a>
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/contract/my_contract_list">合同管理</a>
+    <a href="/course/new_course_schedule_contract_list">新增排课</a>
 </li>
 <%- contentFor('script')%>
 <script>
@@ -166,5 +149,4 @@
     $('#attribute_id').val('<%= condition.attribute_id%>');
     $('#contract_type_id').val('<%= condition.contract_type_id%>');
     $('#grade_id').val('<%= condition.grade_id%>');
-    $('#status_id').val('<%= condition.status_id%>');
 </script>

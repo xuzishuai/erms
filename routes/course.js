@@ -689,7 +689,6 @@ router.get('/audited_course_apply_list', async function (req, res) {
 });
 
 //todo:排课表逐条新增编辑和审核，
-//todo:在合同管理list页面对每一条合同数据加个按钮——当用户为班主任时（排课按钮和排课申请按钮应该不能同时存在，属于不同角色），搜索自己的学生的合同，对于已排课时小于总课时且状态为"执行中"的合同显示"排课"按钮，
 //todo:点击"排课"按钮后上面显示合同信息和合同明细，在已排课时（查询和此明细id相关的排课表数据条数，所有状态都算上）小于此明细总课时的后面显示"排课"按钮，点击后进入新增一条排课数据的form表单
 //todo:form表单显示不可编辑的合同信息以及当前选中的合同明细信息（显示合同编号，隐藏合同id和明细id的input，显示明细中的科目和年级），剩下待确定字段可编辑（教师，教室，日期，课时，在编辑排课信息时也只能编辑这四个字段），
 //todo:上课日期默认今天，课时默认选择第一个，可选教室和教师动态变化，根据上课日期和课时来查询空闲的教室和教师，
@@ -697,7 +696,55 @@ router.get('/audited_course_apply_list', async function (req, res) {
 //todo:提交后状态为"待审核"，可被审核通过为"未上课"或审核不通过为"未通过"，若为"未通过"，班主任可以编辑，其他状态不可编辑，编辑后变为"待审核"，"未通过"状态时也可以删除
 //todo:排课管理list列表查询当前用户班主任的学生的相关数据，在"未上课"状态且上课日期小于或等于今天的的排课数据后面增加操作按钮"已上课"，点击后改变此条数据状态为"已上课"，并在对应的合同明细的"已完成课时数"中加1
 
-//todo:问题：哪些角色可以签合同？合同列表现在只显示自己签的合同是否正确？怎么通过角色判断是否应该显示“排课申请”按钮和“排课”按钮？
+router.get('/new_course_schedule_contract_list', async function (req, res) {
+    try {
+        let condition = {};
+        condition.student_id = req.query.student_id;
+        condition.contract_no = req.query.contract_no;
+        condition.attribute_id = req.query.attribute_id;
+        condition.contract_type_id = req.query.contract_type_id;
+        condition.grade_id = req.query.grade_id;
+        condition.start_date_from = req.query.start_date_from;
+        condition.start_date_to = req.query.start_date_to;
+        condition.status_id = '02';//查询执行中的合同
+        condition.headmaster_id = req.session.user[0].id;//查询当前用户（班主任）的学生的合同
+        let contracts = await contractDAO.getContractByCondition('contract', condition);
+        //去除课时使用完的合同
+        let contractVOs = [];
+        for (let i = 0; i < contracts.length; i++) {
+            let lesson_periods = await courseScheduleDAO.getCountByContractId(contracts[i].id);
+            contracts[i].lesson_periods = lesson_periods[0].lesson_periods;
+            if (contracts[i].lesson_periods < contracts[i].total_lesson_period) {
+                contractVOs[contractVOs.length] = contracts[i];
+            }
+        }
+        let students = await baseDAO.getAll('student');
+        let grades = await baseDAO.getAll('grade');
+        let users = await baseDAO.getAll('user');
+        let contractAttributes = await baseDAO.getAll('contract_attribute');
+        let contractTypes = await baseDAO.getAll('contract_type');
+        let possibilities = await baseDAO.getAll('possibility');
+        let contractStatus = await baseDAO.getAll('contract_status');
+        res.render('course/new_course_schedule_contract_list', {
+            contracts: contractVOs,
+            students: students,
+            grades: grades,
+            contractAttributes: contractAttributes,
+            contractTypes: contractTypes,
+            possibilities: possibilities,
+            studentMap: commonUtil.toMap(students),
+            gradeMap: commonUtil.toMap(grades),
+            userMap: commonUtil.toMap(users),
+            contractAttributeMap: commonUtil.toMap(contractAttributes),
+            contractTypeMap: commonUtil.toMap(contractTypes),
+            contractStatusMap: commonUtil.toMap(contractStatus),
+            condition: condition,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
 
 router.get('/course_schedule_list', async function (req, res) {
     try {
