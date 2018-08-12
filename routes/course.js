@@ -454,9 +454,6 @@ router.get('/new_course_apply', async function (req, res) {
         let contract = await baseDAO.getById('contract', req.query.contract_id);
         contract = contract[0];
         let contractDetails = await contractDAO.getDetailsByContractId(contract.id);
-        let contractCharges = await contractDAO.getContractChargesByContractId(contract.id);
-        let chargeTypes = await baseDAO.getAll('contract_charge_type');
-        let chargeModes = await baseDAO.getAll('contract_charge_mode');
         let grades = await baseDAO.getAll('grade');
         let users = await baseDAO.getAll('user');
         let attributes = await baseDAO.getAll('contract_attribute');
@@ -469,9 +466,6 @@ router.get('/new_course_apply', async function (req, res) {
         res.render('course/new_course_apply', {
             contract: contract,
             contractDetails: contractDetails,
-            contractCharges: contractCharges,
-            chargeTypeMap: commonUtil.toMap(chargeTypes),
-            chargeModeMap: commonUtil.toMap(chargeModes),
             gradeMap: commonUtil.toMap(grades),
             userMap: commonUtil.toMap(users),
             attributeMap: commonUtil.toMap(attributes),
@@ -543,9 +537,6 @@ router.get('/edit_course_apply', async function (req, res) {
         let contract = await baseDAO.getById('contract', courseApply.contract_id);
         contract = contract[0];
         let contractDetails = await contractDAO.getDetailsByContractId(contract.id);
-        let contractCharges = await contractDAO.getContractChargesByContractId(contract.id);
-        let chargeTypes = await baseDAO.getAll('contract_charge_type');
-        let chargeModes = await baseDAO.getAll('contract_charge_mode');
         let grades = await baseDAO.getAll('grade');
         let users = await baseDAO.getAll('user');
         let attributes = await baseDAO.getAll('contract_attribute');
@@ -559,9 +550,6 @@ router.get('/edit_course_apply', async function (req, res) {
             courseApply: courseApply,
             contract: contract,
             contractDetails: contractDetails,
-            contractCharges: contractCharges,
-            chargeTypeMap: commonUtil.toMap(chargeTypes),
-            chargeModeMap: commonUtil.toMap(chargeModes),
             gradeMap: commonUtil.toMap(grades),
             userMap: commonUtil.toMap(users),
             attributeMap: commonUtil.toMap(attributes),
@@ -739,6 +727,46 @@ router.get('/new_course_schedule_contract_list', async function (req, res) {
             contractTypeMap: commonUtil.toMap(contractTypes),
             contractStatusMap: commonUtil.toMap(contractStatus),
             condition: condition,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/new_course_schedule_contract_view', async function (req, res) {
+    try {
+        let contract = await baseDAO.getById('contract', req.query.contract_id);
+        contract = contract[0];
+        let contractDetails = await contractDAO.getDetailsByContractId(contract.id);
+        //查询此条合同明细是否能新增排课
+        for (let i = 0; i < contractDetails.length; i++) {
+            let lesson_periods = await courseScheduleDAO.getCountByContractDetailId(contractDetails[i].id);
+            if (lesson_periods[0].lesson_periods < contractDetails[i].lesson_period) {
+                contractDetails[i].enable_course_schedule = true;
+            }
+        }
+        let grades = await baseDAO.getAll('grade');
+        let users = await baseDAO.getAll('user');
+        let attributes = await baseDAO.getAll('contract_attribute');
+        let types = await baseDAO.getAll('contract_type');
+        let possibilities = await baseDAO.getAll('possibility');
+        let status = await baseDAO.getAll('contract_status');
+        let subjects = await baseDAO.getAll('subject');
+        let detailTypes = await baseDAO.getAll('contract_detail_type');
+        let detailStatus = await baseDAO.getAll('contract_detail_status');
+        res.render('course/new_course_schedule_contract_view', {
+            contract: contract,
+            contractDetails: contractDetails,
+            gradeMap: commonUtil.toMap(grades),
+            userMap: commonUtil.toMap(users),
+            attributeMap: commonUtil.toMap(attributes),
+            typeMap: commonUtil.toMap(types),
+            possibilityMap: commonUtil.toMap(possibilities),
+            statusMap: commonUtil.toMap(status),
+            subjectMap: commonUtil.toMap(subjects),
+            detailTypeMap: commonUtil.toMap(detailTypes),
+            detailStatusMap: commonUtil.toMap(detailStatus),
             dateUtil: dateUtil
         });
     } catch (error) {

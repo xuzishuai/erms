@@ -122,7 +122,7 @@
                         <td><%= userMap[contracts[i].signer_id].name%></td>
                         <td><%= contractStatusMap[contracts[i].status_id].name%></td>
                         <td>
-                            <a href="/course/new_course_schedule_contract_detail?contract_id=<%= contracts[i].id%>" class="btn green mini"><i class="icon-plus"></i> 排课</a>
+                            <a href="/course/new_course_schedule_contract_view?contract_id=<%= contracts[i].id%>" class="btn green mini"><i class="icon-plus"></i> 排课</a>
                         </td>
                     </tr>
                     <%}%>
