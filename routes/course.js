@@ -774,6 +774,74 @@ router.get('/new_course_schedule_contract_view', async function (req, res) {
     }
 });
 
+router.get('/new_course_schedule', async function (req, res) {
+    try {
+        let contractDetail = await baseDAO.getById('contract', req.query.contract_detail_id);
+        contractDetail = contractDetail[0];
+        let contract = await baseDAO.getById('contract', contractDetail.contract_id);
+        contract = contract[0];
+        let student = await baseDAO.getById('student', contract.student_id);
+        student = student[0];
+        let subjects = await baseDAO.getAll('subject');
+        let grades = await baseDAO.getAll('grade');
+        let today = dateUtil.dateFormat(new Date());
+        let lessonPeriods = await baseDAO.getAll('lesson_period');
+        let lessonPeriodVOs = [];
+        //根据日期去除已使用的课时
+        for (let i = 0; i < lessonPeriods.length; i++) {
+            let lCondition = {};
+            lCondition.lesson_date = today;
+            lCondition.lesson_period_id = lessonPeriods[i].id;
+            let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(lCondition);
+            if (!courseSchedule || courseSchedule.length <= 0) {
+                lessonPeriodVOs[lessonPeriodVOs.length] = lessonPeriods[i];
+            }
+        }
+        let tCondition = {};
+        tCondition.grade_id = contractDetail.grade_id;
+        tCondition.sbuject_id = contractDetail.sbuject_id;
+        let teachers = await teacherDAO.getTeacherByCondition(tCondition);
+        let teacherVOs = [];
+        //根据日期和默认第一个课时去除有课的教师
+        for (let i = 0; i < teachers.length; i++) {
+            let tCondition = {};
+            tCondition.lesson_date = today;
+            tCondition.lesson_period_id = lessonPeriodVOs[0].id;//默认第一个课时
+            tCondition.teacher_id = teachers[i].id;
+            let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(tCondition);
+            if (!courseSchedule || courseSchedule.length <= 0) {
+                teacherVOs[teacherVOs.length] = teachers[i];
+            }
+        }
+        let classRooms = await baseDAO.getAll('class_room');
+        let classRoomVOs = [];
+        //根据日期和默认第一个课时去除有课的教室
+        for (let i = 0; i < classRooms.length; i++) {
+            let cCondition = {};
+            cCondition.lesson_date = today;
+            cCondition.lesson_period_id = lessonPeriodVOs[0].id;//默认第一个课时
+            cCondition.class_room_id = classRooms[i].id;
+            let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(cCondition);
+            if (!courseSchedule || courseSchedule.length <= 0) {
+                classRoomVOs[teacherVOs.length] = classRooms[i];
+            }
+        }
+        res.render('course/new_course_schedule', {
+            contract: contract,
+            contractDetail: contractDetail,
+            subjects: subjects,
+            grades: grades,
+            lessonPeriod: lessonPeriodVOs,
+            teachers: teacherVOs,
+            classRooms: classRoomVOs,
+            student: student,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
 router.get('/course_schedule_list', async function (req, res) {
     try {
         let headmaster_id = req.session.user[0].id;
