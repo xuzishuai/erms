@@ -679,7 +679,7 @@ router.get('/audited_course_apply_list', async function (req, res) {
 //todo:排课表逐条新增编辑和审核，
 //todo:点击"排课"按钮后上面显示合同信息和合同明细，在已排课时（查询和此明细id相关的排课表数据条数，所有状态都算上）小于此明细总课时的后面显示"排课"按钮，点击后进入新增一条排课数据的form表单
 //todo:form表单显示不可编辑的合同信息以及当前选中的合同明细信息（显示合同编号，隐藏合同id和明细id的input，显示明细中的科目和年级），剩下待确定字段可编辑（教师，教室，日期，课时，在编辑排课信息时也只能编辑这四个字段），
-//todo:上课日期默认今天，课时默认选择第一个，可选教室和教师动态变化，根据上课日期和课时来查询空闲的教室和教师，
+//todo:上课日期默认今天，课时默认选择第一个，课时随日期变化（查出空闲课时），可选教室和教师动态变化，根据上课日期和课时来查询空闲的教室和教师，
 //todo:提交后返回上一界面，即显示合同信息和合同明细的界面
 //todo:提交后状态为"待审核"，可被审核通过为"未上课"或审核不通过为"未通过"，若为"未通过"，班主任可以编辑，其他状态不可编辑，编辑后变为"待审核"，"未通过"状态时也可以删除
 //todo:排课管理list列表查询当前用户班主任的学生的相关数据，在"未上课"状态且上课日期小于或等于今天的的排课数据后面增加操作按钮"已上课"，点击后改变此条数据状态为"已上课"，并在对应的合同明细的"已完成课时数"中加1
@@ -829,8 +829,8 @@ router.get('/new_course_schedule', async function (req, res) {
         res.render('course/new_course_schedule', {
             contract: contract,
             contractDetail: contractDetail,
-            subjects: subjects,
-            grades: grades,
+            subjectMap: commonUtil.toMap(subjects),
+            gradeMap: commonUtil.toMap(grades),
             lessonPeriod: lessonPeriodVOs,
             teachers: teacherVOs,
             classRooms: classRoomVOs,
@@ -839,6 +839,70 @@ router.get('/new_course_schedule', async function (req, res) {
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/course_schedule_select_change', async function (req, res) {
+    try {
+        let today = req.body.lesson_date;
+        let lessonPeriodVOs = [];
+        if (req.body.select_name == 'lesson_date') {
+            let lessonPeriods = await baseDAO.getAll('lesson_period');
+            //根据日期去除已使用的课时
+            for (let i = 0; i < lessonPeriods.length; i++) {
+                let lCondition = {};
+                lCondition.lesson_date = today;
+                lCondition.lesson_period_id = lessonPeriods[i].id;
+                let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(lCondition);
+                if (!courseSchedule || courseSchedule.length <= 0) {
+                    lessonPeriodVOs[lessonPeriodVOs.length] = lessonPeriods[i];
+                }
+            }
+        }
+        let tCondition = {};
+        tCondition.grade_id = req.body.grade_id;
+        tCondition.sbuject_id = req.body.sbuject_id;
+        let teachers = await teacherDAO.getTeacherByCondition(tCondition);
+        let teacherVOs = [];
+        //根据日期和默认第一个课时去除有课的教师
+        for (let i = 0; i < teachers.length; i++) {
+            let tCondition = {};
+            tCondition.lesson_date = today;
+            if (req.body.select_name == 'lesson_date') {
+                tCondition.lesson_period_id = lessonPeriodVOs[0].id;//默认第一个课时
+            } else {
+                tCondition.lesson_period_id = req.body.lesson_period_id;//通过传过来的课时查询
+            }
+            tCondition.teacher_id = teachers[i].id;
+            let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(tCondition);
+            if (!courseSchedule || courseSchedule.length <= 0) {
+                teacherVOs[teacherVOs.length] = teachers[i];
+            }
+        }
+        let classRooms = await baseDAO.getAll('class_room');
+        let classRoomVOs = [];
+        //根据日期和默认第一个课时去除有课的教室
+        for (let i = 0; i < classRooms.length; i++) {
+            let cCondition = {};
+            cCondition.lesson_date = today;
+            if (req.body.select_name == 'lesson_date') {
+                cCondition.lesson_period_id = lessonPeriodVOs[0].id;//默认第一个课时
+            } else {
+                cCondition.lesson_period_id = req.body.lesson_period_id;//通过传过来的课时查询
+            }
+            cCondition.class_room_id = classRooms[i].id;
+            let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(cCondition);
+            if (!courseSchedule || courseSchedule.length <= 0) {
+                classRoomVOs[teacherVOs.length] = classRooms[i];
+            }
+        }
+        res.send({
+            lessonPeriods: lessonPeriodVOs,
+            teachers: teacherVOs,
+            classRooms: classRoomVOs
+        });
+    } catch (error) {
+        exceptionHelper.sendException(res, error);
     }
 });
 
