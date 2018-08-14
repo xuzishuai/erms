@@ -32,7 +32,7 @@ INSERT INTO menu VALUES ('28', '教师查询', '24', '/course/teacher_search', n
 INSERT INTO menu VALUES ('29', '排课申请', '24', '/course/my_course_apply_list', null, null, '#/course/my_course_apply_list#/course/edit_course_apply#/course/do_update_course_apply#/course/delete_course_apply#', null);
 INSERT INTO menu VALUES ('30', '排课申请审核', '24', '/course/audit_course_apply_list', null, null, '#/course/audit_course_apply_list#/course/do_audit_course_apply#', null);
 INSERT INTO menu VALUES ('31', '排课申请列表', '24', '/course/audited_course_apply_list', null, null, '#/course/audited_course_apply_list#/course/delete_course_apply#', null);
-INSERT INTO menu VALUES ('32', '新增排课', '24', '/course/new_course_schedule_contract_list', null, null, '#/course/new_course_schedule_contract_list#/course/new_course_schedule_contract_view#/course/new_course_schedule#/course/course_schedule_select_change#', null);
+INSERT INTO menu VALUES ('32', '新增排课', '24', '/course/new_course_schedule_contract_list', null, null, '#/course/new_course_schedule_contract_list#/course/new_course_schedule_contract_view#/course/new_course_schedule#/course/course_schedule_select_change#/course/do_create_course_schedule#', null);
 INSERT INTO menu VALUES ('33', '排课管理', '24', '/course/course_schedule_list', null, null, '#/course/course_schedule_list#', null);
 
 -- ----------------------------

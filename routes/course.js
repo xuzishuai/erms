@@ -906,6 +906,24 @@ router.post('/course_schedule_select_change', async function (req, res) {
     }
 });
 
+router.post('/do_create_course_schedule', async function (req, res) {
+    try {
+        let courseSchedule = {};
+        courseSchedule.contract_id = req.body.contract_id;
+        courseSchedule.contract_detail_id = req.body.contract_detail_id;
+        courseSchedule.subject_id = req.body.subject_id;
+        courseSchedule.grade_id = req.body.grade_id;
+        courseSchedule.lesson_date = req.body.lesson_date;
+        courseSchedule.lesson_period_id = req.body.lesson_period_id;
+        courseSchedule.class_room_id = req.body.class_room_id;
+        courseSchedule.operator_id = req.session.user[0].id;
+        await courseScheduleDAO.saveCourseSchedule(courseSchedule);
+        res.redirect('/course/new_course_schedule_contract_view?contract_id=' + courseSchedule.contract_id);
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
 router.get('/course_schedule_list', async function (req, res) {
     try {
         let headmaster_id = req.session.user[0].id;
