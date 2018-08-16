@@ -8,7 +8,7 @@
             </div>
             <div class="portlet-body">
                 <div class="booking-search">
-                    <form action="/course/course_schedule_list">
+                    <form action="/course/audit_course_schedule_list">
                         <div class="clearfix">
                             <div class="control-group span3">
                                 <label class="control-label">学员:</label>
@@ -97,6 +97,19 @@
                             </div>
                         </div>
                         <div class="clearfix">
+                            <div class="control-group span3">
+                                <label class="control-label">班主任:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="headmaster_id" id="headmaster_id">
+                                        <option value=""></option>
+                                        <%for (let i = 0; i < headmasters.length; i++){%>
+                                        <option value="<%= headmasters[i].id%>"><%= headmasters[i].name%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix">
                             <div class="pull-right">
                                 <button class="btn yellow"><i class="icon-search m-icon-white"></i> 搜索</button>
                             </div>
@@ -108,23 +121,25 @@
                     <tr>
                         <th>学员(编号)</th>
                         <th>合同编号</th>
+                        <th>班主任</th>
                         <th>科目</th>
                         <th>年级</th>
                         <th>教师</th>
                         <th>上课日期</th>
                         <th>课时</th>
                         <th>状态</th>
-                        <th class="table_action" data-colNum=8>操作</th>
+                        <th class="table_action" data-colNum=9>操作</th>
                     </tr>
                     </thead>
                     <tbody>
                     <%for (let i = 0; i < courseSchedules.length; i++){
-                    let contract = contractMap[courseSchedules[i].contract_id];
-                    let student = studentMap[contract.student_id];
+                        let contract = contractMap[courseSchedules[i].contract_id];
+                        let student = studentMap[contract.student_id];
                     %>
                     <tr>
                         <td><%= student.name%>(<%= student.student_no%>)</td>
                         <td><%= contract.contract_no%></td>
+                        <td><%= headmasterMap[student[i].headmaster_id].name%></td>
                         <td><%= subjectMap[courseSchedules[i].subject_id].name%></td>
                         <td><%= gradeMap[courseSchedules[i].grade_id].name%></td>
                         <td><%= teacherMap[courseSchedules[i].teacher_id].name%></td>
@@ -132,13 +147,8 @@
                         <td><%= lessonPeriodMap[courseSchedules[i].lesson_period_id].name%></td>
                         <td><%= statusMap[courseSchedules[i].status_id].name%></td>
                         <td>
-                            <% if(courseSchedules[i].status_id == '02') {%>
-                            <a data-toggle="modal" data-target="#confirmFinished" data-id="<%= courseSchedules[i].id%>" class="btn green mini"><i class="icon-ok"></i> 已上课</a>
-                            <%}%>
-                            <% if(courseSchedules[i].status_id == '03') {%>
-                            <a href="/course/edit_course_schedule?id=<%= courseSchedules[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
-                            <a data-toggle="modal" data-target="#confirm" data-id="<%= courseSchedules[i].id%>" class="btn red mini"><i class="icon-minus"></i> 删除</a>
-                            <%}%>
+                            <a href="/course/do_audit_course_schedule?id=<%= courseSchedules[i].id%>&status_id=02" class="btn green mini"><i class="icon-ok"></i> 通过</a>
+                            <a href="/course/do_audit_course_schedule?id=<%= courseSchedules[i].id%>&status_id=03" class="btn red mini"><i class="icon-remove"></i> 不通过</a>
                         </td>
                     </tr>
                     <%}%>
@@ -148,32 +158,8 @@
         </div>
     </div>
 </div>
-<div id="confirm" class="modal hide fade" tabindex="-1" data-backdrop="static">
-    <div class="modal-body">
-        <p>确定删除此条记录吗?</p>
-    </div>
-    <div class="modal-footer">
-        <form action="/course/delete_course_schedule">
-            <input id="id" name="id" hidden>
-            <button type="button" data-dismiss="modal" class="btn">取消</button>
-            <button type="submit" class="btn green">确认</button>
-        </form>
-    </div>
-</div>
-<div id="confirmFinished" class="modal hide fade" tabindex="-1" data-backdrop="static">
-    <div class="modal-body">
-        <p>确定此课时已经上完了?</p>
-    </div>
-    <div class="modal-footer">
-        <form action="/course/do_finish_course_schedule">
-            <input id="id" name="id" hidden>
-            <button type="button" data-dismiss="modal" class="btn">取消</button>
-            <button type="submit" class="btn green">确认</button>
-        </form>
-    </div>
-</div>
 <%- contentFor('title')%>
-排课管理
+排课审核
 <%- contentFor('breadcrumb')%>
 <li>
     <i class="icon-angle-right"></i>
@@ -181,7 +167,7 @@
 </li>
 <li>
     <i class="icon-angle-right"></i>
-    <a href="/course/course_schedule_list">排课管理</a>
+    <a href="/course/audit_course_schedule_list">排课审核</a>
 </li>
 <%- contentFor('script')%>
 <script>
@@ -191,4 +177,5 @@
     $('#teacher_id').val('<%= condition.teacher_id%>');
     $('#lesson_period_id').val('<%= condition.lesson_period_id%>');
     $('#class_room_id').val('<%= condition.class_room_id%>');
+    $('#headmaster_id').val('<%= condition.headmaster_id%>');
 </script>

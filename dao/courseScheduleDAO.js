@@ -44,11 +44,16 @@ exports.getCourseScheduleByCondition = function (condition) {
                     sql += ' and operator_id=?';
                     params[params.length] = condition.operator_id;
                 }
+                if (condition.status_id && condition.status_id != '') {
+                    sql += ' and status_id=?';
+                    params[params.length] = condition.status_id;
+                }
                 if (condition.headmaster_id && condition.headmaster_id != '') {
                     sql += ' and contract_id in (select id from contract where status_id="02" and student_id in (select id from student where status_id="03" and headmaster_id=?))';
                     params[params.length] = condition.headmaster_id;
                 }
             }
+            sql += ' order by update_at';
             let courseSchedules = await dataPool.query(sql, params);
             resolve(courseSchedules);
         } catch (error) {
@@ -95,16 +100,14 @@ exports.saveCourseSchedule = function (courseSchedule) {
     })
 };
 
-/*
-
 exports.updateCourseSchedule = function (courseSchedule) {
     return new Promise(async function (resolve, reject) {
         try {
-            await dataPool.query('update course_schedule set status_id=?, name=?, path=?, update_at=? where id=?',
-                [courseSchedule.status_id, courseSchedule.name, courseSchedule.path, new Date(), courseSchedule.id]);
+            await dataPool.query('update course_schedule set teacher_id=?, lesson_date=?, lesson_period_id=?, class_room_id=?, status_id=?, update_at=? where id=?',
+                [courseSchedule.teacher_id, courseSchedule.lesson_date, courseSchedule.lesson_period_id, courseSchedule.class_room_id, courseSchedule.status_id, new Date(), courseSchedule.id]);
             resolve();
         } catch (error) {
             reject(error);
         }
     })
-};*/
+};

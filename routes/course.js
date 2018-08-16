@@ -924,6 +924,72 @@ router.post('/do_create_course_schedule', async function (req, res) {
     }
 });
 
+router.get('/audit_course_schedule_list', async function (req, res) {
+    try {
+        let headmaster_id = req.session.user[0].id;
+        let condition = {};
+        condition.student_id = req.query.student_id;
+        condition.contract_no = req.query.contract_no;
+        condition.sbuject_id = req.query.sbuject_id;
+        condition.grade_id = req.query.grade_id;
+        condition.teacher_id = req.query.teacher_id;
+        condition.lesson_date = req.query.lesson_date;
+        condition.lesson_period_id = req.query.lesson_period_id;
+        condition.class_room_id = req.query.class_room_id;
+        condition.operator_id = req.query.headmaster_id;//班主任就是操作人
+        condition.status_id = '01';//查询待审核的数据
+        let courseSchedules = await courseScheduleDAO.getCourseScheduleByCondition(condition);
+        let sCondition = {};
+        sCondition.status_id = '03';//只显示已签约的学员
+        let students = await studentDAO.getStudentByCondition(sCondition);
+        let cCondition = {};
+        cCondition.status_id = '02';//查询执行中的合同
+        let contracts = await contractDAO.getContractByCondition('contract', cCondition);
+        let headmasters = await userDAO.getAllHeadmaster()
+        let subjects = await baseDAO.getAll('subject');
+        let grades = await baseDAO.getAll('grade');
+        let teachers = await baseDAO.getAll('teacher');
+        let lessonPeriods = await baseDAO.getAll('lesson_period');
+        let classRooms = await baseDAO.getAll('class_room');
+        let status = await baseDAO.getAll('course_schedule_status');
+        res.render('course/audit_course_schedule_list', {
+            courseSchedules: courseSchedules,
+            students: students,
+            contracts: contracts,
+            subjects: subjects,
+            grades: grades,
+            teachers: teachers,
+            lessonPeriods: lessonPeriods,
+            classRooms: classRooms,
+            headmasters: headmasters,
+            studentMap: commonUtil.toMap(students),
+            contractMap: commonUtil.toMap(contracts),
+            subjectMap: commonUtil.toMap(subjects),
+            gradeMap: commonUtil.toMap(grades),
+            teacherMap: commonUtil.toMap(teachers),
+            lessonPeriodMap: commonUtil.toMap(lessonPeriods),
+            statusMap: commonUtil.toMap(status),
+            headmasterMap: commonUtil.toMap(headmasters),
+            condition: condition,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/do_audit_course_schedule', async function (req, res) {
+    try {
+        let courseSchedule = await baseDAO.getById('course_schedule', req.query.id);
+        courseSchedule = courseSchedule[0];
+        courseSchedule.status_id = req.query.status_id;
+        await courseScheduleDAO.updateCourseSchedule(courseSchedule);
+        res.redirect('/course/audit_course_schedule_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
 router.get('/course_schedule_list', async function (req, res) {
     try {
         let headmaster_id = req.session.user[0].id;
