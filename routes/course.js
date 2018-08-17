@@ -679,7 +679,7 @@ router.get('/audited_course_apply_list', async function (req, res) {
 //todo:排课表逐条新增编辑和审核，
 //todo:点击"排课"按钮后上面显示合同信息和合同明细，在已排课时（查询和此明细id相关的排课表数据条数，所有状态都算上）小于此明细总课时的后面显示"排课"按钮，点击后进入新增一条排课数据的form表单
 //todo:form表单显示不可编辑的合同信息以及当前选中的合同明细信息（显示合同编号，隐藏合同id和明细id的input，显示明细中的科目和年级），剩下待确定字段可编辑（教师，教室，日期，课时，在编辑排课信息时也只能编辑这四个字段），
-//todo:上课日期默认今天，课时默认选择第一个，课时随日期变化（查出空闲课时），可选教室和教师动态变化，根据上课日期和课时来查询空闲的教室和教师，
+//todo:上课日期默认今天，课时默认选择第一个，课时随日期变化（查出空闲课时，查询原则见代码注释），可选教室和教师动态变化，根据上课日期和课时来查询空闲的教室和教师，
 //todo:提交后返回上一界面，即显示合同信息和合同明细的界面
 //todo:提交后状态为"待审核"，可被审核通过为"未上课"或审核不通过为"未通过"，若为"未通过"，班主任可以编辑，其他状态不可编辑，编辑后变为"待审核"，"未通过"状态时也可以删除
 //todo:排课管理list列表查询当前用户班主任的学生的相关数据，在"未上课"状态且上课日期小于或等于今天的的排课数据后面增加操作按钮"已上课"，点击后改变此条数据状态为"已上课"，并在对应的合同明细的"已完成课时数"中加1
@@ -776,7 +776,7 @@ router.get('/new_course_schedule_contract_view', async function (req, res) {
 
 router.get('/new_course_schedule', async function (req, res) {
     try {
-        let contractDetail = await baseDAO.getById('contract', req.query.contract_detail_id);
+        let contractDetail = await baseDAO.getById('contract_detail', req.query.contract_detail_id);
         contractDetail = contractDetail[0];
         let contract = await baseDAO.getById('contract', contractDetail.contract_id);
         contract = contract[0];
@@ -784,6 +784,7 @@ router.get('/new_course_schedule', async function (req, res) {
         student = student[0];
         let subjects = await baseDAO.getAll('subject');
         let grades = await baseDAO.getAll('grade');
+        let classRooms = await baseDAO.getAll('class_room');
         let today = dateUtil.dateFormat(new Date());
         let lessonPeriods = await baseDAO.getAll('lesson_period');
         let lessonPeriodVOs = [];
@@ -793,7 +794,7 @@ router.get('/new_course_schedule', async function (req, res) {
             lCondition.lesson_date = today;
             lCondition.lesson_period_id = lessonPeriods[i].id;
             let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(lCondition);
-            if (!courseSchedule || courseSchedule.length <= 0) {
+            if (!courseSchedule || courseSchedule.length < classRooms.length) {//此日期此课时，只要不是所有教室都在使用，表示此课时可用
                 lessonPeriodVOs[lessonPeriodVOs.length] = lessonPeriods[i];
             }
         }
@@ -813,7 +814,6 @@ router.get('/new_course_schedule', async function (req, res) {
                 teacherVOs[teacherVOs.length] = teachers[i];
             }
         }
-        let classRooms = await baseDAO.getAll('class_room');
         let classRoomVOs = [];
         //根据日期和默认第一个课时去除有课的教室
         for (let i = 0; i < classRooms.length; i++) {
@@ -844,8 +844,10 @@ router.get('/new_course_schedule', async function (req, res) {
 
 router.post('/course_schedule_select_change', async function (req, res) {
     try {
+        let id = req.body.id;
         let today = req.body.lesson_date;
         let lessonPeriodVOs = [];
+        let classRooms = await baseDAO.getAll('class_room');
         if (req.body.select_name == 'lesson_date') {
             let lessonPeriods = await baseDAO.getAll('lesson_period');
             //根据日期去除已使用的课时
@@ -854,7 +856,17 @@ router.post('/course_schedule_select_change', async function (req, res) {
                 lCondition.lesson_date = today;
                 lCondition.lesson_period_id = lessonPeriods[i].id;
                 let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(lCondition);
-                if (!courseSchedule || courseSchedule.length <= 0) {
+                //id不为空时表示编辑页面，这条记录的课时也要加进去
+                let enabled = false;
+                if (id && id != '' && courseSchedule && courseSchedule.length == classRooms.length) {
+                    for (let j = 0; j < courseSchedule.length; j++) {
+                        if (courseSchedule[j].id == id) {
+                            enabled = true;
+                            break;
+                        }
+                    }
+                }
+                if (!courseSchedule || courseSchedule.length < classRooms.length || enabled) {//此日期此课时，只要不是所有教室都在使用，表示此课时可用；即使是所有教室都在用，但是是编辑界面，且其中有一条是本数据，则此课时可用
                     lessonPeriodVOs[lessonPeriodVOs.length] = lessonPeriods[i];
                 }
             }
@@ -875,11 +887,11 @@ router.post('/course_schedule_select_change', async function (req, res) {
             }
             tCondition.teacher_id = teachers[i].id;
             let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(tCondition);
-            if (!courseSchedule || courseSchedule.length <= 0) {
+            //id不为空时表示编辑页面，这条记录的教师也要加进去
+            if (!courseSchedule || courseSchedule.length <= 0 || (id && id != '' && courseSchedule && courseSchedule.length > 0 && courseSchedule[0].id == id)) {
                 teacherVOs[teacherVOs.length] = teachers[i];
             }
         }
-        let classRooms = await baseDAO.getAll('class_room');
         let classRoomVOs = [];
         //根据日期和默认第一个课时去除有课的教室
         for (let i = 0; i < classRooms.length; i++) {
@@ -892,7 +904,8 @@ router.post('/course_schedule_select_change', async function (req, res) {
             }
             cCondition.class_room_id = classRooms[i].id;
             let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(cCondition);
-            if (!courseSchedule || courseSchedule.length <= 0) {
+            //id不为空时表示编辑页面，这条记录的教室也要加进去
+            if (!courseSchedule || courseSchedule.length <= 0 || (id && id != '' && courseSchedule && courseSchedule.length > 0 && courseSchedule[0].id == id)) {
                 classRoomVOs[teacherVOs.length] = classRooms[i];
             }
         }
@@ -916,6 +929,7 @@ router.post('/do_create_course_schedule', async function (req, res) {
         courseSchedule.lesson_date = req.body.lesson_date;
         courseSchedule.lesson_period_id = req.body.lesson_period_id;
         courseSchedule.class_room_id = req.body.class_room_id;
+        courseSchedule.teacher_id = req.body.teacher_id;
         courseSchedule.operator_id = req.session.user[0].id;
         await courseScheduleDAO.saveCourseSchedule(courseSchedule);
         res.redirect('/course/new_course_schedule_contract_view?contract_id=' + courseSchedule.contract_id);
@@ -926,7 +940,6 @@ router.post('/do_create_course_schedule', async function (req, res) {
 
 router.get('/audit_course_schedule_list', async function (req, res) {
     try {
-        let headmaster_id = req.session.user[0].id;
         let condition = {};
         condition.student_id = req.query.student_id;
         condition.contract_no = req.query.contract_no;
@@ -1002,6 +1015,7 @@ router.get('/course_schedule_list', async function (req, res) {
         condition.lesson_date = req.query.lesson_date;
         condition.lesson_period_id = req.query.lesson_period_id;
         condition.class_room_id = req.query.class_room_id;
+        condition.status_id = req.query.status_id;
         condition.operator_id = headmaster_id;//查询当前用户（班主任）创建的排课信息
         let courseSchedules = await courseScheduleDAO.getCourseScheduleByCondition(condition);
         let sCondition = {};
@@ -1027,6 +1041,7 @@ router.get('/course_schedule_list', async function (req, res) {
             teachers: teachers,
             lessonPeriods: lessonPeriods,
             classRooms: classRooms,
+            status: status,
             studentMap: commonUtil.toMap(students),
             contractMap: commonUtil.toMap(contracts),
             subjectMap: commonUtil.toMap(subjects),
@@ -1039,6 +1054,131 @@ router.get('/course_schedule_list', async function (req, res) {
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/edit_course_schedule', async function (req, res) {
+    try {
+        let courseScheduleObj = await baseDAO.getById('course_schedule', req.query.id);
+        courseScheduleObj = courseScheduleObj[0];
+        let contractDetail = await baseDAO.getById('contract_detail', courseScheduleObj.contract_detail_id);
+        contractDetail = contractDetail[0];
+        let contract = await baseDAO.getById('contract', courseScheduleObj.contract_id);
+        contract = contract[0];
+        let student = await baseDAO.getById('student', contract.student_id);
+        student = student[0];
+        let subjects = await baseDAO.getAll('subject');
+        let grades = await baseDAO.getAll('grade');
+        let classRooms = await baseDAO.getAll('class_room');
+        let today = dateUtil.dateFormat(courseScheduleObj.lesson_date);
+        let lessonPeriods = await baseDAO.getAll('lesson_period');
+        let lessonPeriodVOs = [];
+        //根据日期去除已使用的课时
+        for (let i = 0; i < lessonPeriods.length; i++) {
+            let lCondition = {};
+            lCondition.lesson_date = today;
+            lCondition.lesson_period_id = lessonPeriods[i].id;
+            let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(lCondition);
+            //i编辑页面，这条记录的课时也要加进去
+            let enabled = false;
+            if (courseSchedule && courseSchedule.length == classRooms.length) {
+                for (let j = 0; j < courseSchedule.length; j++) {
+                    if (courseSchedule[j].id == courseScheduleObj.id) {
+                        enabled = true;
+                        break;
+                    }
+                }
+            }
+            if (!courseSchedule || courseSchedule.length < classRooms.length || enabled) {//此日期此课时，只要不是所有教室都在使用，表示此课时可用；即使是所有教室都在用，但是编辑界面，且其中有一条是本数据，则此课时可用
+                lessonPeriodVOs[lessonPeriodVOs.length] = lessonPeriods[i];
+            }
+        }
+        let tCondition = {};
+        tCondition.grade_id = contractDetail.grade_id;
+        tCondition.sbuject_id = contractDetail.sbuject_id;
+        let teachers = await teacherDAO.getTeacherByCondition(tCondition);
+        let teacherVOs = [];
+        //根据日期和默认第一个课时去除有课的教师
+        for (let i = 0; i < teachers.length; i++) {
+            let tCondition = {};
+            tCondition.lesson_date = today;
+            tCondition.lesson_period_id = lessonPeriodVOs[0].id;//默认第一个课时
+            tCondition.teacher_id = teachers[i].id;
+            let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(tCondition);
+            if (!courseSchedule || courseSchedule.length <= 0 || (courseSchedule && courseSchedule.length > 0 && courseSchedule[0].id == courseScheduleObj.id)) {
+                teacherVOs[teacherVOs.length] = teachers[i];
+            }
+        }
+        let classRoomVOs = [];
+        //根据日期和默认第一个课时去除有课的教室
+        for (let i = 0; i < classRooms.length; i++) {
+            let cCondition = {};
+            cCondition.lesson_date = today;
+            cCondition.lesson_period_id = lessonPeriodVOs[0].id;//默认第一个课时
+            cCondition.class_room_id = classRooms[i].id;
+            let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(cCondition);
+            if (!courseSchedule || courseSchedule.length <= 0 || (courseSchedule && courseSchedule.length > 0 && courseSchedule[0].id == courseScheduleObj.id)) {
+                classRoomVOs[teacherVOs.length] = classRooms[i];
+            }
+        }
+        res.render('course/edit_course_schedule', {
+            courseScheduleObj: courseScheduleObj,
+            contract: contract,
+            contractDetail: contractDetail,
+            subjectMap: commonUtil.toMap(subjects),
+            gradeMap: commonUtil.toMap(grades),
+            lessonPeriod: lessonPeriodVOs,
+            teachers: teacherVOs,
+            classRooms: classRoomVOs,
+            student: student,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.post('/do_update_course_schedule', async function (req, res) {
+    try {
+        let courseSchedule = {};
+        courseSchedule.id = req.body.id;
+        courseSchedule.lesson_date = req.body.lesson_date;
+        courseSchedule.lesson_period_id = req.body.lesson_period_id;
+        courseSchedule.class_room_id = req.body.class_room_id;
+        courseSchedule.teacher_id = req.body.teacher_id;
+        courseSchedule.status_id = '01';
+        await courseScheduleDAO.updateCourseSchedule(courseSchedule);
+        res.redirect('/course/course_schedule_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/do_finish_course_schedule', async function (req, res) {
+    try {
+        let courseSchedule = await baseDAO.getById('course_schedule', req.query.id);
+        courseSchedule = courseSchedule[0];
+
+        
+
+
+
+
+
+        //todo:此课时已上完，改状态，合同的课时需更改
+        await courseScheduleDAO.doFinishCourseSchedule(courseSchedule);
+        res.redirect('/course/course_schedule_list');
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
+router.get('/delete_course_schedule', async function (req, res) {
+    try {
+        await baseDAO.deleteById('course_schedule', req.query.id);
+        res.redirect('/course/course_schedule_list');
+    } catch (error) {
+        exceptionHelper.sendException(res, error);
     }
 });
 
