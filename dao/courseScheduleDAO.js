@@ -1,6 +1,7 @@
 const dataPool = require('../util/dataPool');
 const Promise = require('promise');
 const uuid = require('node-uuid');
+const baseDAO = require('../dao/baseDAO');
 
 exports.getCourseScheduleByCondition = function (condition) {
     return new Promise(async function (resolve, reject) {
@@ -105,6 +106,25 @@ exports.updateCourseSchedule = function (courseSchedule) {
         try {
             await dataPool.query('update course_schedule set teacher_id=?, lesson_date=?, lesson_period_id=?, class_room_id=?, status_id=?, update_at=? where id=?',
                 [courseSchedule.teacher_id, courseSchedule.lesson_date, courseSchedule.lesson_period_id, courseSchedule.class_room_id, courseSchedule.status_id, new Date(), courseSchedule.id]);
+            resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
+
+exports.doFinishCourseSchedule = function (courseSchedule) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let now = new Date();
+            let sqls = ['update course_schedule set status_id=?, update_at=? where id=?'];
+            let params = [[courseSchedule.status_id, now, courseSchedule.id]];
+            let contractDetail = await baseDAO.getById('contract_detail', courseSchedule.contract_detail_id);
+            contractDetail = contractDetail[0];
+            contractDetail.finished_lesson = parseFloat(contractDetail.finished_lesson) + 1;
+            sqls[sqls.length] = ['update contract_detail set finished_lesson=?, update_at=? where id=?'];
+            params[params.length] = [contractDetail.finished_lesson, now, contractDetail.id];
+            await dataPool.batchQuery(sqls, params);
             resolve();
         } catch (error) {
             reject(error);

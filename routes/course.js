@@ -1158,14 +1158,6 @@ router.get('/do_finish_course_schedule', async function (req, res) {
     try {
         let courseSchedule = await baseDAO.getById('course_schedule', req.query.id);
         courseSchedule = courseSchedule[0];
-
-        
-
-
-
-
-
-        //todo:此课时已上完，改状态，合同的课时需更改
         await courseScheduleDAO.doFinishCourseSchedule(courseSchedule);
         res.redirect('/course/course_schedule_list');
     } catch (error) {
