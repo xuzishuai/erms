@@ -2,6 +2,7 @@ const dataPool = require('../util/dataPool');
 const Promise = require('promise');
 const uuid = require('node-uuid');
 const baseDAO = require('../dao/baseDAO');
+const contractDAO = require('../dao/contractDAO');
 
 exports.getCourseScheduleByCondition = function (condition) {
     return new Promise(async function (resolve, reject) {
@@ -33,6 +34,14 @@ exports.getCourseScheduleByCondition = function (condition) {
                     sql += ' and lesson_date=?';
                     params[params.length] = condition.lesson_date;
                 }
+                if (condition.lesson_start_date && condition.lesson_start_date != '') {
+                    sql += ' and lesson_date>=?';
+                    params[params.length] = condition.lesson_start_date;
+                }
+                if (condition.lesson_end_date && condition.lesson_end_date != '') {
+                    sql += ' and lesson_date<?';
+                    params[params.length] = condition.lesson_end_date;
+                }
                 if (condition.lesson_period_id && condition.lesson_period_id != '') {
                     sql += ' and lesson_period_id=?';
                     params[params.length] = condition.lesson_period_id;
@@ -48,6 +57,10 @@ exports.getCourseScheduleByCondition = function (condition) {
                 if (condition.status_id && condition.status_id != '') {
                     sql += ' and status_id=?';
                     params[params.length] = condition.status_id;
+                }
+                if (condition.status_ids && condition.status_ids != '') {
+                    sql += ' and status_id in (?)';
+                    params[params.length] = condition.status_ids;
                 }
                 if (condition.headmaster_id && condition.headmaster_id != '') {
                     sql += ' and contract_id in (select id from contract where status_id="02" and student_id in (select id from student where status_id="03" and headmaster_id=?))';
@@ -121,9 +134,20 @@ exports.doFinishCourseSchedule = function (courseSchedule) {
             let params = [[courseSchedule.status_id, now, courseSchedule.id]];
             let contractDetail = await baseDAO.getById('contract_detail', courseSchedule.contract_detail_id);
             contractDetail = contractDetail[0];
-            contractDetail.finished_lesson = parseFloat(contractDetail.finished_lesson) + 1;
+            contractDetail.finished_lesson = parseInt(contractDetail.finished_lesson) + 1;
             sqls[sqls.length] = ['update contract_detail set finished_lesson=?, update_at=? where id=?'];
             params[params.length] = [contractDetail.finished_lesson, now, contractDetail.id];
+            let contract = await baseDAO.getById('contract', contractDetail.contract_id);
+            contract = contract[0];
+            let contractDetails = await contractDAO.getDetailsByContractId(contract.id);
+            let totalLessonPeriod = 1;//总已上课时除了表里面的还要加上本次的一课时
+            for (let i = 0; i < contractDetails.length; i++) {
+                totalLessonPeriod += parseInt(contractDetails[i].finished_lesson);
+            }
+            if (parseInt(contract.total_lesson_period) == totalLessonPeriod) {
+                sqls[sqls.length] = ['update contract set status_id=?, update_at=? where id=?'];
+                params[params.length] = ['06', now, contract.id];
+            }
             await dataPool.batchQuery(sqls, params);
             resolve();
         } catch (error) {

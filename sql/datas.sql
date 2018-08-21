@@ -24,17 +24,18 @@ INSERT INTO menu VALUES ('20', '校考反馈', '14', '/student/test_score_list',
 INSERT INTO menu VALUES ('21', '学员预警', '14', '/student/warning_student_list', null, null, '#/student/warning_student_list#/student/warning_student#/student/do_warning_student#', null);
 INSERT INTO menu VALUES ('22', '合同收费', '11', '/contract/contract_charge_list', null, null, '#/contract/contract_charge_list#/contract/new_contract_charge#/contract/do_create_contract_charge#/contract/edit_contract_charge#/contract/do_update_contract_charge#/contract/delete_contract_charge#', null);
 INSERT INTO menu VALUES ('23', '合同退费', '11', '/contract/contract_refund_list', null, null, '#/contract/contract_refund_list#/contract/new_contract_refund#/contract/do_create_contract_refund#', null);
-INSERT INTO menu VALUES ('24', '排课', null, null, '#25#26#27#28#29#30#31#32#33#34#', 'icon-calendar', null, 4);
-INSERT INTO menu VALUES ('25', '教室管理', '24', '/course/class_room_list', null, null, '#/course/class_room_list#/course/new_class_room#/course/do_create_class_room#/course/edit_class_room#/course/do_update_class_room#', null);
-INSERT INTO menu VALUES ('26', '课时管理', '24', '/course/lesson_period_list', null, null, '#/course/lesson_period_list#/course/new_lesson_period#/course/validate_lesson_period_name#/course/do_create_lesson_period#/course/edit_lesson_period#/course/do_update_lesson_period#/course/delete_lesson_period#', null);
-INSERT INTO menu VALUES ('27', '教师管理', '24', '/course/teacher_list', null, null, '#/course/teacher_list#/course/teacher_view#/course/new_teacher#/course/add_teacher_free_time_tr#/course/do_create_teacher#/course/edit_teacher#/course/do_update_teacher#', null);
-INSERT INTO menu VALUES ('28', '教师查询', '24', '/course/teacher_search', null, null, '#/course/teacher_search#/course/teacher_view#', null);
-INSERT INTO menu VALUES ('29', '排课申请', '24', '/course/my_course_apply_list', null, null, '#/course/my_course_apply_list#/course/edit_course_apply#/course/do_update_course_apply#/course/delete_course_apply#', null);
-INSERT INTO menu VALUES ('30', '排课申请审核', '24', '/course/audit_course_apply_list', null, null, '#/course/audit_course_apply_list#/course/do_audit_course_apply#', null);
-INSERT INTO menu VALUES ('31', '排课申请列表', '24', '/course/audited_course_apply_list', null, null, '#/course/audited_course_apply_list#/course/delete_course_apply#', null);
-INSERT INTO menu VALUES ('32', '新增排课', '24', '/course/new_course_schedule_contract_list', null, null, '#/course/new_course_schedule_contract_list#/course/new_course_schedule_contract_view#/course/new_course_schedule#/course/course_schedule_select_change#/course/do_create_course_schedule#', null);
-INSERT INTO menu VALUES ('33', '排课审核', '24', '/course/audit_course_schedule_list', null, null, '#/course/audit_course_schedule_list#/course/do_audit_course_schedule#', null);
-INSERT INTO menu VALUES ('34', '排课管理', '24', '/course/course_schedule_list', null, null, '#/course/course_schedule_list#/course/edit_course_schedule#/course/course_schedule_select_change#/course/do_update_course_schedule#/course/do_finish_course_schedule#/course/delete_course_schedule#', null);
+INSERT INTO menu VALUES ('24', '排课', null, null, '#25#26#27#28#29#30#31#32#33#34#35#', 'icon-calendar', null, 4);
+INSERT INTO menu VALUES ('25', '课程表', '24', '/course/course_timetable', null, null, '#/course/course_timetable#', null);
+INSERT INTO menu VALUES ('26', '排课申请', '24', '/course/my_course_apply_list', null, null, '#/course/my_course_apply_list#/course/edit_course_apply#/course/do_update_course_apply#/course/delete_course_apply#', null);
+INSERT INTO menu VALUES ('27', '排课申请审核', '24', '/course/audit_course_apply_list', null, null, '#/course/audit_course_apply_list#/course/do_audit_course_apply#', null);
+INSERT INTO menu VALUES ('28', '排课申请列表', '24', '/course/audited_course_apply_list', null, null, '#/course/audited_course_apply_list#/course/delete_course_apply#', null);
+INSERT INTO menu VALUES ('29', '新增排课', '24', '/course/new_course_schedule_contract_list', null, null, '#/course/new_course_schedule_contract_list#/course/new_course_schedule_contract_view#/course/new_course_schedule#/course/course_schedule_select_change#/course/do_create_course_schedule#', null);
+INSERT INTO menu VALUES ('30', '排课审核', '24', '/course/audit_course_schedule_list', null, null, '#/course/audit_course_schedule_list#/course/do_audit_course_schedule#', null);
+INSERT INTO menu VALUES ('31', '排课管理', '24', '/course/course_schedule_list', null, null, '#/course/course_schedule_list#/course/edit_course_schedule#/course/course_schedule_select_change#/course/do_update_course_schedule#/course/do_finish_course_schedule#/course/delete_course_schedule#', null);
+INSERT INTO menu VALUES ('32', '教室管理', '24', '/course/class_room_list', null, null, '#/course/class_room_list#/course/new_class_room#/course/do_create_class_room#/course/edit_class_room#/course/do_update_class_room#', null);
+INSERT INTO menu VALUES ('33', '课时管理', '24', '/course/lesson_period_list', null, null, '#/course/lesson_period_list#/course/new_lesson_period#/course/validate_lesson_period_name#/course/do_create_lesson_period#/course/edit_lesson_period#/course/do_update_lesson_period#/course/delete_lesson_period#', null);
+INSERT INTO menu VALUES ('34', '教师管理', '24', '/course/teacher_list', null, null, '#/course/teacher_list#/course/teacher_view#/course/new_teacher#/course/add_teacher_free_time_tr#/course/do_create_teacher#/course/edit_teacher#/course/do_update_teacher#', null);
+INSERT INTO menu VALUES ('35', '教师查询', '24', '/course/teacher_search', null, null, '#/course/teacher_search#/course/teacher_view#', null);
 
 -- ----------------------------
 -- Records of user,插入超级管理员用户

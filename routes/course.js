@@ -1174,4 +1174,31 @@ router.get('/delete_course_schedule', async function (req, res) {
     }
 });
 
+router.get('/course_timetable', async function (req, res) {
+    try {
+        let condition = {};
+        condition.teacher_id = req.query.teacher_id;
+        condition.lesson_start_date = req.query.lesson_start_date?req.query.lesson_start_date:dateUtil.dateFormat(new Date());
+        condition.lesson_end_date = dateUtil.addDays(condition.lesson_start_date, 7);
+        condition.status_ids = ['02', '04'];
+        let courseSchedules = await courseScheduleDAO.getCourseScheduleByCondition(condition);
+        let teachers = await baseDAO.getAll('teacher');
+        let teacherMap = commonUtil.toMap(teachers);
+        let courseScheduleMap = {};
+        let teacherVOs = [];
+        for (let i = 0; i < courseSchedules.length; i++) {
+            courseScheduleMap[courseSchedules[i].teacher_id+courseSchedules[i].lesson_date+courseSchedules[i].lesson_period_id] = courseSchedules[i];
+            teacherVOs[teacherVOs.length] = teacherMap[courseSchedules[i].teacher_id];
+        }
+        res.render('course/course_timetable', {
+            courseScheduleMap: courseScheduleMap,
+            teachers: teacherVOs,
+            teacherMap: teacherMap,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.sendException(res, error);
+    }
+});
+
 module.exports = router;
