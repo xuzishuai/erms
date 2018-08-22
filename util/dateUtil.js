@@ -13,6 +13,5 @@ exports.dateTimeMinuteFormat = function (date) {
 };
 
 exports.addDays = function (date, days) {
-    let day = moment(date).add(days, 'days').calendar();
-    return moment(day).format("YYYY-MM-DD");
+    return moment(date).add(days, 'days').format("YYYY-MM-DD");
 };

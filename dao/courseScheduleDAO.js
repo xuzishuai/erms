@@ -102,9 +102,9 @@ exports.saveCourseSchedule = function (courseSchedule) {
     return new Promise(async function (resolve, reject) {
         try {
             let now = new Date();
-            await dataPool.query('insert into course_schedule(id, contract_id, contract_detail_id, subject_id, grade_id, teacher_id, lesson_date,' +
-                ' lesson_period_id, class_room_id, status_id, operator_id, create_at, update_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                [uuid.v1(), courseSchedule.contract_id, courseSchedule.contract_detail_id, courseSchedule.subject_id, courseSchedule.grade_id,
+            await dataPool.query('insert into course_schedule(id, student_id, contract_id, contract_detail_id, subject_id, grade_id, teacher_id, lesson_date,' +
+                ' lesson_period_id, class_room_id, status_id, operator_id, create_at, update_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                [uuid.v1(), courseSchedule.student_id, courseSchedule.contract_id, courseSchedule.contract_detail_id, courseSchedule.subject_id, courseSchedule.grade_id,
                     courseSchedule.teacher_id, courseSchedule.lesson_date, courseSchedule.lesson_period_id, courseSchedule.class_room_id, '01',
                     courseSchedule.operator_id, now, now]);
             resolve();

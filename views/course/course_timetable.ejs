@@ -1,0 +1,114 @@
+<div class="row-fluid">
+    <div class="span12">
+        <div class="portlet box purple">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-reorder"></i>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="booking-search">
+                    <form action="/course/course_timetable">
+                        <div class="clearfix">
+                            <div class="control-group span3">
+                                <label class="control-label">教师:</label>
+                                <div class="controls">
+                                    <select class="span12 select2" tabindex="1" name="teacher_id" id="teacher_id">
+                                        <option value=""></option>
+                                        <%for (let i = 0; i < teachers.length; i++){%>
+                                        <option value="<%= teachers[i].id%>"><%= teachers[i].name%></option>
+                                        <%}%>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group span3">
+                                <label class="control-label">起始日期:</label>
+                                <div class="controls">
+                                    <div class="input-append date date-picker span12" style="padding-right: 136px;">
+                                        <a id="pre_week" class="btn" style="display: inline-block;width: auto;height: 24px;min-width: 16px;padding: 4px 5px;font-size: 14px;font-weight: normal;line-height: 24px;text-align: center;text-shadow: 0 1px 0 #ffffff;background-color: #e5e5e5;border: 1px solid #e5e5e5;">
+                                            <i class="icon-chevron-left"></i>&nbsp;上周
+                                        </a>
+                                        <input id="lesson_start_date" name="lesson_start_date" type="text" value="<%= dateUtil.dateFormat(condition.lesson_start_date)%>" readonly class="m-wrap span12"/>
+                                        <span class="add-on"><i class="icon-calendar"></i></span>
+                                        <a id="next_week" class="btn" style="display: inline-block;width: auto;height: 24px;min-width: 16px;padding: 4px 5px;font-size: 14px;font-weight: normal;line-height: 24px;text-align: center;text-shadow: 0 1px 0 #ffffff;background-color: #e5e5e5;border: 1px solid #e5e5e5;">
+                                            下周&nbsp;<i class="icon-chevron-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <%for (let i = 0; i < teachers.length; i++){%>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <% for (let j = 0; j < days.length; j++) {%>
+                        <th><%= days[j];%></th>
+                        <%}%>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td rowspan="<%= days.length;%>">
+                            教师姓名:<%= teachers[i].name%><br>
+                            联系电话:<%= teachers[i].contact%>
+                        </td>
+                    </tr>
+                    <% for (let j = 0; j < lessonPeriods.length; j++) {%>
+                    <tr>
+                        <% for (let k = 0; k < days.length; k++) {
+                        let courseSchedule = courseScheduleMap[teachers[i].id+days[k]+lessonPeriods[j].id];
+                        %>
+                        <td <% if (courseSchedule.status_id == '02') {%>style="background-color:yellow;"<%} else if (courseSchedule.status_id == '04') {%>style="background-color:green;"<%}%>>
+                            <% if (courseSchedule) {%>
+                            学员:<%= studentMap[courseSchedule.student_id].name%>(<%= studentMap[courseSchedule.student_id].student_no%>)<br>
+                            教室:<%= classRoomMap[courseSchedule.class_room_id].name%><br>
+                            状态:<%= statusMap[courseSchedule.status_id].name%>
+                            <%}%>
+                        </td>
+                        <%}%>
+                    </tr>
+                    <%}%>
+                    </tbody>
+                </table>
+                <%}%>
+            </div>
+        </div>
+    </div>
+</div>
+<%- contentFor('title')%>
+课程表
+<%- contentFor('breadcrumb')%>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="javascript:void(0);">排课</a>
+</li>
+<li>
+    <i class="icon-angle-right"></i>
+    <a href="/course/course_timetable">课程表</a>
+</li>
+<%- contentFor('script')%>
+<script>
+    $('#teacher_id').val('<%= condition.teacher_id%>');
+
+    $('#teacher_id').on('change', function () {
+        $('form').submit();
+    })
+    $('#lesson_start_date').on('change', function () {
+        $('form').submit();
+    })
+
+    $('#pre_week').click(function (e) {
+        e.stopImmediatePropagation();//阻止当前元素祖先的绑定事件的执行
+        $('#lesson_start_date').val('<%= preWeek%>');
+        $('form').submit();
+    });
+
+    $('#next_week').click(function (e) {
+        e.stopImmediatePropagation();//阻止当前元素祖先的绑定事件的执行
+        $('#lesson_start_date').val('<%= nextWeek%>');
+        $('form').submit();
+    })
+</script>

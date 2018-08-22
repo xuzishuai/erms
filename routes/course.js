@@ -931,6 +931,8 @@ router.post('/do_create_course_schedule', async function (req, res) {
         courseSchedule.class_room_id = req.body.class_room_id;
         courseSchedule.teacher_id = req.body.teacher_id;
         courseSchedule.operator_id = req.session.user[0].id;
+        let contract = await baseDAO.getById('contract', courseSchedule.contract_id);
+        courseSchedule.student_id = contract[0].id;
         await courseScheduleDAO.saveCourseSchedule(courseSchedule);
         res.redirect('/course/new_course_schedule_contract_view?contract_id=' + courseSchedule.contract_id);
     } catch (error) {
@@ -1190,10 +1192,34 @@ router.get('/course_timetable', async function (req, res) {
             courseScheduleMap[courseSchedules[i].teacher_id+courseSchedules[i].lesson_date+courseSchedules[i].lesson_period_id] = courseSchedules[i];
             teacherVOs[teacherVOs.length] = teacherMap[courseSchedules[i].teacher_id];
         }
+        let lessonPeriods = await baseDAO.getAll('lesson_period');
+        let days = [];
+        days.push(condition.lesson_start_date);
+        days.push(dateUtil.addDays(condition.lesson_start_date, 1));
+        days.push(dateUtil.addDays(condition.lesson_start_date, 2));
+        days.push(dateUtil.addDays(condition.lesson_start_date, 3));
+        days.push(dateUtil.addDays(condition.lesson_start_date, 4));
+        days.push(dateUtil.addDays(condition.lesson_start_date, 5));
+        days.push(dateUtil.addDays(condition.lesson_start_date, 6));
+        let sCondition = {};
+        sCondition.status_id = '03';
+        let students = await studentDAO.getStudentByCondition(sCondition);
+        let classRooms = await baseDAO.getAll('class_room');
+        let status = await baseDAO.getAll('course_schedule_status');
+        let preWeek = dateUtil.addDays(condition.lesson_start_date, -7);
+        let nextWeek = dateUtil.addDays(condition.lesson_start_date, 7);
         res.render('course/course_timetable', {
             courseScheduleMap: courseScheduleMap,
             teachers: teacherVOs,
             teacherMap: teacherMap,
+            lessonPeriods: lessonPeriods,
+            days: days,
+            studentMap: commonUtil.toMap(students),
+            classRoomMap: commonUtil.toMap(classRooms),
+            statusMap: commonUtil.toMap(status),
+            preWeek: preWeek,
+            nextWeek: nextWeek,
+            condition: condition,
             dateUtil: dateUtil
         });
     } catch (error) {

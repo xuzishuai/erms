@@ -705,6 +705,7 @@ alter table course_apply_status comment '排课申请状态表';
 create table course_schedule
 (
    id                   varchar(36) not null,
+   student_id           varchar(36) not null comment '学员id',
    contract_id          varchar(36) not null comment '合同id',
    contract_detail_id   varchar(36) not null comment '合同明细id',
    subject_id           varchar(36) not null comment '科目id',
@@ -964,3 +965,6 @@ alter table course_schedule add constraint FK_Reference_76 foreign key (grade_id
 
 alter table course_schedule add constraint FK_Reference_77 foreign key (contract_detail_id)
       references contract_detail (id) on delete restrict on update restrict;
+
+alter table course_schedule add constraint FK_Reference_78 foreign key (student_id)
+      references student (id) on delete restrict on update restrict;
