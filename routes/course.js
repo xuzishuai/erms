@@ -226,7 +226,7 @@ router.get('/teacher_view', async function (req, res) {
                 teacher.grades += '，' + gradeMap[gradeIds[i]].name;
             }
         }
-        let freeTimes = await teacherDAO.getFreeTimeByTeacherId(teacher.id);
+        let freeTimes = await teacherDAO.getFreeTimeByCondition({teacher_id: teacher.id});
         let lessonPeriods = await lessonPeriodDAO.getLessonPeriod();
         let lessonPeriodMap = commonUtil.toMap(lessonPeriods);
         if (freeTimes != null && freeTimes.length > 0) {
@@ -338,7 +338,7 @@ router.get('/edit_teacher', async function (req, res) {
     try {
         let teacher = await baseDAO.getById('teacher', req.query.id);
         teacher = teacher[0];
-        let teacherFreeTimes = await teacherDAO.getFreeTimeByTeacherId(teacher.id);
+        let teacherFreeTimes = await teacherDAO.getFreeTimeByCondition({teacher_id: teacher.id});
         let grades = await baseDAO.getAll('grade');
         let subjects = await baseDAO.getAll('subject');
         let lessonPeriods = await lessonPeriodDAO.getLessonPeriod();
@@ -1208,6 +1208,7 @@ router.get('/course_timetable', async function (req, res) {
         let status = await baseDAO.getAll('course_schedule_status');
         let preWeek = dateUtil.addDays(condition.lesson_start_date, -7);
         let nextWeek = dateUtil.addDays(condition.lesson_start_date, 7);
+        let subjects = await baseDAO.getAll('subject');
         res.render('course/course_timetable', {
             courseScheduleMap: courseScheduleMap,
             teachers: teacherVOs,
@@ -1217,6 +1218,7 @@ router.get('/course_timetable', async function (req, res) {
             studentMap: commonUtil.toMap(students),
             classRoomMap: commonUtil.toMap(classRooms),
             statusMap: commonUtil.toMap(status),
+            subjectMap: commonUtil.toMap(subjects),
             preWeek: preWeek,
             nextWeek: nextWeek,
             condition: condition,

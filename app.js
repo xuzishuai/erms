@@ -6,7 +6,10 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const expressLayouts = require('express-ejs-layouts');
+const schedule = require('node-schedule');
 const menuDAO = require('./dao/menuDAO');
+const teacherDAO = require('./dao/teacherDAO');
+const baseDAO = require('./dao/baseDAO');
 
 const index = require('./routes/index');
 const user = require('./routes/user');
@@ -32,6 +35,23 @@ app.use(session({
     saveUninitialized: true,
     cookie: { maxAge: 1000*3600*24 }
 }));
+
+//定时器方法
+function scheduleFunc(){
+    //每天的1点0分1秒执行
+    schedule.scheduleJob('1 0 1 * * *', async function(){
+        let condition = {};
+        condition.free_end_date = new Date();//今天以前的教师空闲时间
+        let freeTimes = await teacherDAO.getFreeTimeByCondition(condition);
+        //删除过期的教师空余时间
+        for (let i = 0; i < freeTimes.length; i++) {
+            await baseDAO.deleteById(freeTimes[i].id);
+        }
+    });
+}
+
+//启动项目后即调用定时器方法
+scheduleFunc();
 
 //拦截器
 app.all('/*', async function(req, res, next){

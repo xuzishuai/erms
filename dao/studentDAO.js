@@ -122,3 +122,14 @@ exports.doUpdateStudent = function (student) {
         }
     })
 };
+
+exports.getSingedStudentCount = function () {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let count = await dataPool.query("select count(*) count from student where status_id='03'");
+            resolve(count);
+        } catch (error) {
+            reject(error);
+        }
+    })
+};

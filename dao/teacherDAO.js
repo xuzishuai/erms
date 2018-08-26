@@ -41,6 +41,33 @@ exports.getTeacherByCondition = function (condition) {
     })
 };
 
+exports.getFreeTimeByCondition = function (condition) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let sql = 'select * from teacher_free_time where 1=1';
+            let params = [];
+            if (condition) {
+                if (condition.teacher_id && condition.teacher_id != '') {
+                    sql += ' and teacher_id=?';
+                    params[params.length] = condition.teacher_id;
+                }
+                if (condition.free_start_date && condition.free_start_date != '') {
+                    sql += ' and free_date>=?';
+                    params[params.length] = condition.free_start_date;
+                }
+                if (condition.free_end_date && condition.free_end_date != '') {
+                    sql += ' and free_date<?';
+                    params[params.length] = condition.free_end_date;
+                }
+            }
+            let freeTimess = await dataPool.query(sql, params);
+            resolve(freeTimess);
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
+
 exports.saveTeacher = function (teacher) {
     return new Promise(async function (resolve, reject) {
         try {
@@ -64,17 +91,6 @@ exports.saveTeacher = function (teacher) {
     })
 };
 
-exports.getFreeTimeByTeacherId = function (teacher_id) {
-    return new Promise(async function (resolve, reject) {
-        try {
-            let teacherFreeTimes = await dataPool.query('select * from teacher_free_time where teacher_id=?', [teacher_id]);
-            resolve(teacherFreeTimes);
-        } catch (error) {
-            reject(error);
-        }
-    })
-};
-
 exports.updateTeacher = function (teacher) {
     return new Promise(async function (resolve, reject) {
         try {
@@ -91,6 +107,17 @@ exports.updateTeacher = function (teacher) {
             }
             await dataPool.batchQuery(sqls, params);
             resolve();
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
+
+exports.getSingedTeacherCount = function () {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let count = await dataPool.query("select count(*) count from teacher where status='1'");
+            resolve(count);
         } catch (error) {
             reject(error);
         }

@@ -1,63 +1,78 @@
 <div id="dashboard">
     <div class="row-fluid">
-        <div class="span3 responsive" data-tablet="span6" data-desktop="span3">
+        <div class="span4 responsive" data-tablet="span6" data-desktop="span4">
             <div class="dashboard-stat blue">
                 <div class="visual">
-                    <i class="icon-comments"></i>
+                    <i class="icon-group"></i>
                 </div>
                 <div class="details">
-                    <div class="number">
-                        1349
-                    </div>
-                    <div class="desc">
-                        New Feedbacks
-                    </div>
+                    <div class="number"><%= totalStudent%></div>
+                    <div class="desc">学员总数</div>
                 </div>
-                <a class="more" href="#">
-                    View more <i class="m-icon-swapright m-icon-white"></i>
-                </a>
             </div>
         </div>
-        <div class="span3 responsive" data-tablet="span6" data-desktop="span3">
-            <div class="dashboard-stat green">
-                <div class="visual">
-                    <i class="icon-shopping-cart"></i>
-                </div>
-                <div class="details">
-                    <div class="number">549</div>
-                    <div class="desc">New Orders</div>
-                </div>
-                <a class="more" href="#">
-                    View more <i class="m-icon-swapright m-icon-white"></i>
-                </a>
-            </div>
-        </div>
-        <div class="span3 responsive" data-tablet="span6  fix-offset" data-desktop="span3">
+        <div class="span4 responsive" data-tablet="span6  fix-offset" data-desktop="span4">
             <div class="dashboard-stat purple">
                 <div class="visual">
                     <i class="icon-globe"></i>
                 </div>
                 <div class="details">
-                    <div class="number">+89%</div>
-                    <div class="desc">Brand Popularity</div>
+                    <div class="number"><%= totalTeacher%></div>
+                    <div class="desc">教师总数</div>
                 </div>
-                <a class="more" href="#">
-                    View more <i class="m-icon-swapright m-icon-white"></i>
-                </a>
             </div>
         </div>
-        <div class="span3 responsive" data-tablet="span6" data-desktop="span3">
+        <div class="span4 responsive" data-tablet="span6" data-desktop="span4">
             <div class="dashboard-stat yellow">
                 <div class="visual">
                     <i class="icon-bar-chart"></i>
                 </div>
                 <div class="details">
-                    <div class="number">12,5M$</div>
-                    <div class="desc">Total Profit</div>
+                    <div class="number"><%= totalContract%></div>
+                    <div class="desc">合同总数</div>
                 </div>
-                <a class="more" href="#">
-                    View more <i class="m-icon-swapright m-icon-white"></i>
-                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="span12">
+        <div class="portlet box purple">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-reorder"></i>今日课表
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <% for (let i = 0; i < lessonPeriods.length; i++) {%>
+                        <th><%= lessonPeriods[i].name;%></th>
+                        <%}%>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% for (let i = 0; i < classRooms.length; i++) {%>
+                    <tr>
+                        <td><%= classRooms[i].name%></td>
+                        <% for (let j = 0; j < lessonPeriods.length; j++) {
+                            let courseSchedule = courseScheduleMap[lessonPeriods[j].id+classRooms[i].id];
+                        %>
+                        <td <% if (courseSchedule&&courseSchedule.status_id == '02') {%>style="background-color:yellow;"<%} else if (courseSchedule&&courseSchedule.status_id == '04') {%>style="background-color:green;"<%}%>>
+                            <% if (courseSchedule) {%>
+                            学员:<%= studentMap[courseSchedule.student_id].name%>(<%= studentMap[courseSchedule.student_id].student_no%>)<br>
+                            教室:<%= classRoomMap[courseSchedule.class_room_id].name%><br>
+                            科目:<%= subjectMap[courseSchedule.subject_id].name%><br>
+                            状态:<%= statusMap[courseSchedule.status_id].name%>
+                            <%}%>
+                        </td>
+                        <%}%>
+                    </tr>
+                    <%}%>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

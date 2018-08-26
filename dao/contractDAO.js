@@ -292,3 +292,14 @@ exports.getDetailLogsByContractId = function (contract_id) {
         }
     })
 };
+
+exports.getSingedContractCount = function () {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let count = await dataPool.query("select count(*) count from contract where status_id='02'");
+            resolve(count);
+        } catch (error) {
+            reject(error);
+        }
+    })
+};
