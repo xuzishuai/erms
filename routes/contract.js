@@ -259,6 +259,47 @@ router.get('/my_contract_list', async function (req, res) {
     }
 });
 
+router.get('/contract_list', async function (req, res) {
+    try {
+        let condition = {};
+        condition.student_id = req.query.student_id;
+        condition.contract_no = req.query.contract_no;
+        condition.attribute_id = req.query.attribute_id;
+        condition.contract_type_id = req.query.contract_type_id;
+        condition.grade_id = req.query.grade_id;
+        condition.start_date_from = req.query.start_date_from;
+        condition.start_date_to = req.query.start_date_to;
+        condition.status_id = (req.query.status_id && req.query.status_id != '')?[req.query.status_id]:null;
+        let contracts = await contractDAO.getContractByCondition('contract', condition);
+        let students = await baseDAO.getAll('student');
+        let grades = await baseDAO.getAll('grade');
+        let users = await baseDAO.getAll('user');
+        let contractAttributes = await baseDAO.getAll('contract_attribute');
+        let contractTypes = await baseDAO.getAll('contract_type');
+        let possibilities = await baseDAO.getAll('possibility');
+        let contractStatus = await baseDAO.getAll('contract_status');
+        res.render('contract/contract_list', {
+            contracts: contracts,
+            students: students,
+            grades: grades,
+            contractStatus: contractStatus,
+            contractAttributes: contractAttributes,
+            contractTypes: contractTypes,
+            possibilities: possibilities,
+            studentMap: commonUtil.toMap(students),
+            gradeMap: commonUtil.toMap(grades),
+            userMap: commonUtil.toMap(users),
+            contractAttributeMap: commonUtil.toMap(contractAttributes),
+            contractTypeMap: commonUtil.toMap(contractTypes),
+            contractStatusMap: commonUtil.toMap(contractStatus),
+            condition: condition,
+            dateUtil: dateUtil
+        });
+    } catch (error) {
+        exceptionHelper.renderException(res, error);
+    }
+});
+
 router.get('/edit_contract', async function (req, res) {
     try {
         let contract = await baseDAO.getById('contract', req.query.id);
@@ -454,6 +495,7 @@ router.get('/contract_view', async function (req, res) {
             subjectMap: commonUtil.toMap(subjects),
             detailTypeMap: commonUtil.toMap(detailTypes),
             detailStatusMap: commonUtil.toMap(detailStatus),
+            from: req.query.from,
             dateUtil: dateUtil
         });
     } catch (error) {
