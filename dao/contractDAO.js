@@ -218,6 +218,7 @@ exports.auditContract = function (id, audit_status) {
                 if (audit_status == '1') {//审核通过
                     let contractTemp = await baseDAO.getById('contract_temp', contract.id);
                     contract = contractTemp[0];
+                    student.status_id = '03';
                     contract.update_at = now;
                     if (details[0].status_id == '01') {//如果此时合同明细还待确认
                         for (let i = 0; i < details.length; i++) {//更新合同明细状态
@@ -235,6 +236,7 @@ exports.auditContract = function (id, audit_status) {
                 if (audit_status == '1') {//审核通过
                     let contractTemp = await baseDAO.getById('contract_temp', contract.id);
                     contract = contractTemp[0];
+                    student.status_id = '03';
                     contract.update_at = now;
                     details = await getDetailTempsByContractId(contract.id);
                     for (let i = 0; i < details.length; i++) {//更新合同明细状态
