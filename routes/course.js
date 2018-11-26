@@ -823,7 +823,7 @@ router.get('/new_course_schedule', async function (req, res) {
             cCondition.class_room_id = classRooms[i].id;
             let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(cCondition);
             if (!courseSchedule || courseSchedule.length <= 0) {
-                classRoomVOs[teacherVOs.length] = classRooms[i];
+                classRoomVOs.push(classRooms[i]);
             }
         }
         res.render('course/new_course_schedule', {

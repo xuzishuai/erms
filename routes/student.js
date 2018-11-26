@@ -465,7 +465,8 @@ router.get('/student_list', async function (req, res) {
             sourceMap: commonUtil.toMap(sources),
             statusMap: commonUtil.toMap(status),
             condition: condition,
-            dateUtil: dateUtil
+            dateUtil: dateUtil,
+            user: req.session.user[0]
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);

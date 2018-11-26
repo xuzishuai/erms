@@ -129,7 +129,7 @@
                         <td><% if (students[i].note){%><%= students[i].note%><%}%></td>
                         <td>
                             <a href="/student/edit_student?id=<%= students[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>
-                            <% if (students[i].audit_status_id == '02') {%>
+                            <% if (students[i].audit_status_id == '02' && user.role_id == '03') {%>
                             <a href="/contract/new_contract?id=<%= students[i].id%>" class="btn green mini"><i class="icon-plus"></i> 新增合同</a>
                             <%}%>
                         </td>
