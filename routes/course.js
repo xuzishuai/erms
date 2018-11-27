@@ -176,7 +176,7 @@ router.get('/teacher_list', async function (req, res) {
         let condition = {};
         condition.name = req.query.name;
         condition.grade_id = req.query.grade_id;
-        condition.sbuject_id = req.query.sbuject_id;
+        condition.subject_id = req.query.subject_id;
         condition.contact = req.query.contact;
         condition.is_part_time = req.query.is_part_time;
         condition.status = req.query.is_part_time!=null?req.query.is_part_time:'1';//若不填默认搜索在职教师
@@ -415,7 +415,7 @@ router.get('/teacher_search', async function (req, res) {
         let condition = {};
         condition.name = req.query.name;
         condition.grade_id = req.query.grade_id;
-        condition.sbuject_id = req.query.sbuject_id;
+        condition.subject_id = req.query.subject_id;
         condition.contact = req.query.contact;
         condition.is_part_time = req.query.is_part_time;
         condition.status = req.query.is_part_time!=null?req.query.is_part_time:'1';//若不填默认搜索在职教师
@@ -509,7 +509,6 @@ router.get('/my_course_apply_list', async function (req, res) {
         sCondition.status_id = '03';//只显示已签约的学员
         let students = await studentDAO.getStudentByCondition(sCondition);
         let cCondition = {};
-        cCondition.status_id = '02';//查询执行中的合同
         let contracts = await contractDAO.getContractByCondition('contract', cCondition);
         let status = await baseDAO.getAll('course_apply_status');
         let appliers = [currentUser];//申请人只可选自己
@@ -800,7 +799,7 @@ router.get('/new_course_schedule', async function (req, res) {
         }
         let tCondition = {};
         tCondition.grade_id = contractDetail.grade_id;
-        tCondition.sbuject_id = contractDetail.sbuject_id;
+        tCondition.subject_id = contractDetail.subject_id;
         let teachers = await teacherDAO.getTeacherByCondition(tCondition);
         let teacherVOs = [];
         //根据日期和默认第一个课时去除有课的教师
@@ -873,7 +872,7 @@ router.post('/course_schedule_select_change', async function (req, res) {
         }
         let tCondition = {};
         tCondition.grade_id = req.body.grade_id;
-        tCondition.sbuject_id = req.body.sbuject_id;
+        tCondition.subject_id = req.body.subject_id;
         let teachers = await teacherDAO.getTeacherByCondition(tCondition);
         let teacherVOs = [];
         //根据日期和默认第一个课时去除有课的教师
@@ -932,7 +931,7 @@ router.post('/do_create_course_schedule', async function (req, res) {
         courseSchedule.teacher_id = req.body.teacher_id;
         courseSchedule.operator_id = req.session.user[0].id;
         let contract = await baseDAO.getById('contract', courseSchedule.contract_id);
-        courseSchedule.student_id = contract[0].id;
+        courseSchedule.student_id = contract[0].student_id;
         await courseScheduleDAO.saveCourseSchedule(courseSchedule);
         res.redirect('/course/new_course_schedule_contract_view?contract_id=' + courseSchedule.contract_id);
     } catch (error) {
@@ -945,7 +944,7 @@ router.get('/audit_course_schedule_list', async function (req, res) {
         let condition = {};
         condition.student_id = req.query.student_id;
         condition.contract_no = req.query.contract_no;
-        condition.sbuject_id = req.query.sbuject_id;
+        condition.subject_id = req.query.subject_id;
         condition.grade_id = req.query.grade_id;
         condition.teacher_id = req.query.teacher_id;
         condition.lesson_date = req.query.lesson_date;
@@ -960,7 +959,7 @@ router.get('/audit_course_schedule_list', async function (req, res) {
         let cCondition = {};
         cCondition.status_id = '02';//查询执行中的合同
         let contracts = await contractDAO.getContractByCondition('contract', cCondition);
-        let headmasters = await userDAO.getAllHeadmaster()
+        let headmasters = await userDAO.getAllHeadmaster();
         let subjects = await baseDAO.getAll('subject');
         let grades = await baseDAO.getAll('grade');
         let teachers = await baseDAO.getAll('teacher');
@@ -1011,7 +1010,7 @@ router.get('/course_schedule_list', async function (req, res) {
         let condition = {};
         condition.student_id = req.query.student_id;
         condition.contract_no = req.query.contract_no;
-        condition.sbuject_id = req.query.sbuject_id;
+        condition.subject_id = req.query.subject_id;
         condition.grade_id = req.query.grade_id;
         condition.teacher_id = req.query.teacher_id;
         condition.lesson_date = req.query.lesson_date;
@@ -1097,7 +1096,7 @@ router.get('/edit_course_schedule', async function (req, res) {
         }
         let tCondition = {};
         tCondition.grade_id = contractDetail.grade_id;
-        tCondition.sbuject_id = contractDetail.sbuject_id;
+        tCondition.subject_id = contractDetail.subject_id;
         let teachers = await teacherDAO.getTeacherByCondition(tCondition);
         let teacherVOs = [];
         //根据日期和默认第一个课时去除有课的教师

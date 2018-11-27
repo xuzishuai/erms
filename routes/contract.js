@@ -577,7 +577,9 @@ router.get('/contract_charge_list', async function (req, res) {
 
 router.get('/new_contract_charge', async function (req, res) {
     try {
-        let contracts = await baseDAO.getAll('contract');
+        let condition = {};
+        condition.status_id = ['01', '02', '03', '04', '05'];//已废弃的合同不能收费
+        let contracts = await contractDAO.getContractByCondition('contract', condition);
         let students = await baseDAO.getAll('student');
         let types = await baseDAO.getAll('contract_charge_type');
         let modes = await baseDAO.getAll('contract_charge_mode');

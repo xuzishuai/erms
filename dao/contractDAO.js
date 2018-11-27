@@ -170,8 +170,8 @@ exports.saveContractDetailTemp = function (contractDetailTemp, contract_id) {
                     ' values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
                 let isOld = contractDetailTemp[i].id && contractDetailTemp[i].id != '';
                 params[params.length] = [isOld?contractDetailTemp[i].id:uuid.v1(), contractTemp.id, contractDetailTemp[i].subject_id, contractTemp.grade_id, contractDetailTemp[i].lesson_period,
-                    isOld?contractDetailTemp[i].finished_lesson:0, contractDetailTemp[i].type_id, contractDetailTemp[i].price, contractDetailTemp[i].status_id, now, now];
-                total_money += parseFloat(contractDetailTemp[i].price);
+                    isOld?contractDetailTemp[i].finished_lesson:0, contractDetailTemp[i].type_id, contractDetailTemp[i].price, isOld?contractDetailTemp[i].status_id:'01', now, now];
+                total_money += parseFloat(contractDetailTemp[i].price) * parseInt(contractDetailTemp[i].lesson_period);
                 total_lesson_period += parseInt(contractDetailTemp[i].lesson_period);
             }
             contractTemp.total_money = total_money;

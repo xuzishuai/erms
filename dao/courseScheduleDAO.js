@@ -18,9 +18,9 @@ exports.getCourseScheduleByCondition = function (condition) {
                     sql += ' and contract_id in (select id from contract where contract_no like ?)';
                     params[params.length] = '%' + condition.contract_no + '%';
                 }
-                if (condition.sbuject_id && condition.sbuject_id != '') {
-                    sql += ' and sbuject_id=?';
-                    params[params.length] = condition.sbuject_id;
+                if (condition.subject_id && condition.subject_id != '') {
+                    sql += ' and subject_id=?';
+                    params[params.length] = condition.subject_id;
                 }
                 if (condition.grade_id && condition.grade_id != '') {
                     sql += ' and grade_id=?';

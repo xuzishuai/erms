@@ -16,9 +16,9 @@ exports.getTeacherByCondition = function (condition) {
                     sql += ' and grade_ids like ?';
                     params[params.length] = '%#' + condition.grade_id + '#%';
                 }
-                if (condition.sbuject_id && condition.sbuject_id != '') {
-                    sql += ' and sbuject_id=?';
-                    params[params.length] = condition.sbuject_id;
+                if (condition.subject_id && condition.subject_id != '') {
+                    sql += ' and subject_id=?';
+                    params[params.length] = condition.subject_id;
                 }
                 if (condition.contact && condition.contact != '') {
                     sql += ' and contact like ?';

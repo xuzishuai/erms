@@ -49,6 +49,9 @@ exports.saveContractRefund = function (contractRefund) {
             let now = new Date();
             sqls[sqls.length] = 'update contract set status_id=?, update_at=? where id=?';
             params[params.length] = ['06', now, contractRefund.contract_id];//退费后此合同设置为作废状态
+
+            sqls[sqls.length] = 'delete from course_apply where contract_id=? and (status_id=? or status_id=?)';
+            params[params.length] = [contractRefund.contract_id, '01', '03'];
             
             sqls[sqls.length] = 'insert into contract_refund(id, contract_id, refund_date, money, operator_id, create_at) values (?, ?, ?, ?, ?, ?)';
             params[params.length] = [uuid.v1(), contractRefund.contract_id, contractRefund.refund_date, contractRefund.money, contractRefund.operator_id, now];

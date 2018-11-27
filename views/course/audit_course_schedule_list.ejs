@@ -30,7 +30,7 @@
                             <div class="control-group span3">
                                 <label class="control-label">科目:</label>
                                 <div class="controls">
-                                    <select class="span12 select2" tabindex="1" name="sbuject_id" id="sbuject_id">
+                                    <select class="span12 select2" tabindex="1" name="subject_id" id="subject_id">
                                         <option value=""></option>
                                         <%for (let i = 0; i < subjects.length; i++){%>
                                         <option value="<%= subjects[i].id%>"><%= subjects[i].name%></option>
@@ -134,12 +134,12 @@
                     <tbody>
                     <%for (let i = 0; i < courseSchedules.length; i++){
                         let contract = contractMap[courseSchedules[i].contract_id];
-                        let student = studentMap[contract.student_id];
+                        let student = studentMap[courseSchedules[i].student_id];
                     %>
                     <tr>
                         <td><%= student.name%>(<%= student.student_no%>)</td>
                         <td><%= contract.contract_no%></td>
-                        <td><%= headmasterMap[student[i].headmaster_id].name%></td>
+                        <td><%= headmasterMap[student.headmaster_id].name%></td>
                         <td><%= subjectMap[courseSchedules[i].subject_id].name%></td>
                         <td><%= gradeMap[courseSchedules[i].grade_id].name%></td>
                         <td><%= teacherMap[courseSchedules[i].teacher_id].name%></td>
@@ -172,7 +172,7 @@
 <%- contentFor('script')%>
 <script>
     $('#student_id').val('<%= condition.student_id%>');
-    $('#sbuject_id').val('<%= condition.sbuject_id%>');
+    $('#subject_id').val('<%= condition.subject_id%>');
     $('#grade_id').val('<%= condition.grade_id%>');
     $('#teacher_id').val('<%= condition.teacher_id%>');
     $('#lesson_period_id').val('<%= condition.lesson_period_id%>');
