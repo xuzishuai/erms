@@ -598,6 +598,7 @@ router.get('/signed_student_list', async function (req, res) {
         condition.source_id = req.query.source_id;
         condition.adviser_id = req.query.adviser_id;
         condition.status_id = '03';//只显示已签约的学员
+        condition.contract_status = (req.query.contract_status&&(req.query.contract_status=='01'||req.query.contract_status=='02'))?req.query.contract_status:'01';
         let students = await studentDAO.getStudentByCondition(condition);
         let grades = await baseDAO.getAll('grade');
         let headmasters = await userDAO.getAllHeadmaster();

@@ -70,13 +70,12 @@
                                 </div>
                             </div>
                             <div class="control-group span3">
-                                <label class="control-label">途径:</label>
+                                <label class="control-label">合同状态:</label>
                                 <div class="controls">
-                                    <select class="span12 select2" tabindex="1" name="source_id" id="source_id">
+                                    <select class="span12 select2" tabindex="1" name="contract_status" id="contract_status">
                                         <option value=""></option>
-                                        <%for (let i = 0; i < sources.length; i++){%>
-                                        <option value="<%= sources[i].id%>"><%= sources[i].name%></option>
-                                        <%}%>
+                                        <option value="01">签约中</option>
+                                        <option value="02">已解约</option>
                                     </select>
                                 </div>
                             </div>
