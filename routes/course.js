@@ -1119,7 +1119,7 @@ router.get('/edit_course_schedule', async function (req, res) {
             cCondition.class_room_id = classRooms[i].id;
             let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(cCondition);
             if (!courseSchedule || courseSchedule.length <= 0 || (courseSchedule && courseSchedule.length > 0 && courseSchedule[0].id == courseScheduleObj.id)) {
-                classRoomVOs[teacherVOs.length] = classRooms[i];
+                classRoomVOs[classRoomVOs.length] = classRooms[i];
             }
         }
         res.render('course/edit_course_schedule', {
@@ -1157,8 +1157,9 @@ router.post('/do_update_course_schedule', async function (req, res) {
 
 router.get('/do_finish_course_schedule', async function (req, res) {
     try {
-        let courseSchedule = await baseDAO.getById('course_schedule', req.query.id);
+        let courseSchedule = await baseDAO.getById('course_schedule', req.query.csId);
         courseSchedule = courseSchedule[0];
+        courseSchedule.status_id = '04';
         await courseScheduleDAO.doFinishCourseSchedule(courseSchedule);
         res.redirect('/course/course_schedule_list');
     } catch (error) {
@@ -1188,7 +1189,7 @@ router.get('/course_timetable', async function (req, res) {
         let courseScheduleMap = {};
         let teacherVOs = [];
         for (let i = 0; i < courseSchedules.length; i++) {
-            courseScheduleMap[courseSchedules[i].teacher_id+courseSchedules[i].lesson_date+courseSchedules[i].lesson_period_id] = courseSchedules[i];
+            courseScheduleMap[courseSchedules[i].teacher_id+dateUtil.dateFormat(courseSchedules[i].lesson_date)+courseSchedules[i].lesson_period_id] = courseSchedules[i];
             teacherVOs[teacherVOs.length] = teacherMap[courseSchedules[i].teacher_id];
         }
         let lessonPeriods = await baseDAO.getAll('lesson_period');

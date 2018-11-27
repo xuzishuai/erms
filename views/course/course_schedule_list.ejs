@@ -179,7 +179,7 @@
     </div>
     <div class="modal-footer">
         <form action="/course/do_finish_course_schedule">
-            <input id="id" name="id" hidden>
+            <input id="csId" name="csId" hidden>
             <button type="button" data-dismiss="modal" class="btn">取消</button>
             <button type="submit" class="btn green">确认</button>
         </form>
@@ -204,4 +204,22 @@
     $('#teacher_id').val('<%= condition.teacher_id%>');
     $('#lesson_period_id').val('<%= condition.lesson_period_id%>');
     $('#class_room_id').val('<%= condition.class_room_id%>');
+
+    $(function() {
+        $('#confirm').on('show.bs.modal', function (event) {
+            let button = $(event.relatedTarget);
+            $('#id').val(button.data('id'));
+        })
+        $('#confirm').on('hidden.bs.modal', function () {
+            $('#id').val('');
+        })
+
+        $('#confirmFinished').on('show.bs.modal', function (event) {
+            let button = $(event.relatedTarget);
+            $('#csId').val(button.data('id'));
+        })
+        $('#confirmFinished').on('hidden.bs.modal', function () {
+            $('#csId').val('');
+        })
+    });
 </script>

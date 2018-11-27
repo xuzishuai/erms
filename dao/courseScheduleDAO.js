@@ -135,7 +135,7 @@ exports.doFinishCourseSchedule = function (courseSchedule) {
             let contractDetail = await baseDAO.getById('contract_detail', courseSchedule.contract_detail_id);
             contractDetail = contractDetail[0];
             contractDetail.finished_lesson = parseInt(contractDetail.finished_lesson) + 1;
-            sqls[sqls.length] = ['update contract_detail set finished_lesson=?, update_at=? where id=?'];
+            sqls[sqls.length] = 'update contract_detail set finished_lesson=?, update_at=? where id=?';
             params[params.length] = [contractDetail.finished_lesson, now, contractDetail.id];
             let contract = await baseDAO.getById('contract', contractDetail.contract_id);
             contract = contract[0];
@@ -145,7 +145,7 @@ exports.doFinishCourseSchedule = function (courseSchedule) {
                 totalLessonPeriod += parseInt(contractDetails[i].finished_lesson);
             }
             if (parseInt(contract.total_lesson_period) == totalLessonPeriod) {
-                sqls[sqls.length] = ['update contract set status_id=?, update_at=? where id=?'];
+                sqls[sqls.length] = 'update contract set status_id=?, update_at=? where id=?';
                 params[params.length] = ['06', now, contract.id];
             }
             await dataPool.batchQuery(sqls, params);
