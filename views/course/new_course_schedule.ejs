@@ -170,7 +170,7 @@
     function selectChange(select_name) {
         $.post('/course/course_schedule_select_change', {select_name: select_name, lesson_date: $('#lesson_date').val(),
             lesson_period_id: $('#lesson_period_id').val(), grade_id: $('#grade_id').val(), subject_id: $('#subject_id').val()}, function (result) {
-            if (select_name == 'lesson_period_id') {
+            if (select_name == 'lesson_date') {
                 resetOptions('lesson_period_id', result.lessonPeriods);
             }
             resetOptions('teacher_id', result.teachers);
@@ -179,16 +179,15 @@
     }
 
     function resetOptions(select_name, data) {
-        let optionData = [];
-        for (let i = 0; i < data.length; i++) {
-            optionData.push({id: data[i].id, text: data[i].name});
-
-        }
         let s = $('#'+select_name);
+        let options = '';
+        for (let i = 0; i < data.length; i++) {
+            options += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+        }
         s.select2('destroy').empty();
+        s.html(options);
         s.select2({
             placeholder: "",
-            data: optionData,
             formatNoMatches: function () { return "没有找到匹配项"; },
             formatLoadMore: function () { return "加载结果中…"; },
             formatSearching: function () { return "搜索中…"; }

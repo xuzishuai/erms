@@ -905,7 +905,7 @@ router.post('/course_schedule_select_change', async function (req, res) {
             let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(cCondition);
             //id不为空时表示编辑页面，这条记录的教室也要加进去
             if (!courseSchedule || courseSchedule.length <= 0 || (id && id != '' && courseSchedule && courseSchedule.length > 0 && courseSchedule[0].id == id)) {
-                classRoomVOs[teacherVOs.length] = classRooms[i];
+                classRoomVOs.push(classRooms[i]);
             }
         }
         res.send({
