@@ -168,7 +168,7 @@
     })
 
     function selectChange(select_name) {
-        $.post('/course/course_schedule_select_change', {select_name: select_name, lesson_date: $('#lesson_date').val(),
+        $.post('/course/course_schedule_select_change', {select_name: select_name, lesson_date: $('#lesson_date').val(), student_id: '<%= student.id%>',
             lesson_period_id: $('#lesson_period_id').val(), grade_id: $('#grade_id').val(), subject_id: $('#subject_id').val()}, function (result) {
             if (select_name == 'lesson_date') {
                 resetOptions('lesson_period_id', result.lessonPeriods);
