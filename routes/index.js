@@ -5,6 +5,7 @@ const studentDAO = require('../dao/studentDAO');
 const teacherDAO = require('../dao/teacherDAO');
 const contractDAO = require('../dao/contractDAO');
 const courseScheduleDAO = require('../dao/courseScheduleDAO');
+const lessonPeriodDAO = require('../dao/lessonPeriodDAO');
 const dateUtil = require('../util/dateUtil');
 const commonUtil = require('../util/commonUtil');
 
@@ -13,7 +14,7 @@ router.get('/', async function(req, res) {
     let totalStudent = await studentDAO.getSingedStudentCount();
     let totalTeacher = await teacherDAO.getSingedTeacherCount();
     let totalContract = await contractDAO.getSingedContractCount();
-    let lessonPeriods = await baseDAO.getAll('lesson_period');
+    let lessonPeriods = await lessonPeriodDAO.getLessonPeriod();
     let classRooms = await baseDAO.getAll('class_room');
     let condition = {};
     condition.lesson_start_date = dateUtil.dateFormat(new Date());

@@ -785,7 +785,7 @@ router.get('/new_course_schedule', async function (req, res) {
         let grades = await baseDAO.getAll('grade');
         let classRooms = await baseDAO.getAll('class_room');
         let today = dateUtil.dateFormat(new Date());
-        let lessonPeriods = await baseDAO.getAll('lesson_period');
+        let lessonPeriods = await lessonPeriodDAO.getLessonPeriod();
         let lessonPeriodVOs = [];
         //根据日期去除已使用的课时
         for (let i = 0; i < lessonPeriods.length; i++) {
@@ -861,7 +861,7 @@ router.post('/course_schedule_select_change', async function (req, res) {
         let lessonPeriodVOs = [];
         let classRooms = await baseDAO.getAll('class_room');
         if (req.body.select_name == 'lesson_date') {
-            let lessonPeriods = await baseDAO.getAll('lesson_period');
+            let lessonPeriods = await lessonPeriodDAO.getLessonPeriod();
             //根据日期去除已使用的课时
             for (let i = 0; i < lessonPeriods.length; i++) {
                 let lCondition = {};
@@ -987,7 +987,7 @@ router.get('/audit_course_schedule_list', async function (req, res) {
         let subjects = await baseDAO.getAll('subject');
         let grades = await baseDAO.getAll('grade');
         let teachers = await baseDAO.getAll('teacher');
-        let lessonPeriods = await baseDAO.getAll('lesson_period');
+        let lessonPeriods = await lessonPeriodDAO.getLessonPeriod();
         let classRooms = await baseDAO.getAll('class_room');
         let status = await baseDAO.getAll('course_schedule_status');
         res.render('course/audit_course_schedule_list', {
@@ -1054,7 +1054,7 @@ router.get('/course_schedule_list', async function (req, res) {
         let subjects = await baseDAO.getAll('subject');
         let grades = await baseDAO.getAll('grade');
         let teachers = await baseDAO.getAll('teacher');
-        let lessonPeriods = await baseDAO.getAll('lesson_period');
+        let lessonPeriods = await lessonPeriodDAO.getLessonPeriod();
         let classRooms = await baseDAO.getAll('class_room');
         let status = await baseDAO.getAll('course_schedule_status');
         res.render('course/course_schedule_list', {
@@ -1096,7 +1096,7 @@ router.get('/edit_course_schedule', async function (req, res) {
         let grades = await baseDAO.getAll('grade');
         let classRooms = await baseDAO.getAll('class_room');
         let today = dateUtil.dateFormat(courseScheduleObj.lesson_date);
-        let lessonPeriods = await baseDAO.getAll('lesson_period');
+        let lessonPeriods = await lessonPeriodDAO.getLessonPeriod();
         let lessonPeriodVOs = [];
         //根据日期去除已使用的课时
         for (let i = 0; i < lessonPeriods.length; i++) {
@@ -1235,7 +1235,7 @@ router.get('/course_timetable', async function (req, res) {
                 teacherVOs[teacherVOs.length] = teacherMap[courseSchedules[i].teacher_id];
             }
         }
-        let lessonPeriods = await baseDAO.getAll('lesson_period');
+        let lessonPeriods = await lessonPeriodDAO.getLessonPeriod();
         let days = [];
         days.push(condition.lesson_start_date);
         days.push(dateUtil.addDays(condition.lesson_start_date, 1));
