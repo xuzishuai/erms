@@ -1048,7 +1048,7 @@ router.get('/course_schedule_list', async function (req, res) {
         sCondition.headmaster_id = headmaster_id;//查询当前用户（班主任）的学生
         let students = await studentDAO.getStudentByCondition(sCondition);
         let cCondition = {};
-        cCondition.status_id = '02';//查询执行中的合同
+        cCondition.status_id = ['02', '06'];//查询执行中和已作废的合同
         cCondition.headmaster_id = headmaster_id;//查询当前用户（班主任）的学生的合同
         let contracts = await contractDAO.getContractByCondition('contract', cCondition);
         let subjects = await baseDAO.getAll('subject');
