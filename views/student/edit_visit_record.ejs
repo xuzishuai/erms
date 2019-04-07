@@ -17,7 +17,7 @@
                         <label class="control-label">到访时间<span class="required">*</span></label>
                         <div class="controls">
                             <div class="input-append date form_datetime">
-                                <input id="arrive_time" name="arrive_time" size="16" type="text" readonly class="m-wrap" value="<%= dateUtil.dateFormat(visitRecord.arrive_time)%>"/>
+                                <input id="arrive_time" name="arrive_time" size="16" type="text" readonly class="m-wrap" value="<%= dateUtil.dateTimeFormat(visitRecord.arrive_time)%>"/>
                                 <span class="add-on"><i class="icon-remove"></i></span>
                                 <span class="add-on"><i class="icon-calendar"></i></span>
                             </div>
@@ -27,7 +27,7 @@
                         <label class="control-label">离开时间<span class="required">*</span></label>
                         <div class="controls">
                             <div class="input-append date form_datetime">
-                                <input id="leave_time" name="leave_time" size="16" type="text" readonly class="m-wrap" value="<%= dateUtil.dateFormat(visitRecord.leave_time)%>"/>
+                                <input id="leave_time" name="leave_time" size="16" type="text" readonly class="m-wrap" value="<%= dateUtil.dateTimeFormat(visitRecord.leave_time)%>"/>
                                 <span class="add-on"><i class="icon-remove"></i></span>
                                 <span class="add-on"><i class="icon-calendar"></i></span>
                             </div>

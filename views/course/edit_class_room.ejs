@@ -23,9 +23,7 @@
                         <div class="controls">
                             <select class="span6 select2" tabindex="1" name="status_id" id="status_id">
                                 <%for (let i = 0; i < status.length; i++){%>
-                                <%if (status[i].id != '03'){%>
                                 <option <%if (status[i].id == classRoom.status_id){%>selected<%}%> value="<%= status[i].id%>"><%= status[i].name%></option>
-                                <%}%>
                                 <%}%>
                             </select>
                         </div>

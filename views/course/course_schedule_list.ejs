@@ -124,10 +124,11 @@
                         <th>科目</th>
                         <th>年级</th>
                         <th>教师</th>
+                        <th>教室</th>
                         <th>上课日期</th>
                         <th>课时</th>
                         <th>状态</th>
-                        <th class="table_action" data-colNum=8>操作</th>
+                        <th class="table_action" data-colNum=9>操作</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -141,6 +142,7 @@
                         <td><%= subjectMap[courseSchedules[i].subject_id].name%></td>
                         <td><%= gradeMap[courseSchedules[i].grade_id].name%></td>
                         <td><%= teacherMap[courseSchedules[i].teacher_id].name%></td>
+                        <td><%= classRoomMap[courseSchedules[i].class_room_id].name%></td>
                         <td><%= dateUtil.dateFormat(courseSchedules[i].lesson_date)%></td>
                         <td><%= lessonPeriodMap[courseSchedules[i].lesson_period_id].name%></td>
                         <td><%= statusMap[courseSchedules[i].status_id].name%></td>

@@ -27,14 +27,22 @@
                         </div>
                         <div class="span6 ">
                             <div class="control-group">
+                                <label class="control-label">学员姓名:</label>
+                                <div class="controls">
+                                    <span class="text bold"><%= studentMap[contract.student_id].name%></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6 ">
+                            <div class="control-group">
                                 <label class="control-label">合同属性:</label>
                                 <div class="controls">
                                     <span class="text bold"><%= attributeMap[contract.attribute_id].name%></span>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row-fluid">
                         <div class="span6 ">
                             <div class="control-group">
                                 <label class="control-label">合同类型:</label>
@@ -43,6 +51,8 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="row-fluid">
                         <div class="span6 ">
                             <div class="control-group">
                                 <label class="control-label">年级:</label>
@@ -51,8 +61,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row-fluid">
                         <div class="span6 ">
                             <div class="control-group">
                                 <label class="control-label" >合同金额:</label>
@@ -61,6 +69,8 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="row-fluid">
                         <div class="span6 ">
                             <div class="control-group">
                                 <label class="control-label" >已付款:</label>
@@ -69,8 +79,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row-fluid">
                         <div class="span6 ">
                             <div class="control-group">
                                 <label class="control-label" >未付款:</label>
@@ -79,6 +87,8 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="row-fluid">
                         <div class="span6 ">
                             <div class="control-group">
                                 <label class="control-label" >总课时数:</label>
@@ -87,21 +97,11 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row-fluid">
                         <div class="span6 ">
                             <div class="control-group">
                                 <label class="control-label" >合同开始日期:</label>
                                 <div class="controls">
                                     <span class="text bold"><%= dateUtil.dateFormat(contract.start_date)%></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="span6 ">
-                            <div class="control-group">
-                                <label class="control-label" >是否推荐:</label>
-                                <div class="controls">
-                                    <span class="text bold"><%if (contract.is_recommend == 0){%>否<%} else {%>是<%}%></span>
                                 </div>
                             </div>
                         </div>

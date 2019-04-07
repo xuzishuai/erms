@@ -12,10 +12,14 @@ exports.getById = function (table, id) {
     })
 };
 
-exports.getAll = function (table) {
+exports.getAll = function (table, order_by) {
     return new Promise(async function (resolve, reject) {
         try {
-            let results = await dataPool.query('select * from ' + table);
+            let sql = 'select * from ' + table;
+            if (order_by && order_by != null) {
+                sql += ' order by ' + order_by;
+            }
+            let results = await dataPool.query(sql);
             resolve(results);
         } catch (error) {
             reject(error);

@@ -33,6 +33,7 @@ exports.getTeacherByCondition = function (condition) {
                     params[params.length] = condition.status;
                 }
             }
+            sql += ' order by CONVERT(name USING gbk)';
             let teachers = await dataPool.query(sql, params);
             resolve(teachers);
         } catch (error) {

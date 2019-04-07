@@ -99,9 +99,8 @@
                         <th>教育顾问</th>
                         <th>班主任</th>
                         <th>途径</th>
-                        <th>状态</th>
-                        <th>备注</th>
-                        <th class="table_action" data-colNum=10>操作</th>
+                        <th class="table-note-th">备注</th>
+                        <th class="table_action" data-colNum=9>操作</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -116,7 +115,6 @@
                         <td><% if (students[i].adviser_id) {%><%= adviserMap[students[i].adviser_id].name%><%}%></td>
                         <td><% if (students[i].headmaster_id) {%><%= headmasterMap[students[i].headmaster_id].name%><%}%></td>
                         <td><%= sourceMap[students[i].source_id].name%></td>
-                        <td><%= statusMap[students[i].status_id].name%></td>
                         <td><% if (students[i].note){%><%= students[i].note%><%}%></td>
                         <td>
                             <a href="/student/edit_signed_student?id=<%= students[i].id%>" class="btn blue mini"><i class="icon-pencil"></i> 编辑</a>

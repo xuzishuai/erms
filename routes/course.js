@@ -754,6 +754,7 @@ router.get('/new_course_schedule_contract_view', async function (req, res) {
         let subjects = await baseDAO.getAll('subject');
         let detailTypes = await baseDAO.getAll('contract_detail_type');
         let detailStatus = await baseDAO.getAll('contract_detail_status');
+        let students = await baseDAO.getAll('student');
         res.render('course/new_course_schedule_contract_view', {
             contract: contract,
             contractDetails: contractDetails,
@@ -766,6 +767,7 @@ router.get('/new_course_schedule_contract_view', async function (req, res) {
             subjectMap: commonUtil.toMap(subjects),
             detailTypeMap: commonUtil.toMap(detailTypes),
             detailStatusMap: commonUtil.toMap(detailStatus),
+            studentMap: commonUtil.toMap(students),
             dateUtil: dateUtil
         });
     } catch (error) {
@@ -1053,9 +1055,9 @@ router.get('/course_schedule_list', async function (req, res) {
         let contracts = await contractDAO.getContractByCondition('contract', cCondition);
         let subjects = await baseDAO.getAll('subject');
         let grades = await baseDAO.getAll('grade');
-        let teachers = await baseDAO.getAll('teacher');
+        let teachers = await baseDAO.getAll('teacher', 'CONVERT(name USING gbk)');
         let lessonPeriods = await lessonPeriodDAO.getLessonPeriod();
-        let classRooms = await baseDAO.getAll('class_room');
+        let classRooms = await baseDAO.getAll('class_room', 'name');
         let status = await baseDAO.getAll('course_schedule_status');
         res.render('course/course_schedule_list', {
             courseSchedules: courseSchedules,
@@ -1074,6 +1076,7 @@ router.get('/course_schedule_list', async function (req, res) {
             teacherMap: commonUtil.toMap(teachers),
             lessonPeriodMap: commonUtil.toMap(lessonPeriods),
             statusMap: commonUtil.toMap(status),
+            classRoomMap: commonUtil.toMap(classRooms),
             condition: condition,
             dateUtil: dateUtil
         });

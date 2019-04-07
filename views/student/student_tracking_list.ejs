@@ -81,21 +81,21 @@
                     <table class="table table-list table-striped table-bordered table-hover">
                         <thead>
                         <tr>
-                            <th>追踪人</th>
                             <th>追踪日期</th>
+                            <th>追踪人</th>
                             <th>追踪方式</th>
                             <th>追踪结果</th>
                             <th>签约可能性</th>
                             <th>下次追踪日期</th>
-                            <th>追踪记录</th>
+                            <th class="table-note-th">追踪记录</th>
                             <th class="table_action" data-colNum=7>操作</th>
                         </tr>
                         </thead>
                         <tbody>
                         <%for (let i = 0; i < studentTrackings.length; i++){%>
                         <tr>
-                            <td><%= trackerMap[studentTrackings[i].tracker_id].name%></td>
                             <td><%= dateUtil.dateFormat(studentTrackings[i].track_date)%></td>
+                            <td><%= trackerMap[studentTrackings[i].tracker_id].name%></td>
                             <td><%= channelMap[studentTrackings[i].channel_id].name%></td>
                             <td><%= resultMap[studentTrackings[i].result_id].name%></td>
                             <td><%= possibilityMap[studentTrackings[i].possibility_id].name%></td>

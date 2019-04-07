@@ -43,10 +43,10 @@
                 <table class="table table-bordered">
                     <thead>
                     <tr>
-                        <th></th>
-                        <th></th>
+                        <th class="table-th-width-10"></th>
+                        <th class="table-th-width-6"></th>
                         <% for (let j = 0; j < days.length; j++) {%>
-                        <th><%= days[j];%></th>
+                        <th class="table-th-width-12"><%= days[j];%></th>
                         <%}%>
                     </tr>
                     </thead>
@@ -63,7 +63,7 @@
                         <% for (let k = 0; k < days.length; k++) {
                         let courseSchedule = courseScheduleMap[teachers[i].id+days[k]+lessonPeriods[j].id];
                         %>
-                        <td <% if (courseSchedule&&courseSchedule.status_id == '02') {%>style="background-color:yellow;"<%} else if (courseSchedule&&courseSchedule.status_id == '04') {%>style="background-color:green;"<%}%>>
+                        <td class="class-td-height" <% if (courseSchedule&&courseSchedule.status_id == '02') {%>style="background-color:yellow;"<%} else if (courseSchedule&&courseSchedule.status_id == '04') {%>style="background-color:#77ff00;"<%}%>>
                             <% if (courseSchedule) {%>
                             学员:<%= studentMap[courseSchedule.student_id].name%>(<%= studentMap[courseSchedule.student_id].student_no%>)<br>
                             教室:<%= classRoomMap[courseSchedule.class_room_id].name%><br>

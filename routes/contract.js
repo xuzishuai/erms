@@ -480,6 +480,7 @@ router.get('/contract_view', async function (req, res) {
         let subjects = await baseDAO.getAll('subject');
         let detailTypes = await baseDAO.getAll('contract_detail_type');
         let detailStatus = await baseDAO.getAll('contract_detail_status');
+        let students = await baseDAO.getAll('student');
         res.render('contract/contract_view', {
             contract: contract,
             contractDetails: contractDetails,
@@ -495,6 +496,7 @@ router.get('/contract_view', async function (req, res) {
             subjectMap: commonUtil.toMap(subjects),
             detailTypeMap: commonUtil.toMap(detailTypes),
             detailStatusMap: commonUtil.toMap(detailStatus),
+            studentMap: commonUtil.toMap(students),
             from: req.query.from,
             dateUtil: dateUtil
         });

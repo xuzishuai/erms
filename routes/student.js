@@ -604,7 +604,6 @@ router.get('/signed_student_list', async function (req, res) {
         let headmasters = await userDAO.getAllHeadmaster();
         let sources = await baseDAO.getAll('source');
         let advisers = await userDAO.getAllAdviser();
-        let status = await baseDAO.getAll('student_status');
         res.render('student/signed_student_list', {
             students: students,
             grades: grades,
@@ -615,7 +614,6 @@ router.get('/signed_student_list', async function (req, res) {
             headmasterMap: commonUtil.toMap(headmasters),
             sourceMap: commonUtil.toMap(sources),
             adviserMap: commonUtil.toMap(advisers),
-            statusMap: commonUtil.toMap(status),
             condition: condition,
             dateUtil: dateUtil
         });

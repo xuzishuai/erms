@@ -236,8 +236,7 @@ INSERT INTO contract_charge_mode VALUES ('02', '付现');
 -- Records of class_room_status
 -- ----------------------------
 INSERT INTO class_room_status VALUES ('01', '不可用');
-INSERT INTO class_room_status VALUES ('02', '空闲');
-INSERT INTO class_room_status VALUES ('03', '使用中');
+INSERT INTO class_room_status VALUES ('02', '可用');
 
 -- ----------------------------
 -- Records of course_apply_status

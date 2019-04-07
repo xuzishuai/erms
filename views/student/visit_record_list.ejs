@@ -81,20 +81,20 @@
                     <table class="table table-list table-striped table-bordered table-hover">
                         <thead>
                         <tr>
-                            <th>接待人</th>
                             <th>到访时间</th>
                             <th>离开时间</th>
+                            <th>接待人</th>
                             <th>签约可能性</th>
-                            <th>到访记录</th>
+                            <th class="table-note-th">到访记录</th>
                             <th class="table_action" data-colNum=5>操作</th>
                         </tr>
                         </thead>
                         <tbody>
                         <%for (let i = 0; i < visitRecords.length; i++){%>
                         <tr>
-                            <td><%= receptionistMap[visitRecords[i].receptionist_id].name%></td>
                             <td><%= dateUtil.dateTimeFormat(visitRecords[i].arrive_time)%></td>
                             <td><%= dateUtil.dateTimeFormat(visitRecords[i].leave_time)%></td>
+                            <td><%= receptionistMap[visitRecords[i].receptionist_id].name%></td>
                             <td><%= possibilityMap[visitRecords[i].possibility_id].name%></td>
                             <td><%= visitRecords[i].content%></td>
                             <td>
