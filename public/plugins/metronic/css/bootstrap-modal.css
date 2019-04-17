@@ -54,7 +54,8 @@
 }
 
 .modal.fade.in {
-	top: 20%;
+	top: 30%;
+	position: fixed;
 }
 
 .modal-body {

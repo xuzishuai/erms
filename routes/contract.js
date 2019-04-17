@@ -621,7 +621,7 @@ router.get('/edit_contract_charge', async function (req, res) {
         contractCharge = contractCharge[0];
         let contract = await baseDAO.getById('contract', contractCharge.contract_id);
         contract = contract[0];
-        let student = await baseDAO.getAll('student', contract.student_id);
+        let student = await baseDAO.getAll('student', 'CONVERT(name USING gbk)');
         let types = await baseDAO.getAll('contract_charge_type');
         let modes = await baseDAO.getAll('contract_charge_mode');
         res.render('contract/edit_contract_charge', {
