@@ -15,7 +15,7 @@ router.get('/', async function(req, res) {
     let totalTeacher = await teacherDAO.getSingedTeacherCount();
     let totalContract = await contractDAO.getSingedContractCount();
     let lessonPeriods = await lessonPeriodDAO.getLessonPeriod();
-    let classRooms = await baseDAO.getAll('class_room', 'name');
+    let classRooms = await baseDAO.getAll('class_room', 'name');///
     let condition = {};
     condition.lesson_start_date = dateUtil.dateFormat(new Date());
     condition.lesson_end_date = dateUtil.addDays(condition.lesson_start_date, 1);
