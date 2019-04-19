@@ -651,7 +651,7 @@ router.post('/do_update_signed_student', async function (req, res) {
         student.id = req.body.id;
         student.name = req.body.name;
         student.gender = req.body.gender;
-        student.grade_id = req.body.grade_id; 
+        student.grade_id = req.body.grade_id;
         student.school = (req.body.school&&req.body.school!='')?req.body.school:null;
         student.birthday = (req.body.birthday&&req.body.birthday!='')?req.body.birthday:null;
         student.contact = req.body.contact;
