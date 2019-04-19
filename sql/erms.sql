@@ -963,8 +963,5 @@ alter table course_schedule add constraint FK_Reference_75 foreign key (operator
 alter table course_schedule add constraint FK_Reference_76 foreign key (grade_id)
       references grade (id) on delete restrict on update restrict;
 
-alter table course_schedule add constraint FK_Reference_77 foreign key (contract_detail_id)
-      references contract_detail (id) on delete restrict on update restrict;
-
-alter table course_schedule add constraint FK_Reference_78 foreign key (student_id)
+alter table course_schedule add constraint FK_Reference_77 foreign key (student_id)
       references student (id) on delete restrict on update restrict;

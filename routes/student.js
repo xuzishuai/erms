@@ -13,6 +13,8 @@ const testScoreDAO = require('../dao/testScoreDAO');
 const commonUtil = require('../util/commonUtil');
 const dateUtil = require('../util/dateUtil');
 const contractRefundDAO = require('../dao/contractRefundDAO');
+const courseScheduleDAO = require('../dao/courseScheduleDAO');
+const lessonPeriodDAO = require('../dao/lessonPeriodDAO');
 
 router.get('/new_student', async function (req, res) {
     try {
@@ -712,6 +714,11 @@ router.get('/student_details', async function (req, res) {
         }
 
         //排课记录
+        let courseSchedules = await courseScheduleDAO.getCourseScheduleByCondition(condition);
+        let teachers = await baseDAO.getAll('teacher', 'CONVERT(name USING gbk)');
+        let classRooms = await baseDAO.getAll('class_room', 'name');
+        let lessonPeriods = await lessonPeriodDAO.getLessonPeriod();
+        let courseScheduleStatus = await baseDAO.getAll('course_schedule_status');
 
         //合同列表
         let contracts = await contractDAO.getContractByCondition('contract', condition);
@@ -760,7 +767,12 @@ router.get('/student_details', async function (req, res) {
             subjectMap: subjectMap,
             warningMap: commonUtil.toMap(warnings),
             possibilityMap: commonUtil.toMap(possibilities),
-            studentStatusMap: commonUtil.toMap(studentStatus)
+            studentStatusMap: commonUtil.toMap(studentStatus),
+            courseSchedules: courseSchedules,
+            classRoomMap: commonUtil.toMap(classRooms),
+            lessonPeriodMap: commonUtil.toMap(lessonPeriods),
+            courseScheduleStatusMap: commonUtil.toMap(courseScheduleStatus),
+            teacherMap: commonUtil.toMap(teachers)
         });
     } catch (error) {
         exceptionHelper.renderException(res, error);
