@@ -63,9 +63,9 @@
                         <% for (let k = 0; k < days.length; k++) {
                         let courseSchedule = courseScheduleMap[teachers[i].id+days[k]+lessonPeriods[j].id];
                         %>
-                        <td class="class-td-height" <% if (courseSchedule&&courseSchedule.status_id == '02') {%>style="background-color:yellow;"<%} else if (courseSchedule&&courseSchedule.status_id == '04') {%>style="background-color:#77ff00;"<%}%>>
+                        <td class="class-td-height" <% if (courseSchedule&&courseSchedule.status_id == '02') {%>style="background-color:yellow;" <%} else if (courseSchedule&&courseSchedule.status_id == '04') {%>style="background-color:#77ff00;"<%}%>>
                             <% if (courseSchedule) {%>
-                            学员:<%= studentMap[courseSchedule.student_id].name%>(<%= studentMap[courseSchedule.student_id].student_no%>)<br>
+                            学员:<%= courseSchedule.student_name%><br>
                             教室:<%= classRoomMap[courseSchedule.class_room_id].name%><br>
                             科目:<%= subjectMap[courseSchedule.subject_id].name%><br>
                             状态:<%= statusMap[courseSchedule.status_id].name%>

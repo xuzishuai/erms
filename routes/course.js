@@ -786,67 +786,67 @@ router.get('/new_course_schedule', async function (req, res) {
         let subjects = await baseDAO.getAll('subject');
         let grades = await baseDAO.getAll('grade');
         let classRooms = await baseDAO.getAll('class_room');
-        let today = dateUtil.dateFormat(new Date());
         let lessonPeriods = await lessonPeriodDAO.getLessonPeriod();
-        let lessonPeriodVOs = [];
-        //根据日期去除已使用的课时
-        for (let i = 0; i < lessonPeriods.length; i++) {
-            let lCondition = {};
-            lCondition.student_id = student.id;
-            lCondition.lesson_date = today;
-            lCondition.lesson_period_id = lessonPeriods[i].id;
-            let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(lCondition);
-            if (!courseSchedule || courseSchedule.length <= 0) {
-                lessonPeriodVOs[lessonPeriodVOs.length] = lessonPeriods[i];
-            }
-        }
         let tCondition = {};
         tCondition.grade_id = contractDetail.grade_id;
         tCondition.subject_id = contractDetail.subject_id;
         let teachers = await teacherDAO.getTeacherByCondition(tCondition);
-        let teacherVOs = [];
-        let isFree = true;//学生在此日期的此档期是否有空
-        let sCondition = {};
-        sCondition.student_id = student.id;
-        sCondition.lesson_date = today;
-        sCondition.lesson_period_id = lessonPeriodVOs[0].id;//默认第一个课时
-        let courseScheduleForStudent = await courseScheduleDAO.getCourseScheduleByCondition(sCondition);
-        if (courseScheduleForStudent && courseScheduleForStudent.length > 0) {
-            isFree = false;//如果这个学生在这个日期的这个档期有课，那么不用查教师和教室了
-        }
-        let classRoomVOs = [];
-        if (isFree) {
-            //根据日期和默认第一个课时去除有课的教师
-            for (let i = 0; i < teachers.length; i++) {
-                let tCondition = {};
-                tCondition.lesson_date = today;
-                tCondition.lesson_period_id = lessonPeriodVOs[0].id;//默认第一个课时
-                tCondition.teacher_id = teachers[i].id;
-                let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(tCondition);
-                if (!courseSchedule || courseSchedule.length <= 0) {
-                    teacherVOs[teacherVOs.length] = teachers[i];
-                }
-            }
-            //根据日期和默认第一个课时去除有课的教室
-            for (let i = 0; i < classRooms.length; i++) {
-                let cCondition = {};
-                cCondition.lesson_date = today;
-                cCondition.lesson_period_id = lessonPeriodVOs[0].id;//默认第一个课时
-                cCondition.class_room_id = classRooms[i].id;
-                let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(cCondition);
-                if (!courseSchedule || courseSchedule.length <= 0) {
-                    classRoomVOs.push(classRooms[i]);
-                }
-            }
-        }
+        // let lessonPeriodVOs = [];
+        // let today = dateUtil.dateFormat(new Date());
+        //根据日期去除已使用的课时
+        // for (let i = 0; i < lessonPeriods.length; i++) {
+        //     let lCondition = {};
+        //     lCondition.student_id = student.id;
+        //     lCondition.lesson_date = today;
+        //     lCondition.lesson_period_id = lessonPeriods[i].id;
+        //     let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(lCondition);
+        //     if (!courseSchedule || courseSchedule.length <= 0) {
+        //         lessonPeriodVOs[lessonPeriodVOs.length] = lessonPeriods[i];
+        //     }
+        // }
+        // let teacherVOs = [];
+        // let isFree = true;//学生在此日期的此档期是否有空
+        // let sCondition = {};
+        // sCondition.student_id = student.id;
+        // sCondition.lesson_date = today;
+        // sCondition.lesson_period_id = lessonPeriodVOs[0].id;//默认第一个课时
+        // let courseScheduleForStudent = await courseScheduleDAO.getCourseScheduleByCondition(sCondition);
+        // if (courseScheduleForStudent && courseScheduleForStudent.length > 0) {
+        //     isFree = false;//如果这个学生在这个日期的这个档期有课，那么不用查教师和教室了
+        // }
+        // let classRoomVOs = [];
+        // if (isFree) {
+        //     //根据日期和默认第一个课时去除有课的教师
+        //     for (let i = 0; i < teachers.length; i++) {
+        //         let tCondition = {};
+        //         tCondition.lesson_date = today;
+        //         tCondition.lesson_period_id = lessonPeriodVOs[0].id;//默认第一个课时
+        //         tCondition.teacher_id = teachers[i].id;
+        //         let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(tCondition);
+        //         if (!courseSchedule || courseSchedule.length <= 0) {
+        //             teacherVOs[teacherVOs.length] = teachers[i];
+        //         }
+        //     }
+        //     //根据日期和默认第一个课时去除有课的教室
+        //     for (let i = 0; i < classRooms.length; i++) {
+        //         let cCondition = {};
+        //         cCondition.lesson_date = today;
+        //         cCondition.lesson_period_id = lessonPeriodVOs[0].id;//默认第一个课时
+        //         cCondition.class_room_id = classRooms[i].id;
+        //         let courseSchedule = await courseScheduleDAO.getCourseScheduleByCondition(cCondition);
+        //         if (!courseSchedule || courseSchedule.length <= 0) {
+        //             classRoomVOs.push(classRooms[i]);
+        //         }
+        //     }
+        // }
         res.render('course/new_course_schedule', {
             contract: contract,
             contractDetail: contractDetail,
             subjectMap: commonUtil.toMap(subjects),
             gradeMap: commonUtil.toMap(grades),
-            lessonPeriod: lessonPeriodVOs,
-            teachers: teacherVOs,
-            classRooms: classRoomVOs,
+            lessonPeriod: lessonPeriods,
+            teachers: teachers,
+            classRooms: classRooms,
             student: student,
             dateUtil: dateUtil
         });
@@ -1223,12 +1223,22 @@ router.get('/course_timetable', async function (req, res) {
         condition.lesson_end_date = dateUtil.addDays(condition.lesson_start_date, 7);
         condition.status_ids = ['02', '04'];
         let courseSchedules = await courseScheduleDAO.getCourseScheduleByCondition(condition);
+        let sCondition = {};
+        sCondition.status_id = '03';
+        let students = await studentDAO.getStudentByCondition(sCondition);
+        let studentMap = commonUtil.toMap(students);
         let teachers = await baseDAO.getAll('teacher');
         let teacherMap = commonUtil.toMap(teachers);
         let courseScheduleMap = {};
         let teacherVOs = [];
         for (let i = 0; i < courseSchedules.length; i++) {
-            courseScheduleMap[courseSchedules[i].teacher_id+dateUtil.dateFormat(courseSchedules[i].lesson_date)+courseSchedules[i].lesson_period_id] = courseSchedules[i];
+            if (!courseScheduleMap[courseSchedules[i].teacher_id+dateUtil.dateFormat(courseSchedules[i].lesson_date)+courseSchedules[i].lesson_period_id]) {
+                courseSchedules[i].student_name = studentMap[courseSchedules[i].student_id].name;
+                courseScheduleMap[courseSchedules[i].teacher_id+dateUtil.dateFormat(courseSchedules[i].lesson_date)+courseSchedules[i].lesson_period_id] = courseSchedules[i];
+            } else {
+                courseScheduleMap[courseSchedules[i].teacher_id+dateUtil.dateFormat(courseSchedules[i].lesson_date)+courseSchedules[i].lesson_period_id].student_name +=
+                    ',' + studentMap[courseSchedules[i].student_id].name;
+            }
             let isExist = teacherVOs.some(item=>{
                 if(item.id == courseSchedules[i].teacher_id){
                     return true;
@@ -1247,9 +1257,6 @@ router.get('/course_timetable', async function (req, res) {
         days.push(dateUtil.addDays(condition.lesson_start_date, 4));
         days.push(dateUtil.addDays(condition.lesson_start_date, 5));
         days.push(dateUtil.addDays(condition.lesson_start_date, 6));
-        let sCondition = {};
-        sCondition.status_id = '03';
-        let students = await studentDAO.getStudentByCondition(sCondition);
         let classRooms = await baseDAO.getAll('class_room');
         let status = await baseDAO.getAll('course_schedule_status');
         let preWeek = dateUtil.addDays(condition.lesson_start_date, -7);
@@ -1261,7 +1268,6 @@ router.get('/course_timetable', async function (req, res) {
             teacherMap: teacherMap,
             lessonPeriods: lessonPeriods,
             days: days,
-            studentMap: commonUtil.toMap(students),
             classRoomMap: commonUtil.toMap(classRooms),
             statusMap: commonUtil.toMap(status),
             subjectMap: commonUtil.toMap(subjects),

@@ -16,6 +16,11 @@ router.get('/', async function(req, res) {
     let totalContract = await contractDAO.getSingedContractCount();
     let lessonPeriods = await lessonPeriodDAO.getLessonPeriod();
     let classRooms = await baseDAO.getAll('class_room', 'name');
+    let teachers = await baseDAO.getAll('teacher');
+    let sCondition = {};
+    sCondition.status_id = '03';
+    let students = await studentDAO.getStudentByCondition(sCondition);
+    let studentMap = commonUtil.toMap(students);
     let condition = {};
     condition.lesson_start_date = dateUtil.dateFormat(new Date());
     condition.lesson_end_date = dateUtil.addDays(condition.lesson_start_date, 1);
@@ -23,11 +28,13 @@ router.get('/', async function(req, res) {
     let courseSchedules = await courseScheduleDAO.getCourseScheduleByCondition(condition);
     let courseScheduleMap = {};
     for (let i = 0; i < courseSchedules.length; i++) {
-        courseScheduleMap[courseSchedules[i].lesson_period_id+courseSchedules[i].class_room_id] = courseSchedules[i];
+        if (!courseScheduleMap[courseSchedules[i].lesson_period_id+courseSchedules[i].class_room_id]) {
+            courseSchedules[i].student_name = studentMap[courseSchedules[i].student_id].name;
+            courseScheduleMap[courseSchedules[i].lesson_period_id+courseSchedules[i].class_room_id] = courseSchedules[i];
+        } else {
+            courseScheduleMap[courseSchedules[i].lesson_period_id+courseSchedules[i].class_room_id].student_name += ',' + studentMap[courseSchedules[i].student_id].name;
+        }
     }
-    let sCondition = {};
-    sCondition.status_id = '03';
-    let students = await studentDAO.getStudentByCondition(sCondition);
     let status = await baseDAO.getAll('course_schedule_status');
     let subjects = await baseDAO.getAll('subject');
     res.render('index', {
@@ -35,10 +42,10 @@ router.get('/', async function(req, res) {
         totalTeacher: totalTeacher[0].count,
         totalContract: totalContract[0].count,
         courseScheduleMap: courseScheduleMap,
-        studentMap: commonUtil.toMap(students),
         classRoomMap: commonUtil.toMap(classRooms),
         statusMap: commonUtil.toMap(status),
         subjectMap: commonUtil.toMap(subjects),
+        teacherMap: commonUtil.toMap(teachers),
         lessonPeriods: lessonPeriods,
         classRooms: classRooms
     });
